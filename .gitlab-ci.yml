@@ -1,0 +1,105 @@
+stages:
+  - build_develop
+  - build_test
+  # - test
+  # - build
+  # - deploy_test
+  # - deploy_production
+
+# cache:
+#   key: ${CI_BUILD_REF_NAME}
+#   paths:
+#     - node_modules/
+#     - dist/
+
+
+# 还原nuget依赖
+build_develop:
+  stage: build_develop
+  only:
+    - develop
+    - master
+  script:
+    - echo "Restoring NuGet Packages..." 
+    - dotnet restore
+    - echo "clean out output directory..."
+    - rm D:\publish\xiaoyuyue_webapi\* -r
+    - echo "building..."
+    - cd src\Xiaoyuyue.Web.Host
+    - dotnet publish -f netcoreapp2.0 -o 'D:\publish\xiaoyuyue_webapi' -c Release
+    - echo "stop the iis process..."
+    - Stop-WebAppPool xiaoyuyue_webapi
+    - Do{echo "waiting stop the iis process...";Start-Sleep -Seconds 1; $WAP=Get-WebAppPoolState -Name xiaoyuyue_webapi}While($WAP.Value -ne 'Stopped')
+    - echo "copy file..."
+    - copy 'D:\publish\xiaoyuyue_webapi\*' -Destination 'D:\wwwroot\xiaoyuyue_webapi\' -Force -Recurse
+    - echo "start the iis process..."
+    - Start-WebAppPool xiaoyuyue_webapi
+    - curl 192.168.1.23:9090
+  tags:
+    - deploy_xiaoyuyue_23
+
+# 还原nuget依赖
+build_test:
+  stage: build_test
+  only:
+    - test 
+  script:
+    - echo "Restoring NuGet Packages..." 
+    - dotnet restore
+    - echo "clean out output directory..."
+    - rm D:\publish\xiaoyuyue_webapi\* -r # 清空输出目录
+    - echo "building..."
+    - cd src\Xiaoyuyue.Web.Host
+    - dotnet publish -f netcoreapp2.0 -o 'D:\publish\xiaoyuyue_webapi' -c Release
+    - echo "stop the iis process..."
+    - Stop-WebAppPool xiaoyuyue_webapi  
+    - Do{echo "waiting stop the iis process...";Start-Sleep -Seconds 1; $WAP=Get-WebAppPoolState -Name xiaoyuyue_webapi}While($WAP.Value -ne 'Stopped')
+    - echo "copy file..."
+    - copy 'D:\publish\xiaoyuyue_webapi\*' -Destination 'D:\wwwroot\xiaoyuyue_webapi\' -Force -Recurse
+    - echo "start the iis process..."
+    - Start-WebAppPool xiaoyuyue_webapi
+    - curl api.xiaoyuyue.com
+  tags:
+    - deploy_xiaoyuyue_webapi_113
+
+# 运行测试用例
+#test:
+#  stage: test
+#  only:
+#    - develop
+#    - master
+#  script:
+#    - npm run test
+
+
+# 编译
+# build:
+#   stage: build
+#   only:
+#     - develop
+#     - master
+#   script:
+#     - echo "Solution Build..."
+#     - dotnet build 
+#   artifacts:
+#     paths:
+#     - public
+
+
+# 部署测试服务器
+#deploy_test:
+#  stage: deploy_test
+#  only:
+#    - develop
+#  script:
+#    - pm2 delete app || true
+#    - pm2 start app.js --name app
+
+
+# 部署生产服务器
+#deploy_production:
+#  stage: deploy_production
+#  only:
+#    - master
+#  script:
+#    - bash scripts/deploy/deploy.sh
