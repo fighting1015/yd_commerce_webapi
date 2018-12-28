@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.2</TargetFrameworks>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <AssemblyName>Vapps.FileStorage</AssemblyName>
@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Abp" Version="3.8.2" />
-    <PackageReference Include="Abp.ZeroCore" Version="3.8.2" />
+    <PackageReference Include="Abp" Version="4.0.2" />
+    <PackageReference Include="Abp.ZeroCore" Version="4.0.2" />
     <PackageReference Include="Qiniu.Shared" Version="7.2.15" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

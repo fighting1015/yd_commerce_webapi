@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-     <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
+     <TargetFrameworks>net461;netcoreapp2.2</TargetFrameworks>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AssemblyName>Vapps.Application</AssemblyName>
     <PackageId>Vapps.Application</PackageId>
@@ -12,11 +12,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <RootNamespace>Vapps</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="MultiTenancy\SubscriptionAppService.cs" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
   </ItemGroup>
@@ -41,14 +37,6 @@
 
   <ItemGroup>
     <Reference Include="System.Transactions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Dashboard\" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
