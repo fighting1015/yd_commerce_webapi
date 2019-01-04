@@ -15,7 +15,7 @@ namespace Vapps.Stores
     public partial class StoreMapping : FullAuditedEntity
     {
         /// <summary>
-        /// Gets or sets the entity identifier
+        /// 实体Id
         /// </summary>
         public int EntityId { get; set; }
 
