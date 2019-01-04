@@ -14,6 +14,7 @@ using Vapps.Payments;
 using Vapps.SMS;
 using Vapps.States;
 using Vapps.Storage;
+using Vapps.Stores;
 using Vapps.WeChat.Core.TemplateMessages;
 using Vapps.WeChat.Core.Users;
 
@@ -67,6 +68,11 @@ namespace Vapps.EntityFrameworkCore
         public virtual DbSet<WeChatUser> WeChatUsers { get; set; }
 
         public virtual DbSet<UniversalDataStatistics> UniversalDataStatisticses { get; set; }
+
+        public virtual DbSet<Store> Stores { get; set; }
+
+        public virtual DbSet<StoreMapping> StoreMappings { get; set; }
+
 
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
@@ -153,6 +159,19 @@ namespace Vapps.EntityFrameworkCore
             });
 
             modelBuilder.Entity<LoginAttempt>();
+
+            modelBuilder.Entity<Store>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<StoreMapping>(b =>
+            {
+                b.HasIndex(e => new { e.StoreId, e.EntityName });
+                b.HasOne(o => o.Store)
+                 .WithMany()
+                 .HasForeignKey(c => c.StoreId).OnDelete(DeleteBehavior.Cascade);
+            });
 
             modelBuilder.ConfigurePersistedGrantEntity();
         }
