@@ -5,6 +5,7 @@ using Abp.PlugIns;
 using Abp.Timing;
 using Castle.Facilities.Logging;
 using Hangfire;
+using Hangfire.MySql.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -96,7 +97,7 @@ namespace Vapps.Web.Startup
             //Hangfire (Enable to use Hangfire instead of default job manager)
             services.AddHangfire(config =>
             {
-                config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Hangfire"));
+                config.UseStorage(new MySqlStorage(_appConfiguration.GetConnectionString("Hangfire")));
 
                 //var options = new RedisStorageOptions();
                 //options.Db = _appConfiguration.GetValue<int>("Hangfire:DatabaseId");
