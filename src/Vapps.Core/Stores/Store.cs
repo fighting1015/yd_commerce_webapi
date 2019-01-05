@@ -55,5 +55,10 @@ namespace Vapps.Stores
         /// 订单来源
         /// </summary>
         public virtual OrderSource OrderSourceType { get; set; }
+
+        /// <summary>
+        /// 订单同步
+        /// </summary>
+        public virtual bool OrderSync { get; set; }
     }
 }
