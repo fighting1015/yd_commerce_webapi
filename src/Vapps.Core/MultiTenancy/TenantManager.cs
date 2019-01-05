@@ -155,7 +155,6 @@ namespace Vapps.MultiTenancy
                     userRole.IsDefault = true;
                     CheckErrors(await _roleManager.UpdateAsync(userRole));
 
-
                     //Create admin user for the tenant
                     var adminUser = User.CreateTenantAdminUser(tenant.Id, adminEmailAddress ?? string.Empty, tenancyName, phoneNumber);
                     adminUser.ShouldChangePasswordOnNextLogin = shouldChangePasswordOnNextLogin;

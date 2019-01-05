@@ -28,4 +28,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System.Transactions" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Migrations\20190105022843_Add_Stores_And_Mappings.Designer.cs">
+      <DependentUpon>20190105022843_Add_Stores_And_Mappings.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

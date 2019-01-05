@@ -4,6 +4,7 @@ using Abp.Localization;
 using Abp.Net.Mail;
 using Vapps.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Vapps.Configuration;
 
 namespace Vapps.Migrations.Seed.Host
 {
@@ -18,6 +19,8 @@ namespace Vapps.Migrations.Seed.Host
 
         public void Create()
         {
+            AddSettingIfNotExists(AppSettings.TenantManagement.IsNewRegisteredTenantActiveByDefault, "true");
+
             //Emailing
             AddSettingIfNotExists(EmailSettingNames.DefaultFromAddress, "dev@vapps.hk");
             AddSettingIfNotExists(EmailSettingNames.DefaultFromDisplayName, "devvapps");
