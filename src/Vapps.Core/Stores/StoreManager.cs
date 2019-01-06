@@ -1,68 +1,84 @@
-﻿namespace Vapps.Stores
+﻿using Abp.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Vapps.Stores
 {
-    //public class StoreManager : VappsDomainServiceBase, IStoreManager
-    //{
-    //    #region Ctor
+    public class StoreManager : VappsDomainServiceBase, IStoreManager
+    {
+        #region Ctor
 
-    //    public IRepository<Store, int> StoreRepository { get; }
+        public IRepository<Store, int> StoreRepository { get; }
 
-    //    IQueryable<Store> Stores { get; }
-
-
-    //    #endregion
+        public IQueryable<Store> Stores => StoreRepository.GetAll().AsNoTracking();
 
 
-    //    #region Method
+        #endregion
 
 
-    //    #region Store
+        #region Method
 
-    //    /// <summary>
-    //    /// 根据id查找店铺
-    //    /// </summary>
-    //    /// <param name="id"></param>
-    //    /// <returns></returns>
-    //    Task<Store> FindByIdAsync(long id);
+        /// <summary>
+        /// 根据id查找店铺
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<Store> FindByIdAsync(int id)
+        {
+            return await StoreRepository.FirstOrDefaultAsync(id);
+        }
 
-    //    /// <summary>
-    //    /// 根据id获取店铺
-    //    /// </summary>
-    //    /// <param name="id"></param>
-    //    /// <returns></returns>
-    //    Task<Store> GetByIdAsync(long id);
+        /// <summary>
+        /// 根据id获取店铺
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<Store> GetByIdAsync(int id)
+        {
+            return await StoreRepository.GetAsync(id);
+        }
 
-    //    /// <summary>
-    //    /// 添加店铺
-    //    /// </summary>
-    //    /// <param name="store"></param>
-    //    Task CreateAsync(Store store);
+        /// <summary>
+        /// 添加店铺
+        /// </summary>
+        /// <param name="store"></param>
+        public virtual async Task CreateAsync(Store store)
+        {
+            await StoreRepository.InsertAsync(store);
 
-    //    /// <summary>
-    //    /// 修改店铺
-    //    /// </summary>
-    //    /// <param name="Store"></param>
-    //    Task UpdateAsync(Store store);
+        }
 
-    //    /// <summary>
-    //    /// 激活/禁用店铺
-    //    /// </summary>
-    //    /// <param name="id"></param>
-    //    Task ActivedOrDisableAsync(long id, bool active);
+        /// <summary>
+        /// 更新店铺
+        /// </summary>
+        /// <param name="Store"></param>
+        public virtual async Task UpdateAsync(Store store)
+        {
+            await StoreRepository.UpdateAsync(store);
+        }
 
-    //    /// <summary>
-    //    /// 删除店铺
-    //    /// </summary>
-    //    /// <param name="Store"></param>
-    //    Task DeleteAsync(Store store);
+        /// <summary>
+        /// 删除店铺
+        /// </summary>
+        /// <param name="Store"></param>
+        public virtual async Task DeleteAsync(Store store)
+        {
+            await StoreRepository.DeleteAsync(store);
+        }
 
-    //    /// <summary>
-    //    /// 删除店铺
-    //    /// </summary>
-    //    /// <param name="id"></param>
-    //    Task DeleteAsync(long id);
+        /// <summary>
+        /// 删除店铺
+        /// </summary>
+        /// <param name="id"></param>
+        public virtual async Task DeleteAsync(int id)
+        {
+            var store = await StoreRepository.FirstOrDefaultAsync(id);
 
-    //    #endregion
+            if (store != null)
+                await StoreRepository.DeleteAsync(store);
+        }
 
-    //    #endregion
-    //}
+        #endregion
+    }
 }

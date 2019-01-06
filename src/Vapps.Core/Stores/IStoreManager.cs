@@ -17,14 +17,14 @@ namespace Vapps.Stores
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Store> FindByIdAsync(long id);
+        Task<Store> FindByIdAsync(int id);
 
         /// <summary>
         /// 根据id获取店铺
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Store> GetByIdAsync(long id);
+        Task<Store> GetByIdAsync(int id);
 
         /// <summary>
         /// 添加店铺
@@ -39,12 +39,6 @@ namespace Vapps.Stores
         Task UpdateAsync(Store store);
 
         /// <summary>
-        /// 激活/禁用店铺
-        /// </summary>
-        /// <param name="id"></param>
-        Task ActivedOrDisableAsync(long id, bool active);
-
-        /// <summary>
         /// 删除店铺
         /// </summary>
         /// <param name="Store"></param>
@@ -54,7 +48,7 @@ namespace Vapps.Stores
         /// 删除店铺
         /// </summary>
         /// <param name="id"></param>
-        Task DeleteAsync(long id);
+        Task DeleteAsync(int id);
 
         #endregion
     }
