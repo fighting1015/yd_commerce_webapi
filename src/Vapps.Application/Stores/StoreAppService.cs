@@ -17,7 +17,6 @@ using System.Linq.Dynamic.Core;
 
 namespace Vapps.Stores
 {
-    [AbpAuthorize(AdminPermissions.ContentManage.SmsTemplates.Self)]
     public class StoreAppService : VappsAppServiceBase, IStoreAppService
     {
         private readonly IStoreManager _storeManager;
