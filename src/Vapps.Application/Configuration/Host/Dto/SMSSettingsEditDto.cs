@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Vapps.Common.Dto;
-
-namespace Vapps.Configuration.Host.Dto
+﻿namespace Vapps.Configuration.Host.Dto
 {
     public class SMSSettingsEditDto
     {
@@ -39,10 +36,5 @@ namespace Vapps.Configuration.Host.Dto
         /// 手机验证模板
         /// </summary>
         public int PhoneVerificationTempId { get; set; }
-
-        /// <summary>
-        /// 可用短信模板
-        /// </summary>
-        public List<SelectListItemDto> AvailableSmsTemplates { get; set; }
     }
 }

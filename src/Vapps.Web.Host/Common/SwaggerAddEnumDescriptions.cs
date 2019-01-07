@@ -66,7 +66,7 @@ namespace Vapps.Web.Common
                 enumDescriptions.Add($"{Convert.ChangeType(enumOption, type.GetEnumUnderlyingType())} = {Enum.GetName(type, enumOption)}");
             }
 
-            return $"{Environment.NewLine}{string.Join(";", enumDescriptions)}";
+            return $"{string.Join(" ; ", enumDescriptions)}";
         }
     }
 }
