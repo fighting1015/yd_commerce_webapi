@@ -4,7 +4,7 @@ using Vapps.Orders;
 
 namespace Vapps.Stores.Dto
 {
-    [AutoMapFrom(typeof(Store))]
+    //[AutoMapFrom(typeof(Store))]
     public class CreateOrUpdateStoreInput
     {
         /// <summary>

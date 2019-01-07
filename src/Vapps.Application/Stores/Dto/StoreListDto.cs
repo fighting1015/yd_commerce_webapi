@@ -1,7 +1,9 @@
-﻿using Vapps.Orders;
+﻿using Abp.AutoMapper;
+using Vapps.Orders;
 
 namespace Vapps.Stores.Dto
 {
+    //[AutoMapFrom(typeof(Store))]
     public class StoreListDto
     {
         /// <summary>
