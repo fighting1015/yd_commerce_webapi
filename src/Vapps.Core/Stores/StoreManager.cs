@@ -13,9 +13,12 @@ namespace Vapps.Stores
 
         public IQueryable<Store> Stores => StoreRepository.GetAll().AsNoTracking();
 
+        public StoreManager(IRepository<Store, int> storeRepository)
+        {
+            this.StoreRepository = storeRepository;
+        }
 
         #endregion
-
 
         #region Method
 
@@ -46,7 +49,6 @@ namespace Vapps.Stores
         public virtual async Task CreateAsync(Store store)
         {
             await StoreRepository.InsertAsync(store);
-
         }
 
         /// <summary>

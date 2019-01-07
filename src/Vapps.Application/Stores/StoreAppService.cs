@@ -14,6 +14,7 @@ using Vapps.Common.Dto;
 using Vapps.Dto;
 using Vapps.Stores.Dto;
 using System.Linq.Dynamic.Core;
+using Abp.Runtime.Session;
 
 namespace Vapps.Stores
 {
@@ -117,6 +118,7 @@ namespace Vapps.Stores
         protected virtual async Task CreateStoreAsync(CreateOrUpdateStoreInput input)
         {
             var store = ObjectMapper.Map<Store>(input);
+            store.TenantId = AbpSession.GetTenantId();
             await _storeManager.CreateAsync(store);
         }
 
