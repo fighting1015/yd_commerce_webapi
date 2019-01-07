@@ -55,7 +55,6 @@ namespace Vapps.MultiTenancy.Accounting
             }
 
             var edition = await _editionManager.FindByIdAsync(payment.EditionId);
-            var hostAddress = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress);
 
             return new InvoiceDto
             {
@@ -63,9 +62,6 @@ namespace Vapps.MultiTenancy.Accounting
                 InvoiceDate = invoice.InvoiceDate,
                 Amount = payment.Amount,
                 EditionDisplayName = edition.DisplayName,
-
-                HostAddress = hostAddress.Replace("\r\n", "|").Split('|').ToList(),
-                HostLegalName = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
 
                 TenantAddress = invoice.TenantAddress.Replace("\r\n", "|").Split('|').ToList(),
                 TenantLegalName = invoice.TenantLegalName,

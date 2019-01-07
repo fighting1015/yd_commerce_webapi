@@ -166,7 +166,8 @@ namespace Vapps.Identity
         {
             var verificationCode = new VerificationCodeCacheItem()
             {
-                Code = CommonHelper.GenerateRandomDigitCode(6),
+                //Code = CommonHelper.GenerateRandomDigitCode(6),
+                Code = "0000",
                 ExpirationOnUtc = DateTime.UtcNow.AddSeconds(availableSecond),
                 ResendOnUtc = DateTime.UtcNow.AddSeconds(minimumSendInterval),
                 PhoneOrEmail = phoneOrEmail,

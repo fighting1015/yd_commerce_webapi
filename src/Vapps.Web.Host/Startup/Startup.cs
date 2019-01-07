@@ -25,6 +25,7 @@ using Vapps.EntityFrameworkCore;
 using Vapps.Extensions;
 using Vapps.Identity;
 using Vapps.Web.Authentication.JwtBearer;
+using Vapps.Web.Common;
 using Vapps.Web.Hangfire;
 using Vapps.Web.IdentityServer;
 
@@ -184,13 +185,14 @@ namespace Vapps.Web.Startup
             options.SwaggerDoc("v1", new Info { Title = "Vapps API", Version = "v1" });
             //options.DescribeAllEnumsAsStrings();
             options.DocInclusionPredicate((docName, description) => true);
-
+            options.DocumentFilter<EnumDocumentFilter>();
             //Note: This is just for showing Authorize button on the UI. 
             //Authorize button's behaviour is handled in wwwroot/swagger/ui/index.html
             options.AddSecurityDefinition("Bearer", new BasicAuthScheme());
 
             var basePath = PlatformServices.Default.Application.ApplicationBasePath;
 
+            options.IncludeXmlComments(basePath + "\\Vapps.Core.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.Application.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.Web.Core.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.WeChat.Application.xml");

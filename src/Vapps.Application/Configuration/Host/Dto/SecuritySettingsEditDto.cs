@@ -25,11 +25,6 @@ namespace Vapps.Configuration.Host.Dto
         public UserLockOutSettingsEditDto UserLockOut { get; set; }
 
         /// <summary>
-        /// 两步认证登录
-        /// </summary>
-        public TwoFactorLoginSettingsEditDto TwoFactorLogin { get; set; }
-
-        /// <summary>
         /// 验证码设置
         /// </summary>
         public VerificationCodeSettingsEditDto VerificationCode { get; set; }

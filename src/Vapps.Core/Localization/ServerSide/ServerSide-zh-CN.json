@@ -228,6 +228,6 @@
         "Payments.WeChat.PayFail.PaymentAmountNotMatch":"支付失败,支付金额不相等，订单号：{0}，支付金额:{1}",
         "Payments.Alipay.PayFail":"支付宝支付失败,错误码：{0}，原因 ：{1}",
         "Payments.WeChat.CanNotFindUser":"未找到微信用户",
-        "CouldNotValidateExternalUser": "无法验证外部用户登录",
+        "CouldNotValidateExternalUser": "无法验证外部用户登录"
     }
 }

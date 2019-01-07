@@ -64,7 +64,6 @@ namespace Vapps.Install
                 SetUrl(input.WebSiteUrl, input.ServerUrl);
                 await SetDefaultLanguage(input.DefaultLanguage);
                 await SetSmtpSettings(input.SmtpSettings);
-                await SetBillingSettings(input.BillInfo);
             }
             else
             {
@@ -169,12 +168,6 @@ namespace Vapps.Install
             await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.Domain, input.SmtpDomain);
             await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.EnableSsl, input.SmtpEnableSsl.ToString().ToLowerInvariant());
             await SettingManager.ChangeSettingForApplicationAsync(EmailSettingNames.Smtp.UseDefaultCredentials, input.SmtpUseDefaultCredentials.ToString().ToLowerInvariant());
-        }
-
-        private async Task SetBillingSettings(HostBillingSettingsEditDto input)
-        {
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingLegalName, input.LegalName);
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress, input.Address);
         }
 
         private void EditAppSettingsjson(string name, string value, params string[] objectNames)

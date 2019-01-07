@@ -1,4 +1,6 @@
-﻿namespace Vapps.Identity
+﻿using System.ComponentModel;
+
+namespace Vapps.Identity
 {
     /// <summary>
     /// 验证码类型

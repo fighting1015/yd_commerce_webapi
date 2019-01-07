@@ -18,9 +18,5 @@ namespace Vapps.MultiTenancy.Accounting.Dto
         public List<string> TenantAddress { get; set; }
 
         public string TenantTaxNo { get; set; }
-
-        public string HostLegalName { get; set; }
-
-        public List<string> HostAddress { get; set; }
     }
 }

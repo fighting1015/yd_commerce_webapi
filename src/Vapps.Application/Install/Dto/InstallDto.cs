@@ -20,7 +20,5 @@ namespace Vapps.Install.Dto
         public string DefaultLanguage { get; set; }
 
         public EmailSettingsEditDto SmtpSettings { get; set; }
-
-        public HostBillingSettingsEditDto BillInfo { get; set; }
     }
 }

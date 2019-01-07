@@ -8,8 +8,6 @@ namespace Vapps.Configuration
     {
         public static class HostManagement
         {
-            public const string BillingLegalName = "App.HostManagement.BillingLegalName";
-            public const string BillingAddress = "App.HostManagement.BillingAddress";
         }
 
 

@@ -23,11 +23,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\net461\Vapps.Application.xml</DocumentationFile>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
-  </PropertyGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\..\wechat\Vapps.WeChat.Core\Vapps.WeChat.Core.csproj" />
     <ProjectReference Include="..\Vapps.Core\Vapps.Core.csproj" />
@@ -38,6 +33,11 @@
   <ItemGroup>
     <Reference Include="System.Transactions" />
   </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net461\Vapps.Application.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\net461\Vapps.Application.xml</DocumentationFile>

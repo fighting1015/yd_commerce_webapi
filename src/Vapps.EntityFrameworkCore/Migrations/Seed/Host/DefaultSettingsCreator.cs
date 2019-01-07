@@ -5,6 +5,7 @@ using Abp.Net.Mail;
 using Vapps.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Vapps.Configuration;
+using Abp.Runtime.Security;
 
 namespace Vapps.Migrations.Seed.Host
 {
@@ -28,7 +29,7 @@ namespace Vapps.Migrations.Seed.Host
             AddSettingIfNotExists(EmailSettingNames.Smtp.UseDefaultCredentials, "false");
             AddSettingIfNotExists(EmailSettingNames.Smtp.Host, "smtp.ym.163.com");
             AddSettingIfNotExists(EmailSettingNames.Smtp.UserName, "dev@vapps.hk");
-            AddSettingIfNotExists(EmailSettingNames.Smtp.Password, "vapps510000");
+            AddSettingIfNotExists(EmailSettingNames.Smtp.Password, SimpleStringCipher.Instance.Encrypt("vapps510000") );
 
             //Languages
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "zh-CN");

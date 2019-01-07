@@ -62,7 +62,6 @@ namespace Vapps.Configuration.Host
                 Security = await GetSecuritySettingsAsync(),
                 ExternalAuthentication = await GetExternalAuthenticationsAsync(),
                 SMSSettings = await GetSMSSettingsAsync(),
-                Billing = await GetBillingSettingsAsync()
             };
         }
 
@@ -79,20 +78,7 @@ namespace Vapps.Configuration.Host
             await UpdateSecuritySettingsAsync(input.Security);
             await UpdateEmailSettingsAsync(input.Email);
             await UpdateExternalAuthenticationsAsync(input.ExternalAuthentication);
-            //await UpdateSMSSettingsAsync(input.SMSSettings);
-            //await UpdateBillingSettingsAsync(input.Billing);
-        }
-
-        /// <summary>
-        /// 更新账单信息设置
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        private async Task UpdateBillingSettingsAsync(HostBillingSettingsEditDto input)
-        {
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingLegalName, input.LegalName);
-            await SettingManager.ChangeSettingForApplicationAsync(AppSettings.HostManagement.BillingAddress, input.Address);
-
+            await UpdateSMSSettingsAsync(input.SMSSettings);
         }
 
         /// <summary>
@@ -219,21 +205,7 @@ namespace Vapps.Configuration.Host
                 PasswordComplexity = passwordComplexitySetting,
                 DefaultPasswordComplexity = defaultPasswordComplexitySetting,
                 UserLockOut = await GetUserLockOutSettingsAsync(),
-                TwoFactorLogin = await GetTwoFactorLoginSettingsAsync(),
                 VerificationCode = await GetVerificationCodeSettingsAsync()
-            };
-        }
-
-        /// <summary>
-        /// 获取账单设置
-        /// </summary>
-        /// <returns></returns>
-        private async Task<HostBillingSettingsEditDto> GetBillingSettingsAsync()
-        {
-            return new HostBillingSettingsEditDto
-            {
-                LegalName = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingLegalName),
-                Address = await SettingManager.GetSettingValueAsync(AppSettings.HostManagement.BillingAddress)
             };
         }
 
@@ -248,21 +220,6 @@ namespace Vapps.Configuration.Host
                 IsEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled),
                 MaxFailedAccessAttemptsBeforeLockout = await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout),
                 DefaultAccountLockoutSeconds = await SettingManager.GetSettingValueAsync<int>(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds)
-            };
-        }
-
-        /// <summary>
-        /// 获取两步认证登陆设置
-        /// </summary>
-        /// <returns></returns>
-        private async Task<TwoFactorLoginSettingsEditDto> GetTwoFactorLoginSettingsAsync()
-        {
-            return new TwoFactorLoginSettingsEditDto
-            {
-                IsEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled),
-                IsEmailProviderEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled),
-                IsSmsProviderEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled),
-                IsRememberBrowserEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled),
             };
         }
 
@@ -419,7 +376,6 @@ namespace Vapps.Configuration.Host
             }
 
             await UpdateUserLockOutSettingsAsync(settings.UserLockOut);
-            await UpdateTwoFactorLoginSettingsAsync(settings.TwoFactorLogin);
             await UpdateVerificationCodeSettingsAsync(settings.VerificationCode);
         }
 
@@ -462,19 +418,6 @@ namespace Vapps.Configuration.Host
             await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, settings.IsEnabled.ToLowerString());
             await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, settings.DefaultAccountLockoutSeconds.ToString());
             await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, settings.MaxFailedAccessAttemptsBeforeLockout.ToString());
-        }
-
-        /// <summary>
-        /// 更新两步登陆设置
-        /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        private async Task UpdateTwoFactorLoginSettingsAsync(TwoFactorLoginSettingsEditDto settings)
-        {
-            await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, settings.IsEnabled.ToLowerString());
-            await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, settings.IsEmailProviderEnabled.ToLowerString());
-            await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, settings.IsSmsProviderEnabled.ToLowerString());
-            await SettingManager.ChangeSettingForApplicationAsync(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled, settings.IsRememberBrowserEnabled.ToLowerString());
         }
 
         /// <summary>

@@ -182,7 +182,6 @@ namespace Vapps.Configuration.Tenants
                 PasswordComplexity = passwordComplexitySetting,
                 DefaultPasswordComplexity = defaultPasswordComplexitySetting,
                 UserLockOut = await GetUserLockOutSettingsAsync(),
-                TwoFactorLogin = await GetTwoFactorLoginSettingsAsync()
             };
         }
 
@@ -233,34 +232,6 @@ namespace Vapps.Configuration.Tenants
         private Task<bool> IsTwoFactorLoginEnabledForApplicationAsync()
         {
             return SettingManager.GetSettingValueForApplicationAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled);
-        }
-
-        /// <summary>
-        /// 获取双重认证设置
-        /// </summary>
-        /// <returns></returns>
-        private async Task<TwoFactorLoginSettingsEditDto> GetTwoFactorLoginSettingsAsync()
-        {
-            var settings = new TwoFactorLoginSettingsEditDto
-            {
-                IsEnabledForApplication = await IsTwoFactorLoginEnabledForApplicationAsync()
-            };
-
-            if (_multiTenancyConfig.IsEnabled && !settings.IsEnabledForApplication)
-            {
-                return settings;
-            }
-
-            settings.IsEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled);
-            settings.IsRememberBrowserEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled);
-
-            if (!_multiTenancyConfig.IsEnabled)
-            {
-                settings.IsEmailProviderEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled);
-                settings.IsSmsProviderEnabled = await SettingManager.GetSettingValueAsync<bool>(AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled);
-            }
-
-            return settings;
         }
 
         #endregion
@@ -366,7 +337,6 @@ namespace Vapps.Configuration.Tenants
             }
 
             await UpdateUserLockOutSettingsAsync(settings.UserLockOut);
-            await UpdateTwoFactorLoginSettingsAsync(settings.TwoFactorLogin);
         }
 
         /// <summary>
@@ -417,30 +387,6 @@ namespace Vapps.Configuration.Tenants
             await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.UserLockOut.IsEnabled, settings.IsEnabled.ToLowerString());
             await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.UserLockOut.DefaultAccountLockoutSeconds, settings.DefaultAccountLockoutSeconds.ToString());
             await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.UserLockOut.MaxFailedAccessAttemptsBeforeLockout, settings.MaxFailedAccessAttemptsBeforeLockout.ToString());
-        }
-
-        /// <summary>
-        /// 更新双重认证登陆设置
-        /// </summary>
-        /// <param name="settings"></param>
-        /// <returns></returns>
-        private async Task UpdateTwoFactorLoginSettingsAsync(TwoFactorLoginSettingsEditDto settings)
-        {
-            if (_multiTenancyConfig.IsEnabled &&
-                !await IsTwoFactorLoginEnabledForApplicationAsync()) //Two factor login can not be used by tenants if disabled by the host
-            {
-                return;
-            }
-
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEnabled, settings.IsEnabled.ToLowerString());
-            await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsRememberBrowserEnabled, settings.IsRememberBrowserEnabled.ToLowerString());
-
-            if (!_multiTenancyConfig.IsEnabled)
-            {
-                //These settings can only be changed by host, in a multitenant application.
-                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsEmailProviderEnabled, settings.IsEmailProviderEnabled.ToLowerString());
-                await SettingManager.ChangeSettingForTenantAsync(AbpSession.GetTenantId(), AbpZeroSettingNames.UserManagement.TwoFactorLogin.IsSmsProviderEnabled, settings.IsSmsProviderEnabled.ToLowerString());
-            }
         }
 
         /// <summary>

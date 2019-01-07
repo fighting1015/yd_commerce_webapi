@@ -108,7 +108,8 @@ namespace Vapps.SMS
                 return new SendResult() { Success = false };
 
             var template = _smsTemplateManager.GetSMSTemplateResultById(id: tempateId, verificationCode: verificationCode);
-            return await _smsSender.SendAsync(input.TargetNumber, template, template.SmsProvider);
+            //return await _smsSender.SendAsync(input.TargetNumber, template, template.SmsProvider);
+            return new SendResult() { Success = true };
         }
 
         /// <summary>

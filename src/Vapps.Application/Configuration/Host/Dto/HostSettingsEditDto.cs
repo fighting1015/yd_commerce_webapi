@@ -47,10 +47,5 @@ namespace Vapps.Configuration.Host.Dto
         /// </summary>
         [Required]
         public SMSSettingsEditDto SMSSettings { get; set; }
-
-        /// <summary>
-        /// 账单信息
-        /// </summary>
-        public HostBillingSettingsEditDto Billing { get; set; }
     }
 }
