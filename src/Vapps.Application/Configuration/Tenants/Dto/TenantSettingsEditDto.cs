@@ -14,7 +14,7 @@ namespace Vapps.Configuration.Tenants.Dto
         [Required]
         public TenantUserManagementSettingsEditDto UserManagement { get; set; }
 
-        public EmailSettingsEditDto Email { get; set; }
+        //public EmailSettingsEditDto Email { get; set; }
 
         /// <summary>
         /// °²È«ÉèÖÃ
@@ -44,10 +44,10 @@ namespace Vapps.Configuration.Tenants.Dto
                 validationErrors.Add(new ValidationResult("General settings can not be null", new[] { "General" }));
             }
 
-            if (Email == null)
-            {
-                validationErrors.Add(new ValidationResult("Email settings can not be null", new[] { "Email" }));
-            }
+            //if (Email == null)
+            //{
+            //    validationErrors.Add(new ValidationResult("Email settings can not be null", new[] { "Email" }));
+            //}
 
             if (validationErrors.Count > 0)
             {

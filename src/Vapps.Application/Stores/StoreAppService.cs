@@ -118,7 +118,6 @@ namespace Vapps.Stores
         protected virtual async Task CreateStoreAsync(CreateOrUpdateStoreInput input)
         {
             var store = ObjectMapper.Map<Store>(input);
-            store.TenantId = AbpSession.GetTenantId();
             await _storeManager.CreateAsync(store);
         }
 

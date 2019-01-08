@@ -63,10 +63,10 @@ namespace Vapps.Configuration.Tenants
                 settings.General = await GetGeneralSettingsAsync();
             }
 
-            if (!_multiTenancyConfig.IsEnabled)
-            {
-                settings.Email = await GetEmailSettingsAsync();
-            }
+            //if (!_multiTenancyConfig.IsEnabled)
+            //{
+            //    settings.Email = await GetEmailSettingsAsync();
+            //}
 
             return settings;
         }
@@ -268,7 +268,7 @@ namespace Vapps.Configuration.Tenants
             {
                 input.ValidateHostSettings();
 
-                await UpdateEmailSettingsAsync(input.Email);
+                //await UpdateEmailSettingsAsync(input.Email);
             }
         }
 

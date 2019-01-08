@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +14,13 @@ namespace Vapps.Stores
 
         public IQueryable<Store> Stores => StoreRepository.GetAll().AsNoTracking();
 
-        public StoreManager(IRepository<Store, int> storeRepository)
+        private readonly IAbpSession _abpSession;
+
+        public StoreManager(IRepository<Store, int> storeRepository,
+            IAbpSession abpSession)
         {
             this.StoreRepository = storeRepository;
+            this._abpSession = abpSession;
         }
 
         #endregion
