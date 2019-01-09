@@ -103,6 +103,7 @@ namespace Vapps.Authorization.Users
         /// 创建用户
         /// </summary>
         /// <param name="user"></param>
+        /// <param name="plainPassword">明文密码</param>
         /// <returns></returns>
         public override async Task<IdentityResult> CreateAsync(User user, string plainPassword)
         {
@@ -226,6 +227,7 @@ namespace Vapps.Authorization.Users
         /// <param name="expectedUserId"></param>
         /// <param name="userName"></param>
         /// <param name="emailAddress"></param>
+        /// <param name="phoneNumber"></param>
         /// <returns></returns>
         public virtual async Task<IdentityResult> CheckDuplicateUsernameOrEmailAddressOrPhoneNumberAsync(long? expectedUserId,
             string userName, string emailAddress, string phoneNumber)

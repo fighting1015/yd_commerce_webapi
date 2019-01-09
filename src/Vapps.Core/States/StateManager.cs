@@ -42,7 +42,7 @@ namespace Vapps.States
         /// <summary>
         /// 根据Id查找省份
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<Province> FindProvinceByNameAsync(string name)
         {
@@ -92,7 +92,7 @@ namespace Vapps.States
         /// <summary>
         /// 删除省份
         /// </summary>
-        /// <param name="province"></param>
+        /// <param name="provinceId"></param>
         /// <returns></returns>
         public virtual async Task DeleteProvinceAsync(int provinceId)
         {
@@ -118,7 +118,7 @@ namespace Vapps.States
         /// <summary>
         /// 根据名称查找城市
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<City> FindCityByNameAsync(string name)
         {
@@ -168,7 +168,7 @@ namespace Vapps.States
         /// <summary>
         /// 删除城市
         /// </summary>
-        /// <param name="city"></param>
+        /// <param name="cityId"></param>
         /// <returns></returns>
         public virtual async Task DeleteCityAsync(int cityId)
         {
@@ -194,7 +194,7 @@ namespace Vapps.States
         /// <summary>
         /// 根据名称查找区域
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<District> FindDistrictByNameAsync(string name)
         {
@@ -244,7 +244,7 @@ namespace Vapps.States
         /// <summary>
         /// 删除区域
         /// </summary>
-        /// <param name="district"></param>
+        /// <param name="districtId"></param>
         /// <returns></returns>
         public virtual async Task DeleteDistrictAsync(int districtId)
         {

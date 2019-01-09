@@ -23,21 +23,23 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 根据userid获取账户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         Task<Account> GetByUserIdAsync(long userId);
 
         /// <summary>
         /// 根据userid获取账户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="tanantId"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         Task<Account> GetByUserIdAsync(int? tanantId, long userId);
 
         /// <summary>
         /// 根据userid获取账户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="tanantId"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         Account GetByUserId(int? tanantId, long userId);
 
@@ -62,13 +64,15 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 删除账户
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="accountId"></param>
         Task DeleteAsync(long accountId);
 
         /// <summary>
         /// 删除账户
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         Task DeleteByUserIdAsync(int? tenantId, long userId);
 
         /// <summary>

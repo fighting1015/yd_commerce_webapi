@@ -35,13 +35,13 @@ namespace Vapps.Stores
         /// <summary>
         /// 修改店铺
         /// </summary>
-        /// <param name="Store"></param>
+        /// <param name="store"></param>
         Task UpdateAsync(Store store);
 
         /// <summary>
         /// 删除店铺
         /// </summary>
-        /// <param name="Store"></param>
+        /// <param name="store"></param>
         Task DeleteAsync(Store store);
 
         /// <summary>

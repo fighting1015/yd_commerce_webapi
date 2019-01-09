@@ -13,7 +13,6 @@ namespace Vapps.Authorization
     /// 账号验证类
     /// </summary>
     /// <typeparam name="TUser"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
     public class VappsUserValidator<TUser> : UserValidator<TUser>
         where TUser : class
     {
@@ -22,9 +21,9 @@ namespace Vapps.Authorization
         public readonly ILocalizationManager _localizationManager;
 
         /// <summary>
-        ///     Constructor
+        /// Constructor
         /// </summary>
-        /// <param name="manager"></param>
+        /// <param name="localizationManager"></param>
         public VappsUserValidator(ILocalizationManager localizationManager) : base()
         {
             this._localizationManager = localizationManager;

@@ -16,7 +16,7 @@ namespace Vapps.MultiTenancy
     public class Tenant : AbpTenant<User>
     {
         /// <summary>
-        /// Max length of the <see cref="TenancyName"/> property.
+        /// Max length of the tenancy name property.
         /// </summary>
         public const int NewMaxTenancyNameLength = 20;
 

@@ -37,7 +37,6 @@ namespace Vapps.Identity
         /// 保存验证码信息
         /// </summary>
         /// <param name="phoneOrEmail"></param>
-        /// <param name="customer"></param>
         /// <param name="type"></param>
         /// <returns></returns>
         [UnitOfWork]
@@ -119,7 +118,6 @@ namespace Vapps.Identity
         /// 获取验证码信息
         /// </summary>
         /// <param name="phoneOrEmail"></param>
-        /// <param name="customer"></param>
         /// <param name="type"></param>
         /// <returns></returns>
         private async Task<VerificationCodeCacheItem> GetVerificationCodeCacheItemOrNull(string phoneOrEmail, VerificationCodeType type)
@@ -147,7 +145,6 @@ namespace Vapps.Identity
         /// </summary>
         /// <param name="phoneOrEmail"></param>
         /// <param name="type"></param>
-        /// <param name="tenantId"></param>
         /// <returns></returns>
         private string GetCacheKey(string phoneOrEmail, VerificationCodeType type)
         {

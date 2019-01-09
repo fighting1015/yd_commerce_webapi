@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28407.52
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}"
 EndProject
@@ -45,6 +45,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Alipay.Infrastructure", "alipay\Vapps.Payment.Infrastructure\Vapps.Alipay.Infrastructure.csproj", "{E5043537-A366-41B5-9A96-A1124310B86D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Alipay.Application", "alipay\Vapps.Alipay.Application\Vapps.Alipay.Application.csproj", "{B104C103-F1FA-47F3-AEF6-8952BFED8205}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ECommerce", "ECommerce", "{4B7C1DC7-D0A4-4044-A7B3-417EA369F64A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.ECommerce.Core", "ecommerce\Vapps.ECommerce.Core\Vapps.ECommerce.Core.csproj", "{A21989B0-960A-4979-9FC6-595EA81DB96F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.ECommerce.Application", "ecommerce\Vapps.ECommerce.Application\Vapps.ECommerce.Application.csproj", "{47AE961C-B23B-472F-AD7E-75746E15E882}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +118,14 @@ Global
 		{B104C103-F1FA-47F3-AEF6-8952BFED8205}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B104C103-F1FA-47F3-AEF6-8952BFED8205}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B104C103-F1FA-47F3-AEF6-8952BFED8205}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21989B0-960A-4979-9FC6-595EA81DB96F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21989B0-960A-4979-9FC6-595EA81DB96F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21989B0-960A-4979-9FC6-595EA81DB96F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21989B0-960A-4979-9FC6-595EA81DB96F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47AE961C-B23B-472F-AD7E-75746E15E882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47AE961C-B23B-472F-AD7E-75746E15E882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47AE961C-B23B-472F-AD7E-75746E15E882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47AE961C-B23B-472F-AD7E-75746E15E882}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +148,9 @@ Global
 		{C5F04851-B274-4BFB-B9EE-848CBC6052DE} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{E5043537-A366-41B5-9A96-A1124310B86D} = {C5F04851-B274-4BFB-B9EE-848CBC6052DE}
 		{B104C103-F1FA-47F3-AEF6-8952BFED8205} = {C5F04851-B274-4BFB-B9EE-848CBC6052DE}
+		{4B7C1DC7-D0A4-4044-A7B3-417EA369F64A} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
+		{A21989B0-960A-4979-9FC6-595EA81DB96F} = {4B7C1DC7-D0A4-4044-A7B3-417EA369F64A}
+		{47AE961C-B23B-472F-AD7E-75746E15E882} = {4B7C1DC7-D0A4-4044-A7B3-417EA369F64A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71B396AD-4F8D-4210-AC72-A7DF4BC731CD}

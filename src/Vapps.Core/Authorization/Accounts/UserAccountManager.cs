@@ -43,18 +43,18 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 根据userid获取账户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         public virtual async Task<Account> GetByUserIdAsync(long userId)
         {
             return await AccountRepository.FirstOrDefaultAsync(a => a.UserId == userId);
         }
 
-
         /// <summary>
         /// 根据userid获取账户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         public virtual async Task<Account> GetByUserIdAsync(int? tenantId, long userId)
         {
@@ -64,7 +64,8 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 根据userid获取账户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         public virtual Account GetByUserId(int? tenantId, long userId)
         {
@@ -101,7 +102,8 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 删除账户
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
         public virtual async Task DeleteAsync(long accountId)
         {
             var account = await GetByIdAsync(accountId);
@@ -112,7 +114,9 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 删除账户
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="tenantId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public virtual async Task DeleteByUserIdAsync(int? tenantId, long userId)
         {
             var account = await GetByUserIdAsync(tenantId, userId);

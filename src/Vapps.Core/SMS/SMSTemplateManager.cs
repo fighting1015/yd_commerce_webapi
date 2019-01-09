@@ -30,6 +30,8 @@ namespace Vapps.SMS
         /// 获取填充指令后的短信模板
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <param name="verificationCode"></param>
         /// <returns></returns>
         public virtual SendSMSTemplateResult GetSMSTemplateResultById(long id, User user = null,
            VerificationCodeCacheItem verificationCode = null)

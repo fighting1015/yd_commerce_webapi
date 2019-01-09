@@ -89,8 +89,8 @@ namespace Vapps.Authorization.Accounts
         /// <summary>
         /// 账号密码登陆
         /// </summary>
-        /// <param name="loginCertificate">登陆凭证</param>
-        /// <param name="plainPassword">密码</param>
+        /// <param name="phoneNum">手机号</param>
+        /// <param name="code">密码</param>
         /// <param name="tenancyName">租户名称</param>
         /// <param name="shouldLockout">是否锁定</param>
         /// <returns></returns>

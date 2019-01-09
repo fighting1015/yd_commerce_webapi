@@ -59,7 +59,7 @@ namespace Vapps.Stores
         /// <summary>
         /// 更新店铺
         /// </summary>
-        /// <param name="Store"></param>
+        /// <param name="store"></param>
         public virtual async Task UpdateAsync(Store store)
         {
             await StoreRepository.UpdateAsync(store);
@@ -68,7 +68,7 @@ namespace Vapps.Stores
         /// <summary>
         /// 删除店铺
         /// </summary>
-        /// <param name="Store"></param>
+        /// <param name="store"></param>
         public virtual async Task DeleteAsync(Store store)
         {
             await StoreRepository.DeleteAsync(store);

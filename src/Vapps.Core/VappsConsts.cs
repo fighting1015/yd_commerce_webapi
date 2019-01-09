@@ -52,22 +52,11 @@
         /// <summary>
         /// {0} outlet id
         /// </summary>
-        //public const string OutletInfo = "OutletInfo-{0}";
-
-        /// <summary>
-        /// {0} outlet id
-        /// </summary>
         public const string AvailableContactor = "AvailableContactor-{0}";
 
         /// <summary>
         /// {0} ip 
         /// </summary>
         public const string IpAddress = "IpAddress";
-
-
-        /// <summary>
-        /// {0} contactor id
-        /// </summary>
-        //public const string ContactorInfo = "ContactorInfo-{0}";
     }
 }

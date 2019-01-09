@@ -53,10 +53,12 @@ namespace Vapps.Authorization.Users
         }
 
         /// <summary>
-        /// Creates admin <see cref="User"/> for a tenant.
+        /// 创建租户主账号 <see cref="User"/>
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
         /// <param name="emailAddress">Email address</param>
+        /// <param name="userName"></param>
+        /// <param name="phoneNumber"></param>
         /// <returns>Created <see cref="User"/> object</returns>
         public static User CreateTenantAdminUser(int tenantId, string emailAddress, string userName, string phoneNumber)
         {

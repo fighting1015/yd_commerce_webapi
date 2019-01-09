@@ -91,7 +91,7 @@ namespace Vapps.MultiTenancy
         /// </summary>
         /// <param name="tenancyName"></param>
         /// <param name="name"></param>
-        /// <param name="password"></param>
+        /// <param name="adminPassword"></param>
         /// <param name="adminEmailAddress"></param>
         /// <param name="phoneNumber"></param>
         /// <param name="connectionString"></param>
@@ -99,6 +99,8 @@ namespace Vapps.MultiTenancy
         /// <param name="editionId"></param>
         /// <param name="shouldChangePasswordOnNextLogin"></param>
         /// <param name="sendActivationEmail"></param>
+        /// <param name="subscriptionEndDate"></param>
+        /// <param name="isInTrialPeriod"></param>
         /// <param name="emailActivationLink"></param>
         /// <returns></returns>
         public virtual async Task<int> CreateWithAdminUserAsync(
@@ -224,16 +226,14 @@ namespace Vapps.MultiTenancy
         /// <summary>
         /// 给当前用户创建租户
         /// </summary>
+        /// <param name="userId"></param>
         /// <param name="tenancyName"></param>
-        /// <param name="name"></param>
-        /// <param name="password"></param>
-        /// <param name="adminEmailAddress"></param>
-        /// <param name="phoneNumber"></param>
         /// <param name="connectionString"></param>
         /// <param name="isActive"></param>
         /// <param name="editionId"></param>
-        /// <param name="shouldChangePasswordOnNextLogin"></param>
         /// <param name="sendActivationEmail"></param>
+        /// <param name="subscriptionEndDate"></param>
+        /// <param name="isInTrialPeriod"></param>
         /// <param name="emailActivationLink"></param>
         /// <returns></returns>
         [UnitOfWork]

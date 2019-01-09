@@ -68,6 +68,7 @@ namespace Vapps.Authorization.Users
         /// </summary>
         /// <param name="tenantName"></param>
         /// <param name="phoneNumber"></param>
+        /// <param name="code"></param>
         /// <param name="plainPassword"></param>
         /// <param name="isEmailConfirmed"></param>
         /// <param name="emailActivationLink"></param>
@@ -131,12 +132,12 @@ namespace Vapps.Authorization.Users
         /// 注册用户(非机构用户)
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="surname"></param>
         /// <param name="emailAddress"></param>
         /// <param name="userName"></param>
+        /// <param name="phone"></param>
         /// <param name="plainPassword"></param>
         /// <param name="isEmailConfirmed"></param>
-        /// <param name="emailActivationLink"></param>
+        /// <param name="isPhoneNumberConfirmed"></param>
         /// <returns></returns>
         public async Task<User> RegisterAsync(string name, string emailAddress, string userName,  string phone, string plainPassword, bool isEmailConfirmed, bool isPhoneNumberConfirmed)
         {

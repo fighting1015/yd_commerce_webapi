@@ -30,10 +30,8 @@ namespace Vapps.Identity
         /// </summary>
         /// <param name="code"></param>
         /// <param name="phoneOrEmail"></param>
-        /// <param name="customer"></param>
         /// <param name="type"></param>
         /// <param name="ignoreExpire"></param>
-        /// <param name="storeId"></param>
         /// <returns></returns>
         Task<bool> CheckVerificationCodeAsync(string code,
             string phoneOrEmail,

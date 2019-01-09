@@ -24,7 +24,7 @@ namespace Vapps.Payments
         /// <summary>
         /// 根据id获取支付记录
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="paymentId"></param>
         /// <returns></returns>
         Task<SubscriptionPayment> FindByPaymentIdAsync(string paymentId);
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vapps.SMS.Cache;
+﻿using System.Threading.Tasks;
 
 namespace Vapps.SMS
 {
@@ -22,10 +17,10 @@ namespace Vapps.SMS
         Task<SendResult> SendAsync(string[] targetNumbers, string content);
 
         /// <summary>
-        ///  发送验证码
+        /// 发送验证码
         /// </summary>
-        /// <param name="targetNumbers">目标号码</param>
-        /// <param name="code">验证码</param>
+        /// <param name="targetNumber">目标号码</param>
+        /// <param name="sms">验证码</param>
         /// <returns></returns>
         Task<SendResult> SendCodeAsync(string targetNumber, SendSMSTemplateResult sms);
     }

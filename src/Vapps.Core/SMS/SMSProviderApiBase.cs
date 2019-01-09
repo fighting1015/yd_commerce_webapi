@@ -22,10 +22,10 @@ namespace Vapps.SMS
         public abstract Task<SendResult> SendAsync(string[] targetNumbers, string content);
 
         /// <summary>
-        ///  发送验证码
+        /// 发送验证码
         /// </summary>
         /// <param name="targetNumbers">目标号码</param>
-        /// <param name="code">验证码</param>
+        /// <param name="sms">验证码</param>
         /// <returns></returns>
         public abstract Task<SendResult> SendCodeAsync(string targetNumbers, SendSMSTemplateResult sms);
     }

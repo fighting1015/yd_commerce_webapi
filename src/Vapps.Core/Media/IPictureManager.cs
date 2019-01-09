@@ -62,7 +62,7 @@ namespace Vapps.Media
         /// <summary>
         /// 根据key获取图片
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         Task<Picture> GetByKeyAsync(string key);
 
@@ -100,7 +100,7 @@ namespace Vapps.Media
         /// <summary>
         /// 根据id获取图片分组
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         Task<PictureGroup> GetGroupByNameAsync(string name);
 

@@ -102,8 +102,8 @@ namespace Vapps.Authorization.Users
         /// <summary>
         /// 根据手机获取用户
         /// </summary>
-        /// <param name="loginCertificateAsync">User name or email address</param>
-        /// <returns>User or null</returns>
+        /// <param name="phonenumber"></param>
+        /// <returns></returns>
         public virtual async Task<User> FindByPhoneNumberAsync(string phonenumber)
         {
             return await UserRepository.FirstOrDefaultAsync(user => user.PhoneNumber == phonenumber);
@@ -112,7 +112,7 @@ namespace Vapps.Authorization.Users
         /// <summary>
         /// 根据手机获取平台用户
         /// </summary>
-        /// <param name="loginCertificateAsync">User name or email address</param>
+        /// <param name="phonenumber">phone number</param>
         /// <returns>User or null</returns>
         public virtual async Task<User> Find4PlatformByPhoneNumberAsync(string phonenumber)
         {
@@ -137,29 +137,28 @@ namespace Vapps.Authorization.Users
         /// 在指定租户下使用登陆凭证(用户名/邮箱/手机)获取用户
         /// </summary>
         /// <param name="tenantId">Tenant Id</param>
-        /// <param name="userNameOrEmailAddress">User name or email address</param>
+        /// <param name="loginCertificate">login certificate</param>
         /// <returns>User or null</returns>
         [UnitOfWork]
-        public virtual async Task<User> FindByLoginCertificateAsync(int? tenantId, string loginCertificateAsync)
+        public virtual async Task<User> FindByLoginCertificateAsync(int? tenantId, string loginCertificate)
         {
             using (_unitOfWorkManager.Current.SetTenantId(tenantId))
             {
-                return await FindByLoginCertificateAsync(loginCertificateAsync);
+                return await FindByLoginCertificateAsync(loginCertificate);
             }
         }
 
         /// <summary>
         /// 使用登陆凭证(用户名/邮箱/手机)获取用户(所有租户)
         /// </summary>
-        /// <param name="tenantId">Tenant Id</param>
-        /// <param name="userNameOrEmailAddress">User name or email address</param>
+        /// <param name="loginCertificate">login Certificate</param>
         /// <returns>User or null</returns>
         [UnitOfWork]
-        public virtual async Task<User> FindByLoginCertificate4PlatformAsync(string loginCertificateAsync)
+        public virtual async Task<User> FindByLoginCertificate4PlatformAsync(string loginCertificate)
         {
             using (_unitOfWorkManager.Current.DisableFilter(AbpDataFilters.MayHaveTenant))
             {
-                return await FindByLoginCertificateAsync(loginCertificateAsync);
+                return await FindByLoginCertificateAsync(loginCertificate);
             }
         }
 

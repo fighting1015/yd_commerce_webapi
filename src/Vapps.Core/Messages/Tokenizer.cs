@@ -11,7 +11,6 @@ namespace Vapps.Messages
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="settings">Message templates settings</param>
         public Tokenizer()
         {
             _stringComparison = StringComparison.OrdinalIgnoreCase;
