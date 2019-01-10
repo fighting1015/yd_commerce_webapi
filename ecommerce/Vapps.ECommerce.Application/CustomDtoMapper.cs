@@ -10,6 +10,8 @@ using Abp.UI.Inputs;
 using AutoMapper;
 using Vapps.Authorization.Roles;
 using Vapps.Authorization.Users;
+using Vapps.ECommerce.Catalog;
+using Vapps.ECommerce.Catalog.Dto;
 using Vapps.ECommerce.Stores;
 using Vapps.ECommerce.Stores.Dto;
 using Vapps.Editions;
@@ -30,6 +32,13 @@ namespace Vapps.ECommerce
             configuration.CreateMap<GetStoreForEditOutput, Store>();
             configuration.CreateMap<Store, GetStoreForEditOutput>();
             configuration.CreateMap<Store, StoreListDto>();
+
+            //category
+            configuration.CreateMap<CreateOrUpdateCategoryInput, Category>();
+            configuration.CreateMap<Category, CreateOrUpdateCategoryInput>();
+            configuration.CreateMap<GetCategoryForEditOutput, Category>();
+            configuration.CreateMap<Category, GetCategoryForEditOutput>();
+            configuration.CreateMap<Category, CategoryListDto>();
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }

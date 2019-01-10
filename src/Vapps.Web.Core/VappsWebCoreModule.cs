@@ -16,6 +16,7 @@ using System.IO;
 using System.Text;
 using Vapps.Alipay.Infrastructure;
 using Vapps.Configuration;
+using Vapps.ECommerce;
 using Vapps.EntityFrameworkCore;
 using Vapps.Extensions;
 using Vapps.Security.Recaptcha;
@@ -33,6 +34,7 @@ namespace Vapps.Web
         typeof(VappsApplicationModule),
         typeof(VappsAlipayApplicationModule),
         typeof(VappsWeChatApplicationModule),
+        typeof(VappsECommerceApplicationModule),
         typeof(VappsEntityFrameworkCoreModule)
     )]
     public class VappsWebCoreModule : AbpModule

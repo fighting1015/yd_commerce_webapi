@@ -101,6 +101,10 @@ namespace Vapps.Sessions
                 : output.Tenant.SubscriptionEndDateUtc?.ToString("d");
         }
 
+        /// <summary>
+        /// 更新登录状态
+        /// </summary>
+        /// <returns></returns>
         public async Task<UpdateUserSignInTokenOutput> UpdateUserSignInToken()
         {
             if (AbpSession.UserId <= 0)

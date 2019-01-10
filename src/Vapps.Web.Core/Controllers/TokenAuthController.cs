@@ -240,6 +240,10 @@ namespace Vapps.Web.Controllers
             };
         }
 
+        /// <summary>
+        /// 注销登录
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AbpAuthorize]
         public async Task LogOut()

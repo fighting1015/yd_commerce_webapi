@@ -19,6 +19,7 @@ namespace Vapps.ECommerce.Core
 
         public override void PostInitialize()
         {
+           
         }
     }
 }
