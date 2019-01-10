@@ -1125,9 +1125,9 @@ namespace Vapps.Migrations
                     b.ToTable("UniversalDataStatistics");
                 });
 
-            modelBuilder.Entity("Vapps.ECommerce.Core.Catalog.Category", b =>
+            modelBuilder.Entity("Vapps.ECommerce.Catalog.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreationTime");
@@ -1163,6 +1163,84 @@ namespace Vapps.Migrations
                     b.HasIndex("TenantId", "IsDeleted");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Stores.Store", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AppKey");
+
+                    b.Property<string>("AppSecret");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<int>("DisplayOrder");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(12);
+
+                    b.Property<int>("OrderSourceType");
+
+                    b.Property<bool>("OrderSync");
+
+                    b.Property<int>("PictureId");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<string>("Url");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "IsDeleted");
+
+                    b.ToTable("Stores");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Stores.StoreMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<int>("EntityId");
+
+                    b.Property<string>("EntityName");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<int>("StoreId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId", "EntityName");
+
+                    b.ToTable("StoreMappings");
                 });
 
             modelBuilder.Entity("Vapps.Media.Picture", b =>
@@ -1538,84 +1616,6 @@ namespace Vapps.Migrations
                     b.ToTable("BinaryObjects");
                 });
 
-            modelBuilder.Entity("Vapps.Stores.Store", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AppKey");
-
-                    b.Property<string>("AppSecret");
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<long?>("DeleterUserId");
-
-                    b.Property<DateTime?>("DeletionTime");
-
-                    b.Property<int>("DisplayOrder");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(12);
-
-                    b.Property<int>("OrderSourceType");
-
-                    b.Property<bool>("OrderSync");
-
-                    b.Property<int>("PictureId");
-
-                    b.Property<int>("TenantId");
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId", "IsDeleted");
-
-                    b.ToTable("Stores");
-                });
-
-            modelBuilder.Entity("Vapps.Stores.StoreMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<long?>("DeleterUserId");
-
-                    b.Property<DateTime?>("DeletionTime");
-
-                    b.Property<int>("EntityId");
-
-                    b.Property<string>("EntityName");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<int>("StoreId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StoreId", "EntityName");
-
-                    b.ToTable("StoreMappings");
-                });
-
             modelBuilder.Entity("Vapps.WeChat.Core.TemplateMessages.TemplateMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -1973,6 +1973,14 @@ namespace Vapps.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
+            modelBuilder.Entity("Vapps.ECommerce.Stores.StoreMapping", b =>
+                {
+                    b.HasOne("Vapps.ECommerce.Stores.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Vapps.MultiTenancy.Tenant", b =>
                 {
                     b.HasOne("Vapps.Authorization.Users.User", "CreatorUser")
@@ -2005,14 +2013,6 @@ namespace Vapps.Migrations
                     b.HasOne("Vapps.SMS.SMSTemplate")
                         .WithMany("Items")
                         .HasForeignKey("TemplateMessageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Vapps.Stores.StoreMapping", b =>
-                {
-                    b.HasOne("Vapps.Stores.Store", "Store")
-                        .WithMany()
-                        .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

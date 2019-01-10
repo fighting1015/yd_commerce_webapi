@@ -3,7 +3,7 @@ using Vapps.Dto;
 
 namespace Vapps.ECommerce.Catalog.Dto
 {
-    public class GetCategoryInput : PagedAndSortedInputDto, IShouldNormalize
+    public class GetCategoriesInput : PagedAndSortedInputDto, IShouldNormalize
     {
         /// <summary>
         /// 分类名称
@@ -13,7 +13,7 @@ namespace Vapps.ECommerce.Catalog.Dto
         /// <summary>
         /// 父分类Id(0为所有)
         /// </summary>
-        public int ParentCategoryIdrce { get; set; }
+        public int ParentCategoryId { get; set; }
 
         public void Normalize()
         {

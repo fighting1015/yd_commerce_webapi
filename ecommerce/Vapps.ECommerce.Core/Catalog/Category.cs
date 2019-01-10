@@ -10,7 +10,7 @@ namespace Vapps.ECommerce.Catalog
     /// Represents a category
     /// </summary
     [Table("Categories")]
-    public partial class Category : FullAuditedEntity, IMustHaveTenant, IPassivable
+    public partial class Category : FullAuditedEntity<long>, IMustHaveTenant, IPassivable
     {
         public const int MaxNameLength = 12;
 

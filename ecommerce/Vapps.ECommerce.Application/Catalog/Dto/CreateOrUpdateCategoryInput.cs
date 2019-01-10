@@ -3,7 +3,7 @@
 namespace Vapps.ECommerce.Catalog.Dto
 {
     //[AutoMapFrom(typeof(Store))]
-    public class CreateOrUpdateStoreInput
+    public class CreateOrUpdateCategoryInput
     {
         /// <summary>
         /// Id，空或者为0时创建分类

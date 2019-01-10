@@ -9,11 +9,11 @@ namespace Vapps.ECommerce.Catalog
     {
         #region Ctor
 
-        public IRepository<Category, int> CategoryRepository { get; }
+        public IRepository<Category, long> CategoryRepository { get; }
 
         public IQueryable<Category> Categorys => CategoryRepository.GetAll().AsNoTracking();
 
-        public CategoryManager(IRepository<Category, int> categoryRepository)
+        public CategoryManager(IRepository<Category, long> categoryRepository)
         {
             this.CategoryRepository = categoryRepository;
         }
@@ -27,7 +27,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<Category> FindByIdAsync(int id)
+        public virtual async Task<Category> FindByIdAsync(long id)
         {
             return await CategoryRepository.FirstOrDefaultAsync(id);
         }
@@ -37,7 +37,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<Category> GetByIdAsync(int id)
+        public virtual async Task<Category> GetByIdAsync(long id)
         {
             return await CategoryRepository.GetAsync(id);
         }
@@ -73,7 +73,7 @@ namespace Vapps.ECommerce.Catalog
         /// 删除分类
         /// </summary>
         /// <param name="id"></param>
-        public virtual async Task DeleteAsync(int id)
+        public virtual async Task DeleteAsync(long id)
         {
             var category = await CategoryRepository.FirstOrDefaultAsync(id);
 

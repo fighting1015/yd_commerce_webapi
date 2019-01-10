@@ -6,7 +6,7 @@ namespace Vapps.ECommerce.Catalog
 {
     public interface ICategoryManager
     {
-        IRepository<Category, int> CategoryRepository { get; }
+        IRepository<Category, long> CategoryRepository { get; }
 
         IQueryable<Category> Categorys { get; }
 
@@ -17,14 +17,14 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Category> FindByIdAsync(int id);
+        Task<Category> FindByIdAsync(long id);
 
         /// <summary>
         /// 根据id获取商品分类
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Category> GetByIdAsync(int id);
+        Task<Category> GetByIdAsync(long id);
 
         /// <summary>
         /// 添加商品分类
@@ -48,7 +48,7 @@ namespace Vapps.ECommerce.Catalog
         /// 删除商品分类
         /// </summary>
         /// <param name="id"></param>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(long id);
 
         #endregion
     }

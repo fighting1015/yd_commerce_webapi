@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20190104103518_Add_Store_And_Mapping.cs" />
     <Compile Remove="Migrations\20190110034509_Add_Categories.cs" />
     <Compile Remove="Migrations\20190110034509_Add_Categories.Designer.cs" />
+    <Compile Remove="Migrations\20190110042023_Add_Categories.cs" />
+    <Compile Remove="Migrations\20190110042023_Add_Categories.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,11 +32,5 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System.Transactions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Migrations\20190110042023_Add_Categories.Designer.cs">
-      <DependentUpon>20190110042023_Add_Categories.cs</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

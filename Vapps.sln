@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F10AA149-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Core", "src\Vapps.Core\Vapps.Core.csproj", "{0FA75A5B-AB83-4FD0-B545-279774C01E87}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Application.Share", "src\Vapps.Application.Share\Vapps.Application.Share.csproj", "{1348695F-B9F4-4562-8DA2-01AEEED605F6}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Application", "src\Vapps.Application\Vapps.Application.csproj", "{3870C648-4AEA-4B85-BA3F-F2F63B96136A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Tests", "test\Vapps.Tests\Vapps.Tests.csproj", "{0D4C5D00-C144-4213-A007-4B8944113AB1}"
@@ -51,8 +53,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.ECommerce.Core", "ecommerce\Vapps.ECommerce.Core\Vapps.ECommerce.Core.csproj", "{A21989B0-960A-4979-9FC6-595EA81DB96F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.ECommerce.Application", "ecommerce\Vapps.ECommerce.Application\Vapps.ECommerce.Application.csproj", "{47AE961C-B23B-472F-AD7E-75746E15E882}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Application.Share", "src\Vapps.Application.Share\Vapps.Application.Share.csproj", "{1348695F-B9F4-4562-8DA2-01AEEED605F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
