@@ -1,7 +1,7 @@
 ﻿using Abp.Modules;
 using Abp.Reflection.Extensions;
 
-namespace Vapps.WeChat.Core
+namespace Vapps.ECommerce.Core
 {
     [DependsOn(
     typeof(VappsCoreModule))]

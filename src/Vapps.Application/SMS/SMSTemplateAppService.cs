@@ -13,7 +13,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Authorization;
 using Vapps.Caching;
-using Vapps.Common.Dto;
+using Vapps.Dto;
 using Vapps.SMS.Dto;
 
 namespace Vapps.SMS

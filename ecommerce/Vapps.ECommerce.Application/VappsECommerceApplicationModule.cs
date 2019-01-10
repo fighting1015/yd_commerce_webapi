@@ -1,9 +1,9 @@
 ﻿using Abp.AspNetCore.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
-using Vapps.WeChat.Core;
+using Vapps.ECommerce.Core;
 
-namespace Vapps.WeChat.Application
+namespace Vapps.ECommerce
 {
     [DependsOn(
         typeof(VappsECommerceCoreModule))]
@@ -13,7 +13,6 @@ namespace Vapps.WeChat.Application
         {
         
         }
-
 
         public override void Initialize()
         {

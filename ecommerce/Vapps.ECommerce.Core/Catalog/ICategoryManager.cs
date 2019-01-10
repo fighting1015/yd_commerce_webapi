@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Vapps.ECommerce.Core.Catalog
+namespace Vapps.ECommerce.Catalog
 {
     public interface ICategoryManager
     {

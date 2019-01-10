@@ -197,6 +197,7 @@ namespace Vapps.Web.Startup
             options.IncludeXmlComments(basePath + "\\Vapps.Web.Core.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.WeChat.Application.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.Alipay.Application.xml");
+            options.IncludeXmlComments(basePath + "\\Vapps.ECommerce.Application.xml");
         }
 
         private void StratHangfireMission()

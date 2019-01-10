@@ -28,6 +28,7 @@
     <ProjectReference Include="..\Vapps.Core\Vapps.Core.csproj" />
     <ProjectReference Include="..\Vapps.EntityFrameworkCore\Vapps.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Vapps.FileStorage\Vapps.FileStorage.csproj" />
+    <ProjectReference Include="..\Vapps.Application.Share\Vapps.Application.Share.csproj" />
   </ItemGroup>
 
   <ItemGroup>

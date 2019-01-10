@@ -29,8 +29,7 @@ using Vapps.Payments;
 using Vapps.Payments.Cache;
 using Vapps.Payments.Dto;
 using Vapps.Sessions.Dto;
-using Vapps.Stores;
-using Vapps.Stores.Dto;
+
 using static Vapps.Authorization.Users.Dto.UserListDto;
 
 namespace Vapps
@@ -117,11 +116,6 @@ namespace Vapps
 
             //AuditLog
             configuration.CreateMap<AuditLog, AuditLogListDto>();
-
-            //store
-            configuration.CreateMap<CreateOrUpdateStoreInput, Store>();
-            configuration.CreateMap<Store, CreateOrUpdateStoreInput>();
-            configuration.CreateMap<Store, StoreListDto>();
 
             //OrganizationUnit
             configuration.CreateMap<OrganizationUnit, OrganizationUnitDto>();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vapps.Common.Dto;
+using Vapps.Dto;
 using Vapps.SMS.Dto;
 
 namespace Vapps.SMS

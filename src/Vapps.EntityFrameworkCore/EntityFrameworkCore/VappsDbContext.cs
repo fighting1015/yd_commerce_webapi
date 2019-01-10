@@ -6,6 +6,8 @@ using Vapps.Authorization.Accounts;
 using Vapps.Authorization.Roles;
 using Vapps.Authorization.Users;
 using Vapps.DataStatistics;
+using Vapps.ECommerce.Catalog;
+using Vapps.ECommerce.Stores;
 using Vapps.Editions;
 using Vapps.Media;
 using Vapps.MultiTenancy;
@@ -14,7 +16,6 @@ using Vapps.Payments;
 using Vapps.SMS;
 using Vapps.States;
 using Vapps.Storage;
-using Vapps.Stores;
 using Vapps.WeChat.Core.TemplateMessages;
 using Vapps.WeChat.Core.Users;
 
@@ -73,6 +74,7 @@ namespace Vapps.EntityFrameworkCore
 
         public virtual DbSet<StoreMapping> StoreMappings { get; set; }
 
+        public virtual DbSet<Category> Categorys { get; set; }
 
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
@@ -171,6 +173,11 @@ namespace Vapps.EntityFrameworkCore
                 b.HasOne(o => o.Store)
                  .WithMany()
                  .HasForeignKey(c => c.StoreId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Category>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
             });
 
             modelBuilder.ConfigurePersistedGrantEntity();

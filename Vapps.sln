@@ -52,6 +52,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.ECommerce.Core", "eco
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.ECommerce.Application", "ecommerce\Vapps.ECommerce.Application\Vapps.ECommerce.Application.csproj", "{47AE961C-B23B-472F-AD7E-75746E15E882}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vapps.Application.Share", "src\Vapps.Application.Share\Vapps.Application.Share.csproj", "{1348695F-B9F4-4562-8DA2-01AEEED605F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +128,10 @@ Global
 		{47AE961C-B23B-472F-AD7E-75746E15E882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47AE961C-B23B-472F-AD7E-75746E15E882}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47AE961C-B23B-472F-AD7E-75746E15E882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1348695F-B9F4-4562-8DA2-01AEEED605F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1348695F-B9F4-4562-8DA2-01AEEED605F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1348695F-B9F4-4562-8DA2-01AEEED605F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1348695F-B9F4-4562-8DA2-01AEEED605F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +157,7 @@ Global
 		{4B7C1DC7-D0A4-4044-A7B3-417EA369F64A} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{A21989B0-960A-4979-9FC6-595EA81DB96F} = {4B7C1DC7-D0A4-4044-A7B3-417EA369F64A}
 		{47AE961C-B23B-472F-AD7E-75746E15E882} = {4B7C1DC7-D0A4-4044-A7B3-417EA369F64A}
+		{1348695F-B9F4-4562-8DA2-01AEEED605F6} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {71B396AD-4F8D-4210-AC72-A7DF4BC731CD}

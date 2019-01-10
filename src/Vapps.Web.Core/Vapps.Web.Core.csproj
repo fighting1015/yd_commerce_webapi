@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\alipay\Vapps.Alipay.Application\Vapps.Alipay.Application.csproj" />
+    <ProjectReference Include="..\..\ecommerce\Vapps.ECommerce.Application\Vapps.ECommerce.Application.csproj" />
     <ProjectReference Include="..\..\wechat\Vapps.WeChat.Application\Vapps.WeChat.Application.csproj" />
     <ProjectReference Include="..\..\wechat\Vapps.WeChat.Infrastructure\Vapps.WeChat.Infrastructure.csproj" />
     <ProjectReference Include="..\Vapps.Application\Vapps.Application.csproj" />

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using Vapps.Editions.Dto;
 using Abp.Collections.Extensions;
+using Vapps.Dto;
 
 namespace Vapps.Common
 {

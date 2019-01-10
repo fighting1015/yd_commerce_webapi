@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Vapps.ECommerce.Core.Catalog
+namespace Vapps.ECommerce.Catalog
 {
     public class CategoryManager : VappsDomainServiceBase, ICategoryManager
     {

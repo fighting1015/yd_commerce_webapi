@@ -5,7 +5,7 @@
         /// <summary>
         /// 返回数据
         /// </summary>
-        public string additonData { get; set; }
+        public string AdditonData { get; set; }
 
         /// <summary>
         /// 结果布尔值
@@ -34,7 +34,7 @@
             this.Result = false;
             this.ErrorMessage = errMessage;
             this.ErrorCode = errorCode;
-            this.additonData = additonData;
+            this.AdditonData = additonData;
         }
 
         public void Fail()
@@ -49,7 +49,7 @@
 
         public void Success(string additonData)
         {
-            this.additonData = additonData;
+            this.AdditonData = additonData;
             this.Result = true;
         }
     }

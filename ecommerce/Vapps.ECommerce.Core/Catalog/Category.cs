@@ -2,13 +2,14 @@ using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-
-namespace Vapps.ECommerce.Core.Catalog
+namespace Vapps.ECommerce.Catalog
 {
     /// <summary>
     /// Represents a category
-    /// </summary>
+    /// </summary
+    [Table("Categories")]
     public partial class Category : FullAuditedEntity, IMustHaveTenant, IPassivable
     {
         public const int MaxNameLength = 12;

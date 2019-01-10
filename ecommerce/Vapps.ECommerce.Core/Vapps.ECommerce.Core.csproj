@@ -6,7 +6,7 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <RootNamespace>Vapps.ECommerce.Core</RootNamespace>
+    <RootNamespace>Vapps.ECommerce</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="4.0.2" />
@@ -22,4 +22,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vapps.Core\Vapps.Core.csproj" />
   </ItemGroup>
+ 
 </Project>
