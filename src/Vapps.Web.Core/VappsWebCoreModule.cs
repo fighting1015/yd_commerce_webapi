@@ -6,6 +6,7 @@ using Abp.Hangfire.Configuration;
 using Abp.IO;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
+using Abp.Runtime.Caching.Redis;
 using Abp.Zero.Configuration;
 using Castle.MicroKernel.Registration;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,7 @@ namespace Vapps.Web
 {
     [DependsOn(
         typeof(AbpAspNetCoreModule),
-        //typeof(AbpRedisCacheModule), //AbpRedisCacheModule dependency (and Abp.RedisCache nuget package) can be removed if not using Redis cache
+        typeof(AbpRedisCacheModule), //AbpRedisCacheModule dependency (and Abp.RedisCache nuget package) can be removed if not using Redis cache
         typeof(AbpHangfireAspNetCoreModule), //AbpHangfireModule dependency (and Abp.Hangfire.AspNetCore nuget package) can be removed if not using Hangfire
         typeof(VappsApplicationModule),
         typeof(VappsAlipayApplicationModule),
@@ -76,11 +77,11 @@ namespace Vapps.Web
 
             //Uncomment this line to use Redis cache instead of in-memory cache.
             //See app.config for Redis configuration and connection string
-            //Configuration.Caching.UseRedis(options =>
-            //{
-            //    options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
-            //    options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
-            //});
+            Configuration.Caching.UseRedis(options =>
+            {
+                options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
+                options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
+            });
 
             Configuration.Caching.Configure(AuthenticateResultCacheItem.CacheName, cache =>
             {
