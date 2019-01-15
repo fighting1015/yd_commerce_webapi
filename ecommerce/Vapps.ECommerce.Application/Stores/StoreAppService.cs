@@ -10,6 +10,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Dto;
 using Vapps.ECommerce.Stores.Dto;
+using Vapps.Media;
 
 namespace Vapps.ECommerce.Stores
 {
@@ -17,12 +18,15 @@ namespace Vapps.ECommerce.Stores
     {
         private readonly IStoreManager _storeManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IPictureManager _pictureManager;
 
         public StoreAppService(IStoreManager storeManager,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IPictureManager pictureManager)
         {
             this._storeManager = storeManager;
             this._cacheManager = cacheManager;
+            this._pictureManager = pictureManager;
         }
 
 
@@ -88,6 +92,8 @@ namespace Vapps.ECommerce.Stores
             {
                 var store = await _storeManager.GetByIdAsync(input.Id.Value);
                 storeDto = ObjectMapper.Map<GetStoreForEditOutput>(store);
+
+                storeDto.PictureUrl = await _pictureManager.GetPictureUrlAsync(store.PictureId);
             }
             else
             {

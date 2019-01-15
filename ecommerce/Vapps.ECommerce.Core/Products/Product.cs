@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Products
@@ -80,5 +81,28 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         public decimal Height { get; set; }
 
+        /// <summary>
+        /// 分类
+        /// </summary>
+        [ForeignKey("ProductId")]
+        public virtual ICollection<ProductCategory> Categorys { get; set; }
+
+        /// <summary>
+        /// 图片
+        /// </summary>
+        [ForeignKey("ProductId")]
+        public virtual ICollection<ProductPicture> Pictures { get; set; }
+
+        /// <summary>
+        /// 属性
+        /// </summary>
+        [ForeignKey("ProductId")]
+        private ICollection<ProductAttributeMapping> _attributes;
+
+        /// <summary>
+        /// 属性组合
+        /// </summary>
+        [ForeignKey("ProductId")]
+        private ICollection<ProductAttributeCombination> _attributeCombinations;
     }
 }

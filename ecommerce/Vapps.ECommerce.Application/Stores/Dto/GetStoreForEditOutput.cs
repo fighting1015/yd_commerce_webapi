@@ -28,6 +28,11 @@ namespace Vapps.ECommerce.Stores.Dto
         public int PictureId { get; set; }
 
         /// <summary>
+        /// 图片Url
+        /// </summary>
+        public string PictureUrl { get; set; }
+
+        /// <summary>
         /// 第三方App id
         /// </summary>
         public string AppKey { get; set; }

@@ -10,6 +10,7 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Dto;
 using Vapps.ECommerce.Catalog.Dto;
+using Vapps.Media;
 
 namespace Vapps.ECommerce.Catalog
 {
@@ -17,12 +18,15 @@ namespace Vapps.ECommerce.Catalog
     {
         private readonly ICategoryManager _catalogyManager;
         private readonly ICacheManager _cacheManager;
+        private readonly IPictureManager _pictureManager;
 
         public CategoryAppService(ICategoryManager catalogyManager,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IPictureManager pictureManager)
         {
             this._catalogyManager = catalogyManager;
             this._cacheManager = cacheManager;
+            this._pictureManager = pictureManager;
         }
 
         /// <summary>
@@ -87,6 +91,8 @@ namespace Vapps.ECommerce.Catalog
             {
                 var catalogy = await _catalogyManager.GetByIdAsync(input.Id.Value);
                 catalogyDto = ObjectMapper.Map<GetCategoryForEditOutput>(catalogy);
+
+                catalogyDto.PictureUrl = await _pictureManager.GetPictureUrlAsync(catalogy.PictureId);
             }
             else
             {

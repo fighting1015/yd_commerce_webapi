@@ -3,7 +3,7 @@
 namespace Vapps.ECommerce.Products
 {
     /// <summary>
-    /// Represents a product variant attribute combination
+    /// 属性组合
     /// </summary>
     public partial class ProductAttributeCombination : Entity<long>, IMustHaveTenant, ISoftDelete
     {

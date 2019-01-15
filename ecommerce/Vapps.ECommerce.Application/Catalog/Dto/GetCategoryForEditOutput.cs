@@ -25,6 +25,11 @@ namespace Vapps.ECommerce.Catalog.Dto
         public int PictureId { get; set; }
 
         /// <summary>
+        /// 图片Url
+        /// </summary>
+        public string PictureUrl { get; set; }
+
+        /// <summary>
         /// 是否启用
         /// </summary>
         public bool IsActive { get; set; }
