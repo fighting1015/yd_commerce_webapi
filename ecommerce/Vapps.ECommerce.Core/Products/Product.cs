@@ -97,12 +97,12 @@ namespace Vapps.ECommerce.Products
         /// 属性
         /// </summary>
         [ForeignKey("ProductId")]
-        private ICollection<ProductAttributeMapping> _attributes;
+        private ICollection<ProductAttributeMapping> Attributes { get; set; }
 
         /// <summary>
         /// 属性组合
         /// </summary>
         [ForeignKey("ProductId")]
-        private ICollection<ProductAttributeCombination> _attributeCombinations;
+        private ICollection<ProductAttributeCombination> AttributeCombinations { get; set; }
     }
 }

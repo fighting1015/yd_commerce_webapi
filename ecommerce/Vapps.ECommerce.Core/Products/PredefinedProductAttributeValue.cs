@@ -1,13 +1,14 @@
 ﻿using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Products
 {
     /// <summary>
-    /// Represents a product category mapping
+    /// 预定义属性值表
     /// </summary>
-    [Table("ProductCategories")]
-    public partial class ProductCategory : Entity<long>, IMustHaveTenant
+    [Table("PredefinedProductAttributeValues")]
+    public class PredefinedProductAttributeValue : CreationAuditedEntity<long>, IMustHaveTenant
     {
         /// <summary>
         /// 租户Id
@@ -15,17 +16,17 @@ namespace Vapps.ECommerce.Products
         public int TenantId { get; set; }
 
         /// <summary>
-        /// Gets or sets the product identifier
+        /// 属性值主键
         /// </summary>
-        public long ProductId { get; set; }
+        public int ProductAttributeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the category identifier
+        /// 名称
         /// </summary>
-        public long CategoryId { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the display order
+        /// 显示顺序
         /// </summary>
         public int DisplayOrder { get; set; }
     }

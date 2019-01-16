@@ -7,6 +7,7 @@ using Vapps.Authorization.Roles;
 using Vapps.Authorization.Users;
 using Vapps.DataStatistics;
 using Vapps.ECommerce.Catalog;
+using Vapps.ECommerce.Products;
 using Vapps.ECommerce.Stores;
 using Vapps.Editions;
 using Vapps.Media;
@@ -75,6 +76,21 @@ namespace Vapps.EntityFrameworkCore
         public virtual DbSet<StoreMapping> StoreMappings { get; set; }
 
         public virtual DbSet<Category> Categorys { get; set; }
+
+        public virtual DbSet<Product> Products { get; set; }
+
+        public virtual DbSet<ProductCategory> ProductCategorys { get; set; }
+
+        public virtual DbSet<ProductAttribute> ProductAttributes { get; set; }
+
+        public virtual DbSet<ProductPicture> ProductPictures { get; set; }
+
+        public virtual DbSet<ProductAttributeMapping> ProductAttributeMappings { get; set; }
+
+        public virtual DbSet<ProductAttributeCombination> ProductAttributeCombinations { get; set; }
+
+        public virtual DbSet<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; set; }
+
 
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
@@ -178,6 +194,36 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<Category>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<Product>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<ProductCategory>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.ProductId });
+            });
+
+            modelBuilder.Entity<ProductPicture>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.ProductId });
+            });
+
+            modelBuilder.Entity<ProductAttribute>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<ProductAttributeMapping>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.ProductId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<PredefinedProductAttributeValue>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.ProductAttributeId });
             });
 
             modelBuilder.ConfigurePersistedGrantEntity();

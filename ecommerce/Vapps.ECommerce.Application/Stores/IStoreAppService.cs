@@ -40,6 +40,6 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteStore(EntityDto input);
+        Task DeleteStore(BatchDeleteInput input);
     }
 }

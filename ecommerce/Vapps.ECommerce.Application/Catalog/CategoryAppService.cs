@@ -126,9 +126,17 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DeleteCategory(EntityDto input)
+        public async Task DeleteCategory(BatchDeleteInput input)
         {
-            await _catalogyManager.DeleteAsync(input.Id);
+            if (input.Ids == null || input.Ids.Count() <= 0)
+            {
+                return;
+            }
+
+            foreach (var id in input.Ids)
+            {
+                await _catalogyManager.DeleteAsync(id);
+            }
         }
 
         #region Utilities

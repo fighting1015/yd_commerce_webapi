@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vapps.EntityFrameworkCore;
 
 namespace Vapps.Migrations
 {
     [DbContext(typeof(VappsDbContext))]
-    partial class VappsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190116035513_Add_Product")]
+    partial class Add_Product
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1163,30 +1165,6 @@ namespace Vapps.Migrations
                     b.HasIndex("TenantId", "IsDeleted");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("Vapps.ECommerce.Products.PredefinedProductAttributeValue", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<int>("DisplayOrder");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("ProductAttributeId");
-
-                    b.Property<int>("TenantId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId", "ProductAttributeId");
-
-                    b.ToTable("PredefinedProductAttributeValues");
                 });
 
             modelBuilder.Entity("Vapps.ECommerce.Products.Product", b =>

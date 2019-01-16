@@ -1,8 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vapps.Dto;
 using Vapps.ECommerce.Catalog.Dto;
@@ -42,6 +39,6 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteCategory(EntityDto input);
+        Task DeleteCategory(BatchDeleteInput input);
     }
 }

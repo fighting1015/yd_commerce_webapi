@@ -2,7 +2,6 @@
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,9 +126,17 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DeleteStore(EntityDto input)
+        public async Task DeleteStore(BatchDeleteInput input)
         {
-            await _storeManager.DeleteAsync(input.Id);
+            if (input.Ids == null || input.Ids.Count() <= 0)
+            {
+                return;
+            }
+
+            foreach (var id in input.Ids)
+            {
+                await _storeManager.DeleteAsync(id);
+            }
         }
 
         #region Utilities
