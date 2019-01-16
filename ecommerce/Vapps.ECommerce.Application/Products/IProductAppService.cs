@@ -2,44 +2,43 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vapps.Dto;
-using Vapps.ECommerce.Stores.Dto;
+using Vapps.ECommerce.Products.Dto;
 
-namespace Vapps.ECommerce.Stores
+namespace Vapps.ECommerce.Products
 {
-
-    public interface IStoreAppService
+    public interface IProductAppService
     {
         /// <summary>
         /// 获取所有店铺
         /// </summary>
         /// <returns></returns>
-        Task<PagedResultDto<StoreListDto>> GetStores(GetStoresInput input);
+        Task<PagedResultDto<ProductListDto>> GetProducts(GetProductsInput input);
 
         /// <summary>
         /// 获取所有可用店铺(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetStoreSelectList();
+        Task<List<SelectListItemDto>> GetProductSelectList();
 
         /// <summary>
         /// 获取店铺详情
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<GetStoreForEditOutput> GetStoreForEdit(NullableIdDto<int> input);
+        Task<GetProductForEditOutput> GetProductForEdit(NullableIdDto<int> input);
 
         /// <summary>
         /// 创建或更新店铺
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdateStore(CreateOrUpdateStoreInput input);
+        Task CreateOrUpdateProduct(CreateOrUpdateProductInput input);
 
         /// <summary>
         /// 删除店铺
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteStore(BatchDeleteInput<int> input);
+        Task DeleteProduct(BatchDeleteInput<long> input);
     }
 }

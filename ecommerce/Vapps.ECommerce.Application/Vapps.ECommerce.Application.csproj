@@ -23,9 +23,6 @@
     <ProjectReference Include="..\..\src\Vapps.Application.Share\Vapps.Application.Share.csproj" />
     <ProjectReference Include="..\Vapps.ECommerce.Core\Vapps.ECommerce.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Products\Dto\" />
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\net461\Vapps.ECommerce.Application.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>

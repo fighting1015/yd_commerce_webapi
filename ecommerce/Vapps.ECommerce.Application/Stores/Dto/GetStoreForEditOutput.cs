@@ -1,17 +1,13 @@
-﻿using Abp.AutoMapper;
+﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 using System;
 using Vapps.Orders;
 
 namespace Vapps.ECommerce.Stores.Dto
 {
     //[AutoMapFrom(typeof(Store))]
-    public class GetStoreForEditOutput
+    public class GetStoreForEditOutput : EntityDto
     {
-        /// <summary>
-        /// Id
-        /// </summary>
-        public int Id { get; set; }
-
         /// <summary>
         /// 店铺名
         /// </summary>

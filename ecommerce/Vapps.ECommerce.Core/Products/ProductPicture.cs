@@ -12,21 +12,21 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 租户Id
         /// </summary>
-        public int TenantId { get; set; }
+        public virtual int TenantId { get; set; }
 
         /// <summary>
         /// 商品id
         /// </summary>
-        public long ProductId { get; set; }
+        public virtual long ProductId { get; set; }
 
         /// <summary>
         /// 图片Id
         /// </summary>
-        public long PictureId { get; set; }
+        public virtual long PictureId { get; set; }
 
         /// <summary>
         /// 排序
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
     }
 }

@@ -7,36 +7,36 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 租户Id
         /// </summary>
-        public int TenantId { get; set; }
+        public virtual int TenantId { get; set; }
 
         /// <summary>
         /// 属性关联Id
         /// </summary>
-        public int ProductAttributeMappingId { get; set; }
+        public virtual int ProductAttributeMappingId { get; set; }
 
         /// <summary>
         /// 产品Id
         /// </summary>
-        public int ProductId { get; set; }
+        public virtual int ProductId { get; set; }
 
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the display order
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
         /// 图片id
         /// </summary>
-        public int PictureId { get; set; }
+        public virtual int PictureId { get; set; }
 
         /// <summary>
         /// 是否删除
         /// </summary>
-        public bool IsDeleted { get; set; }
+        public virtual bool IsDeleted { get; set; }
     }
 }

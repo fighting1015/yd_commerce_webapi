@@ -13,11 +13,11 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 租户Id
         /// </summary>
-        public int TenantId { get; set; }
+        public virtual int TenantId { get; set; }
 
         /// <summary>
         /// Gets or sets the name
         /// </summary>
-        public string Name { get; set; }
-    }
+        public virtual string Name { get; set; }
+     }
 }
