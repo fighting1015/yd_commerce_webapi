@@ -126,7 +126,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DeleteStore(BatchDeleteInput input)
+        public async Task DeleteStore(BatchDeleteInput<int> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
             {
