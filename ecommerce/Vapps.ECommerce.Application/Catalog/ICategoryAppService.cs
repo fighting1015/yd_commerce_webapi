@@ -39,6 +39,6 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteCategory(BatchDeleteInput input);
+        Task DeleteCategory(BatchDeleteInput<int> input);
     }
 }

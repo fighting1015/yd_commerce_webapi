@@ -10,9 +10,6 @@ namespace Vapps.ECommerce
         typeof(VappsECommerceCoreModule))]
     public class VappsECommerceApplicationModule : AbpModule
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public override void PreInitialize()
         {
             //Adding custom AutoMapper configuration

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Shouldly;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Vapps.Dto;
 using Vapps.Media;
 using Vapps.MultiTenancy;
 using Vapps.Pictures.Dto;
@@ -56,8 +57,9 @@ namespace Vapps.Tests.Media
 
             var picture = await GetPictureByKeyOrNullAsync("1/test.jpg");
 
-            await PictureAppService.DeleteAsync(new BatchDeleteInput() {
-                Ids = new List<long>() { picture.Id }
+            await PictureAppService.DeleteAsync(new BatchDeleteInput<long>()
+            {
+                Ids = new long[] { picture.Id }
             });
 
             //Assert

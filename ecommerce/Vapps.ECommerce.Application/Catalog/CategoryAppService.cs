@@ -126,7 +126,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DeleteCategory(BatchDeleteInput input)
+        public async Task DeleteCategory(BatchDeleteInput<int> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
             {

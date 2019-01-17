@@ -17,7 +17,6 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 获取所有可用商品(下拉框)
         /// </summary>
-        /// 
         /// <returns></returns>
         Task<List<SelectListItemDto>> GetProductSelectList();
 
