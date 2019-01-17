@@ -7,6 +7,7 @@ namespace Vapps.ECommerce.Products.Dto
     /// <summary>
     /// 商品属性
     /// </summary>
+    [AutoMap(typeof(ProductAttribute))]
     public class ProductAttributeDto : EntityDto<long>
     {
         /// <summary>
@@ -17,7 +18,12 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 预定义值/值记录
         /// </summary>
-        public List<PredefinedProductAttributeValue> Values { get; set; }
+        public List<ProductAttributeValueDto> Values { get; set; }
+
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 
     /// <summary>
@@ -34,6 +40,11 @@ namespace Vapps.ECommerce.Products.Dto
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 
     /// <summary>
@@ -53,5 +64,10 @@ namespace Vapps.ECommerce.Products.Dto
         /// 图片id
         /// </summary>
         public int PictureId { get; set; }
+
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 }

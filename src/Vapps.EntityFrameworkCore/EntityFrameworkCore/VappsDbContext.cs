@@ -89,8 +89,10 @@ namespace Vapps.EntityFrameworkCore
 
         public virtual DbSet<ProductAttributeCombination> ProductAttributeCombinations { get; set; }
 
-        public virtual DbSet<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; set; }
+        public virtual DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
 
+        public virtual DbSet<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; set; }
+        
 
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
@@ -214,6 +216,11 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<ProductAttribute>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<ProductAttributeValue>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.ProductId, e.ProductAttributeMappingId, e.IsDeleted });
             });
 
             modelBuilder.Entity<ProductAttributeMapping>(b =>

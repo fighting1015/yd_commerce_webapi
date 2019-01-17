@@ -1,4 +1,6 @@
 ﻿using Abp.Domain.Entities;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Products
 {
@@ -12,12 +14,12 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 商品Id
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public virtual long ProductId { get; set; }
 
         /// <summary>
         /// 属性Id
         /// </summary>
-        public virtual int ProductAttributeId { get; set; }
+        public virtual long ProductAttributeId { get; set; }
 
         /// <summary>
         /// 排序id
@@ -28,5 +30,11 @@ namespace Vapps.ECommerce.Products
         /// 是否删除
         /// </summary>
         public virtual bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// 属性值
+        /// </summary>
+        [ForeignKey("ProductAttributeMappingId")]
+        public virtual ICollection<ProductAttributeValue> Values { get; set; }
     }
 }

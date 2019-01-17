@@ -3,9 +3,9 @@
 namespace Vapps.ECommerce.Products.Dto
 {
     /// <summary>
-    /// 预约图片
+    /// 产品图片
     /// </summary>
-    public class ProductPictureDto : EntityDto<long>
+    public class ProductPictureDto : NullableIdDto<long>
     {
         /// <summary>
         /// 图片Id

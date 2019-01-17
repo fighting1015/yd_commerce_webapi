@@ -12,12 +12,12 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 属性关联Id
         /// </summary>
-        public virtual int ProductAttributeMappingId { get; set; }
+        public virtual long ProductAttributeMappingId { get; set; }
 
         /// <summary>
         /// 产品Id
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public virtual long ProductId { get; set; }
 
         /// <summary>
         /// 名称
@@ -32,7 +32,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 图片id
         /// </summary>
-        public virtual int PictureId { get; set; }
+        public virtual long PictureId { get; set; }
 
         /// <summary>
         /// 是否删除

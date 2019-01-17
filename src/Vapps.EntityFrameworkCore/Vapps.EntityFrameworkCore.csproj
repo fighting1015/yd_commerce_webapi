@@ -41,5 +41,8 @@
     <Compile Update="Migrations\20190116092803_PredefinedProductAttributeValue.Designer.cs">
       <DependentUpon>20190116092803_PredefinedProductAttributeValue.cs</DependentUpon>
     </Compile>
+    <Compile Update="Migrations\20190117014803_Update_Product_Attribute.Designer.cs">
+      <DependentUpon>20190117014803_Update_Product_Attribute.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

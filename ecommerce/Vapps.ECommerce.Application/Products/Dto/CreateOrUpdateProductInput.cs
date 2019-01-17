@@ -7,7 +7,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// Id，空或者为0时创建商品
         /// </summary>
-        public int? Id { get; set; }
+        public long? Id { get; set; }
 
         /// <summary>
         /// 商品名

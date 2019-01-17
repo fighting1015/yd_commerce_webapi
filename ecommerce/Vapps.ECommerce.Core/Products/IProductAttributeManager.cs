@@ -29,6 +29,12 @@ namespace Vapps.ECommerce.Products
         Task<ProductAttribute> GetByIdAsync(long id);
 
         /// <summary>
+        /// 添加/更新属性
+        /// </summary>
+        /// <param name="Product"></param>
+        Task CreateOrUpdateAsync(ProductAttribute Product);
+
+        /// <summary>
         /// 添加属性
         /// </summary>
         /// <param name="Product"></param>

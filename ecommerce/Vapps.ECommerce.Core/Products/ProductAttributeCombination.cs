@@ -15,7 +15,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// Gets or sets the product identifier
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public virtual long ProductId { get; set; }
 
         /// <summary>
         /// 属性和值序列化字符串

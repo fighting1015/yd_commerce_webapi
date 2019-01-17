@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,9 +14,14 @@ namespace Vapps.ECommerce.Products
 
         public IQueryable<Product> Products => ProductRepository.GetAll().AsNoTracking();
 
-        public ProductManager(IRepository<Product, long> productRepository)
+        private readonly IProductAttributeManager _productAttributeManager;
+
+
+        public ProductManager(IRepository<Product, long> productRepository,
+            IProductAttributeManager productAttributeManager)
         {
             this.ProductRepository = productRepository;
+            this._productAttributeManager = productAttributeManager;
         }
 
         #endregion
@@ -46,8 +52,30 @@ namespace Vapps.ECommerce.Products
         /// 添加商品
         /// </summary>
         /// <param name="product"></param>
+        [UnitOfWork]
         public virtual async Task CreateAsync(Product product)
         {
+            // 创建或更新属性
+            foreach (var attribute in product.Attributes)
+            {
+                if (attribute.ProductAttributeId == 0)
+                {
+
+
+                    //_productAttributeManager.CreateAsync();
+                }
+            }
+
+
+            // 创建或更新属性
+            foreach (var combination in product.AttributeCombinations)
+            {
+
+            }
+
+            // 创建或更新属性组合
+
+
             await ProductRepository.InsertAsync(product);
         }
 

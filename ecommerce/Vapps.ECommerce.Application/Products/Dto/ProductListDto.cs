@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 
 namespace Vapps.ECommerce.Products.Dto
 {
+    [AutoMap(typeof(Product))]
     public class ProductListDto : EntityDto<long>
     {
         /// <summary>
