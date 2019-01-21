@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Abp.AutoMapper;
+using System.Collections.Generic;
 
 namespace Vapps.ECommerce.Products.Dto
 {
+    [AutoMap(typeof(Product))]
     public class CreateOrUpdateProductInput
     {
         /// <summary>
@@ -77,7 +79,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 分类
         /// </summary>
-        public virtual List<ProductCategory> Categorys { get; set; }
+        public virtual List<ProductCategoryDto> Categorys { get; set; }
 
         /// <summary>
         /// 图片
