@@ -9,10 +9,15 @@ namespace Vapps.ECommerce.Products.Dto
     /// </summary>
     public partial class AttributeCombinationDto : EntityDto<long>
     {
+        public AttributeCombinationDto()
+        {
+            this.Attributes = new List<ProductAttributeDto>();
+        }
+
         /// <summary>
         /// 属性值
         /// </summary>
-        public List<ProductAttributeValueDto> Attributes { get; set; }
+        public List<ProductAttributeDto> Attributes { get; set; }
 
         /// <summary>
         /// 库存

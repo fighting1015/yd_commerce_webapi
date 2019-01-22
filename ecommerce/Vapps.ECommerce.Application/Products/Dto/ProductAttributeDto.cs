@@ -54,11 +54,6 @@ namespace Vapps.ECommerce.Products.Dto
     public class ProductAttributeValueDto : EntityDto<long>
     {
         /// <summary>
-        /// 属性名
-        /// </summary>
-        public string Attribute { get; set; }
-
-        /// <summary>
         /// 属性Id
         /// </summary>
         public long AttributeId { get; set; }
@@ -67,11 +62,6 @@ namespace Vapps.ECommerce.Products.Dto
         /// 属性值
         /// </summary>
         public string AttributeValue { get; set; }
-
-        /// <summary>
-        /// 属性值Id
-        /// </summary>
-        public long AttributeValueId { get; set; }
 
         /// <summary>
         /// 图片id

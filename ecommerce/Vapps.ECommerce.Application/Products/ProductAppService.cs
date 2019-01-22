@@ -41,7 +41,6 @@ namespace Vapps.ECommerce.Products
             this._productAttributeManager = productAttributeManager;
         }
 
-
         /// <summary>
         /// 获取所有商品
         /// </summary>
@@ -99,7 +98,7 @@ namespace Vapps.ECommerce.Products
         {
             GetProductForEditOutput productDto;
 
-            if (input.Id.HasValue) //Editing existing product?
+            if (input.Id.HasValue)
             {
                 var product = await _productManager.GetByIdAsync(input.Id.Value);
 
@@ -122,12 +121,23 @@ namespace Vapps.ECommerce.Products
                     var item = ObjectMapper.Map<ProductAttributeDto>(i);
                     item.Name = _productAttributeManager.GetByIdAsync(i.ProductAttributeId).Result?.Name ?? string.Empty;
 
-                    //item.Values = i.Values.Select(x=>x{});
+                    item.Values = i.Values.Select(value =>
+                    {
+                        var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
+                        return new ProductAttributeValueDto();
+                    }).ToList();
 
                     return item;
                 }).ToList();
 
-                //productDto.PictureUrl = await _pictureManager.GetPictureUrlAsync(product.PictureId);
+                PrepareProductAttributeCombination(productDto, product);
+
+                productDto.Pictures = product.Pictures.Select(i =>
+                {
+                    var item = ObjectMapper.Map<ProductPictureDto>(i);
+                    item.PictureUrl = _pictureManager.GetPictureUrl(i.Id);
+                    return item;
+                }).ToList();
             }
             else
             {
@@ -137,6 +147,7 @@ namespace Vapps.ECommerce.Products
             return productDto;
         }
 
+        
         /// <summary>
         /// 创建或更新商品
         /// </summary>
@@ -295,30 +306,76 @@ namespace Vapps.ECommerce.Products
             {
                 var jsonAttributeItem = new JsonProductAttribute();
 
-                if (attributeDto.AttributeId == 0)
+                if (attributeDto.Id == 0)
                 {
-                    var productAttribute = await _productAttributeManager.FindByNameAsync(attributeDto.Attribute);
+                    var productAttribute = await _productAttributeManager.FindByNameAsync(attributeDto.Name);
                     jsonAttributeItem.AttributeId = productAttribute.Id;
                 }
                 else
                 {
-                    jsonAttributeItem.AttributeId = attributeDto.AttributeId;
+                    jsonAttributeItem.AttributeId = attributeDto.Id;
                 }
 
-                if (attributeDto.AttributeValueId == 0)
+                jsonAttributeItem.AttributeName = attributeDto.Name;
+
+                foreach (var value in attributeDto.Values)
                 {
-                    var productAttribute = await _productAttributeManager.FindValueByNameAsync(attributeDto.Attribute);
-                    jsonAttributeItem.AttributeValueId = productAttribute.Id;
-                }
-                else
-                {
-                    jsonAttributeItem.AttributeValueId = attributeDto.AttributeValueId;
+                    var jsonAttributeValue = new JsonProductAttributeValue();
+
+                    if (value.Id == 0)
+                    {
+                        var productAttribute = await _productAttributeManager.FindValueByNameAsync(value.AttributeValue);
+                        jsonAttributeValue.AttributeValueId = productAttribute.Id;
+                        jsonAttributeValue.AttributeValueName = productAttribute.Name;
+                    }
+                    else
+                    {
+                        jsonAttributeValue.AttributeValueId = attributeDto.Id;
+                        jsonAttributeValue.AttributeValueName = attributeDto.Name;
+                    }
+                    jsonAttributeValue.DisplayOrder = value.DisplayOrder;
+                    jsonAttributeItem.AttributeValues.Add(jsonAttributeValue);
                 }
 
                 jsonAttributes.Add(jsonAttributeItem);
             }
 
             return jsonAttributes;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productDto"></param>
+        /// <param name="product"></param>
+        private void PrepareProductAttributeCombination(GetProductForEditOutput productDto, Product product)
+        {
+            foreach (var combination in product.AttributeCombinations)
+            {
+                var combinationDto = ObjectMapper.Map<AttributeCombinationDto>(combination);
+
+                var atributeDtoList = new List<ProductAttributeDto>();
+
+                var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(combination.AttributesJson);
+
+                foreach (var jsonAttribute in jsonAttributeList)
+                {
+                    var atributeDto = new ProductAttributeDto();
+                    atributeDto.Id = jsonAttribute.AttributeId;
+                    atributeDto.Name = jsonAttribute.AttributeName;
+                    atributeDto.Values = jsonAttribute.AttributeValues.Select(value =>
+                    {
+                        var valueDto = new ProductAttributeValueDto();
+                        valueDto.Id = value.AttributeValueId;
+                        valueDto.AttributeId = jsonAttribute.AttributeId;
+                        valueDto.AttributeValue = value.AttributeValueName;
+                        valueDto.DisplayOrder = value.DisplayOrder;
+                        return valueDto;
+                    }).ToList();
+                }
+
+                productDto.AttributeCombinations.Add(combinationDto); ;
+            }
         }
 
 
