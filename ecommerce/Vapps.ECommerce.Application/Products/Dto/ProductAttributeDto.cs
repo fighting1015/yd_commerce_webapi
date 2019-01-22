@@ -7,7 +7,7 @@ namespace Vapps.ECommerce.Products.Dto
     /// <summary>
     /// 商品属性
     /// </summary>
-    [AutoMap(typeof(ProductAttribute))]
+    //[AutoMap(typeof(ProductAttribute))]
     public class ProductAttributeDto : EntityDto<long>
     {
         /// <summary>
@@ -53,12 +53,25 @@ namespace Vapps.ECommerce.Products.Dto
     [AutoMap(typeof(ProductAttributeValue))]
     public class ProductAttributeValueDto : EntityDto<long>
     {
-        public int ProductAttributeId { get; set; }
+        /// <summary>
+        /// 属性名
+        /// </summary>
+        public string Attribute { get; set; }
 
         /// <summary>
-        /// Gets or sets the name
+        /// 属性Id
         /// </summary>
-        public string Value { get; set; }
+        public long AttributeId { get; set; }
+
+        /// <summary>
+        /// 属性值
+        /// </summary>
+        public string AttributeValue { get; set; }
+
+        /// <summary>
+        /// 属性值Id
+        /// </summary>
+        public long AttributeValueId { get; set; }
 
         /// <summary>
         /// 图片id

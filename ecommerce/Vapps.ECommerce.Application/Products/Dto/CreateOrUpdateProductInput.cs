@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Vapps.ECommerce.Products.Dto
 {
-    [AutoMap(typeof(Product))]
+    //[AutoMap(typeof(Product))]
     public class CreateOrUpdateProductInput
     {
         /// <summary>

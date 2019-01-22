@@ -73,7 +73,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 分类
         /// </summary>
-        public virtual List<ProductCategory> Categorys { get; set; }
+        public virtual List<ProductCategoryDto> Categorys { get; set; }
 
         /// <summary>
         /// 图片

@@ -14,22 +14,28 @@ using Vapps.Media;
 using System.Linq.Dynamic.Core;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
+using Abp.Domain.Repositories;
+using Vapps.ECommerce.Catalog;
+using Newtonsoft.Json;
 
 namespace Vapps.ECommerce.Products
 {
     public class ProductAppService : VappsAppServiceBase, IProductAppService
     {
         private readonly IProductManager _productManager;
+        private readonly ICategoryManager _categoryManager;
         private readonly ICacheManager _cacheManager;
         private readonly IPictureManager _pictureManager;
         private readonly IProductAttributeManager _productAttributeManager;
 
         public ProductAppService(IProductManager productManager,
+            ICategoryManager categoryManager,
             ICacheManager cacheManager,
             IPictureManager pictureManager,
             IProductAttributeManager productAttributeManager)
         {
             this._productManager = productManager;
+            this._categoryManager = categoryManager;
             this._cacheManager = cacheManager;
             this._pictureManager = pictureManager;
             this._productAttributeManager = productAttributeManager;
@@ -96,8 +102,30 @@ namespace Vapps.ECommerce.Products
             if (input.Id.HasValue) //Editing existing product?
             {
                 var product = await _productManager.GetByIdAsync(input.Id.Value);
+
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Categorys);
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Pictures);
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Attributes);
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.AttributeCombinations);
+
                 productDto = ObjectMapper.Map<GetProductForEditOutput>(product);
 
+                productDto.Categorys = product.Categorys.Select(i =>
+                {
+                    var item = ObjectMapper.Map<ProductCategoryDto>(i);
+                    item.Name = _categoryManager.GetByIdAsync(item.CategoryId).Result?.Name ?? string.Empty;
+                    return item;
+                }).ToList();
+
+                productDto.Attributes = product.Attributes.Select(i =>
+                {
+                    var item = ObjectMapper.Map<ProductAttributeDto>(i);
+                    item.Name = _productAttributeManager.GetByIdAsync(i.ProductAttributeId).Result?.Name ?? string.Empty;
+
+                    //item.Values = i.Values.Select(x=>x{});
+
+                    return item;
+                }).ToList();
 
                 //productDto.PictureUrl = await _pictureManager.GetPictureUrlAsync(product.PictureId);
             }
@@ -189,14 +217,19 @@ namespace Vapps.ECommerce.Products
                 return ObjectMapper.Map<ProductPicture>(i);
             }).ToList();
 
-            product.AttributeCombinations = input.AttributeCombinations.Select(i =>
-            {
-                var combin = ObjectMapper.Map<ProductAttributeCombination>(i);
-
-                return combin;
-            }).ToList();
-
             await _productManager.CreateAsync(product);
+
+            product.AttributeCombinations = new Collection<ProductAttributeCombination>();
+            foreach (var combinDto in input.AttributeCombinations)
+            {
+                var combin = ObjectMapper.Map<ProductAttributeCombination>(combinDto);
+                var jsonAttributes = await CreateOrUpdateJsonAttribute(combinDto);
+
+                combin.AttributesJson = JsonConvert.SerializeObject(jsonAttributes);
+                product.AttributeCombinations.Add(combin);
+            }
+
+            await _productManager.UpdateAsync(product);
         }
 
         /// <summary>
@@ -211,7 +244,6 @@ namespace Vapps.ECommerce.Products
 
             await _productManager.UpdateAsync(product);
         }
-
 
         #region Utility
 
@@ -254,6 +286,41 @@ namespace Vapps.ECommerce.Products
                 }
             }
         }
+
+        private async Task<List<JsonProductAttribute>> CreateOrUpdateJsonAttribute(AttributeCombinationDto combinDto)
+        {
+            var jsonAttributes = new List<JsonProductAttribute>();
+
+            foreach (var attributeDto in combinDto.Attributes)
+            {
+                var jsonAttributeItem = new JsonProductAttribute();
+
+                if (attributeDto.AttributeId == 0)
+                {
+                    var productAttribute = await _productAttributeManager.FindByNameAsync(attributeDto.Attribute);
+                    jsonAttributeItem.AttributeId = productAttribute.Id;
+                }
+                else
+                {
+                    jsonAttributeItem.AttributeId = attributeDto.AttributeId;
+                }
+
+                if (attributeDto.AttributeValueId == 0)
+                {
+                    var productAttribute = await _productAttributeManager.FindValueByNameAsync(attributeDto.Attribute);
+                    jsonAttributeItem.AttributeValueId = productAttribute.Id;
+                }
+                else
+                {
+                    jsonAttributeItem.AttributeValueId = attributeDto.AttributeValueId;
+                }
+
+                jsonAttributes.Add(jsonAttributeItem);
+            }
+
+            return jsonAttributes;
+        }
+
 
         #endregion
     }

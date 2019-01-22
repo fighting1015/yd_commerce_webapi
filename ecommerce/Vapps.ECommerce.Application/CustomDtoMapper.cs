@@ -1,24 +1,10 @@
-﻿using Abp.Application.Editions;
-using Abp.Application.Features;
-using Abp.Auditing;
-using Abp.Authorization;
-using Abp.Authorization.Users;
-using Abp.Localization;
-using Abp.Notifications;
-using Abp.Organizations;
-using Abp.UI.Inputs;
-using AutoMapper;
-using Vapps.Authorization.Roles;
-using Vapps.Authorization.Users;
+﻿using AutoMapper;
 using Vapps.ECommerce.Catalog;
 using Vapps.ECommerce.Catalog.Dto;
+using Vapps.ECommerce.Products;
+using Vapps.ECommerce.Products.Dto;
 using Vapps.ECommerce.Stores;
 using Vapps.ECommerce.Stores.Dto;
-using Vapps.Editions;
-using Vapps.Editions.Cache;
-using Vapps.MultiTenancy;
-using Vapps.Payments;
-using Vapps.Payments.Cache;
 
 namespace Vapps.ECommerce
 {
@@ -40,6 +26,17 @@ namespace Vapps.ECommerce
             configuration.CreateMap<Category, GetCategoryForEditOutput>();
             configuration.CreateMap<Category, CategoryListDto>();
 
+            //product
+            configuration.CreateMap<CreateOrUpdateProductInput, Product>();
+            configuration.CreateMap<ProductCategoryDto, ProductCategory>();
+            configuration.CreateMap<ProductCategory, ProductCategoryDto>();
+            configuration.CreateMap<Product, CreateOrUpdateProductInput>();
+            configuration.CreateMap<Product, ProductListDto>();
+            configuration.CreateMap<Product, GetProductForEditOutput>();
+
+            configuration.CreateMap<ProductAttributeDto, ProductAttribute>();
+            configuration.CreateMap<ProductAttributeValueDto, ProductAttributeValue>();
+            
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
     }

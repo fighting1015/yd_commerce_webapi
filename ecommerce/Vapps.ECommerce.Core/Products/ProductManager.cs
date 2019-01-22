@@ -58,12 +58,12 @@ namespace Vapps.ECommerce.Products
             // 创建或更新属性
             foreach (var attribute in product.Attributes)
             {
-                if (attribute.ProductAttributeId == 0)
-                {
-
+                //if (attribute.ProductAttributeId == 0)
+                //{
+                //    _productAttributeManager.FindByNameAsync(attribute.na);
 
                     //_productAttributeManager.CreateAsync();
-                }
+                //}
             }
 
 
