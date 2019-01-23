@@ -34,7 +34,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 货物成本/进货价
         /// </summary>
-        public decimal ProductCost { get; set; }
+        public decimal GoodCost { get; set; }
 
         /// <summary>
         /// 图片Url

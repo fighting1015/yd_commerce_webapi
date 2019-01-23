@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vapps.EntityFrameworkCore;
 
 namespace Vapps.Migrations
 {
     [DbContext(typeof(VappsDbContext))]
-    partial class VappsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190123090843_Update_Product_Price")]
+    partial class Update_Product_Price
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

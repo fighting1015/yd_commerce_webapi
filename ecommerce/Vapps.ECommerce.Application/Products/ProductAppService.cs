@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using Abp.Domain.Repositories;
 using Vapps.ECommerce.Catalog;
 using Newtonsoft.Json;
+using Abp.Domain.Uow;
 
 namespace Vapps.ECommerce.Products
 {
@@ -116,19 +117,7 @@ namespace Vapps.ECommerce.Products
                     return item;
                 }).ToList();
 
-                productDto.Attributes = product.Attributes.Select(i =>
-                {
-                    var item = ObjectMapper.Map<ProductAttributeDto>(i);
-                    item.Name = _productAttributeManager.GetByIdAsync(i.ProductAttributeId).Result?.Name ?? string.Empty;
-
-                    item.Values = i.Values.Select(value =>
-                    {
-                        var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
-                        return new ProductAttributeValueDto();
-                    }).ToList();
-
-                    return item;
-                }).ToList();
+                PrepareProductAttribute(productDto, product);
 
                 PrepareProductAttributeCombination(productDto, product);
 
@@ -148,6 +137,8 @@ namespace Vapps.ECommerce.Products
         }
 
         
+
+
         /// <summary>
         /// 创建或更新商品
         /// </summary>
@@ -187,6 +178,25 @@ namespace Vapps.ECommerce.Products
 
         #region Utilities
 
+        private void PrepareProductAttribute(GetProductForEditOutput productDto, Product product)
+        {
+            productDto.Attributes = product.Attributes.Select(attribute =>
+            {
+                var item = ObjectMapper.Map<ProductAttributeDto>(attribute);
+                item.Name = _productAttributeManager.GetByIdAsync(attribute.ProductAttributeId).Result?.Name ?? string.Empty;
+
+                _productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoaded(attribute, t => t.Values);
+
+                item.Values = attribute.Values.Select(value =>
+                {
+                    var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
+                    return valueDto;
+                }).ToList();
+
+                return item;
+            }).ToList();
+        }
+
         /// <summary>
         /// 创建商品
         /// </summary>
@@ -217,7 +227,9 @@ namespace Vapps.ECommerce.Products
 
                 attributeMapping.Values = attribueDto.Values.Select(i =>
                 {
-                    return ObjectMapper.Map<ProductAttributeValue>(i);
+                    var value = ObjectMapper.Map<ProductAttributeValue>(i);
+                    value.Name = i.Name;
+                    return value;
                 }).ToList();
 
                 product.Attributes.Add(attributeMapping);
@@ -324,7 +336,7 @@ namespace Vapps.ECommerce.Products
 
                     if (value.Id == 0)
                     {
-                        var productAttribute = await _productAttributeManager.FindValueByNameAsync(value.AttributeValue);
+                        var productAttribute = await _productAttributeManager.FindValueByNameAsync(value.Name);
                         jsonAttributeValue.AttributeValueId = productAttribute.Id;
                         jsonAttributeValue.AttributeValueName = productAttribute.Name;
                     }
@@ -350,6 +362,7 @@ namespace Vapps.ECommerce.Products
         /// <param name="product"></param>
         private void PrepareProductAttributeCombination(GetProductForEditOutput productDto, Product product)
         {
+            productDto.AttributeCombinations = new List<AttributeCombinationDto>();
             foreach (var combination in product.AttributeCombinations)
             {
                 var combinationDto = ObjectMapper.Map<AttributeCombinationDto>(combination);
@@ -368,10 +381,11 @@ namespace Vapps.ECommerce.Products
                         var valueDto = new ProductAttributeValueDto();
                         valueDto.Id = value.AttributeValueId;
                         valueDto.AttributeId = jsonAttribute.AttributeId;
-                        valueDto.AttributeValue = value.AttributeValueName;
+                        valueDto.Name = value.AttributeValueName;
                         valueDto.DisplayOrder = value.DisplayOrder;
                         return valueDto;
                     }).ToList();
+                    combinationDto.Attributes.Add(atributeDto);
                 }
 
                 productDto.AttributeCombinations.Add(combinationDto); ;

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vapps.EntityFrameworkCore;
 
 namespace Vapps.Migrations
 {
     [DbContext(typeof(VappsDbContext))]
-    partial class VappsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190123052342_Add_Product_Attribute_Values")]
+    partial class Add_Product_Attribute_Values
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1204,11 +1206,7 @@ namespace Vapps.Migrations
 
                     b.Property<string>("FullDescription");
 
-                    b.Property<decimal>("GoodCost")
-                        .HasColumnType("decimal(18, 4)");
-
-                    b.Property<decimal>("Height")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal>("Height");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1216,15 +1214,15 @@ namespace Vapps.Migrations
 
                     b.Property<long?>("LastModifierUserId");
 
-                    b.Property<decimal>("Length")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal>("Length");
 
                     b.Property<string>("Name");
 
                     b.Property<int>("NotifyAdminForQuantityBelow");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal>("Price");
+
+                    b.Property<decimal>("ProductCost");
 
                     b.Property<string>("ShortDescription");
 
@@ -1236,11 +1234,9 @@ namespace Vapps.Migrations
 
                     b.Property<string>("ThirdPartySku");
 
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal>("Weight");
 
-                    b.Property<decimal>("Width")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal>("Width");
 
                     b.HasKey("Id");
 
@@ -1288,11 +1284,9 @@ namespace Vapps.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<decimal?>("OverriddenGoodCost")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal?>("OverriddenGoodCost");
 
-                    b.Property<decimal?>("OverriddenPrice")
-                        .HasColumnType("decimal(18, 4)");
+                    b.Property<decimal?>("OverriddenPrice");
 
                     b.Property<long>("ProductId");
 
@@ -1307,8 +1301,6 @@ namespace Vapps.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("TenantId", "ProductId");
 
                     b.ToTable("ProductAttributeCombinations");
                 });

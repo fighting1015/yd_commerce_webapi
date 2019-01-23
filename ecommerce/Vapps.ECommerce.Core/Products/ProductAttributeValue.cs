@@ -1,7 +1,9 @@
 ﻿using Abp.Domain.Entities;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Products
 {
+    [Table("ProductAttributeValues")]
     public partial class ProductAttributeValue : Entity<long>, IMustHaveTenant, ISoftDelete
     {
         /// <summary>

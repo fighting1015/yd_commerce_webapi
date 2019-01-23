@@ -31,12 +31,21 @@ namespace Vapps.ECommerce
             configuration.CreateMap<ProductCategoryDto, ProductCategory>();
             configuration.CreateMap<ProductCategory, ProductCategoryDto>();
             configuration.CreateMap<Product, CreateOrUpdateProductInput>();
+
+
             configuration.CreateMap<Product, ProductListDto>();
-            configuration.CreateMap<Product, GetProductForEditOutput>();
+            configuration.CreateMap<Product, GetProductForEditOutput>()
+                .ForMember(dto => dto.AttributeCombinations, options => options.Ignore());
 
             configuration.CreateMap<ProductAttributeDto, ProductAttribute>();
             configuration.CreateMap<ProductAttributeValueDto, ProductAttributeValue>();
-            
+
+            configuration.CreateMap<ProductAttributeDto, ProductAttributeMapping>();
+            configuration.CreateMap<ProductAttributeMapping, ProductAttributeDto>();
+
+            configuration.CreateMap<AttributeCombinationDto, ProductAttributeCombination>();
+            configuration.CreateMap<ProductAttributeCombination, AttributeCombinationDto>();
+
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
     }

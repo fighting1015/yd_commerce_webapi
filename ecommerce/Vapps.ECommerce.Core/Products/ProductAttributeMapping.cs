@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Products
 {
+    [Table("ProductAttributeMappings")]
     public class ProductAttributeMapping : Entity<long>, IMustHaveTenant, ISoftDelete
     {
         /// <summary>

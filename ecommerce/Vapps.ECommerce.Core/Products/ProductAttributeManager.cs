@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,11 +20,18 @@ namespace Vapps.ECommerce.Products
         public IQueryable<ProductAttributeValue> ProductAttributeValues => ProductAttributeValueRepository.GetAll().AsNoTracking();
 
 
-        public ProductAttributeManager(IRepository<ProductAttribute, long> attribuyeRepository,
-            IRepository<ProductAttributeValue, long> attribuyeValueRepository)
+        public IRepository<ProductAttributeMapping, long> ProductAttributeMappingRepository { get; }
+
+        public IQueryable<ProductAttributeMapping> ProductAttributeMappings => ProductAttributeMappingRepository.GetAll().AsNoTracking();
+
+
+        public ProductAttributeManager(IRepository<ProductAttribute, long> attributeRepository,
+            IRepository<ProductAttributeValue, long> attributeValueRepository,
+            IRepository<ProductAttributeMapping, long> attributeMappingRepository)
         {
-            this.ProductAttributeRepository = attribuyeRepository;
-            this.ProductAttributeValueRepository = attribuyeValueRepository;
+            this.ProductAttributeRepository = attributeRepository;
+            this.ProductAttributeValueRepository = attributeValueRepository;
+            this.ProductAttributeMappingRepository = attributeMappingRepository;
         }
 
         #endregion
@@ -64,50 +72,57 @@ namespace Vapps.ECommerce.Products
         /// 添加/更新属性
         /// </summary>
         /// <param name="attribute"></param>
+        [UnitOfWork]
         public virtual async Task CreateOrUpdateAsync(ProductAttribute attribute)
         {
-            if (attribute.Id == 0)
-            {
-                var entity = await FindByNameAsync(attribute.Name);
-                if (entity != null)
-                    attribute.Id = entity.Id;
-            }
-
             if (attribute.Id > 0)
             {
                 await UpdateAsync(attribute);
             }
             else
             {
-                await CreateAsync(attribute);
+
+                var entity = await FindByNameAsync(attribute.Name);
+                if (entity != null)
+                {
+                    entity.Name = attribute.Name;
+                    attribute.Id = entity.Id;
+                    await UpdateAsync(entity);
+                }
+                else
+                {
+                    await CreateAsync(attribute);
+                }
             }
+
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
         /// 添加属性
         /// </summary>
-        /// <param name="attribuye"></param>
-        public virtual async Task CreateAsync(ProductAttribute attribuye)
+        /// <param name="attribute"></param>
+        public virtual async Task CreateAsync(ProductAttribute attribute)
         {
-            await ProductAttributeRepository.InsertAsync(attribuye);
+            await ProductAttributeRepository.InsertAsync(attribute);
         }
 
         /// <summary>
         /// 更新属性
         /// </summary>
         /// <param name="ProductAttribute"></param>
-        public virtual async Task UpdateAsync(ProductAttribute attribuye)
+        public virtual async Task UpdateAsync(ProductAttribute attribute)
         {
-            await ProductAttributeRepository.UpdateAsync(attribuye);
+            await ProductAttributeRepository.UpdateAsync(attribute);
         }
 
         /// <summary>
         /// 删除属性
         /// </summary>
         /// <param name="ProductAttribute"></param>
-        public virtual async Task DeleteAsync(ProductAttribute attribuye)
+        public virtual async Task DeleteAsync(ProductAttribute attribute)
         {
-            await ProductAttributeRepository.DeleteAsync(attribuye);
+            await ProductAttributeRepository.DeleteAsync(attribute);
         }
 
         /// <summary>
@@ -116,10 +131,10 @@ namespace Vapps.ECommerce.Products
         /// <param name="id"></param>
         public virtual async Task DeleteAsync(long id)
         {
-            var attribuye = await ProductAttributeRepository.FirstOrDefaultAsync(id);
+            var attribute = await ProductAttributeRepository.FirstOrDefaultAsync(id);
 
-            if (attribuye != null)
-                await ProductAttributeRepository.DeleteAsync(attribuye);
+            if (attribute != null)
+                await ProductAttributeRepository.DeleteAsync(attribute);
         }
 
         #endregion
@@ -182,28 +197,28 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 添加属性值
         /// </summary>
-        /// <param name="attribuye"></param>
-        public virtual async Task CreateValueAsync(ProductAttributeValue attribuye)
+        /// <param name="attribute"></param>
+        public virtual async Task CreateValueAsync(ProductAttributeValue attribute)
         {
-            await ProductAttributeValueRepository.InsertAsync(attribuye);
+            await ProductAttributeValueRepository.InsertAsync(attribute);
         }
 
         /// <summary>
         /// 更新属性值
         /// </summary>
         /// <param name="ProductAttribute"></param>
-        public virtual async Task UpdateValueAsync(ProductAttributeValue attribuye)
+        public virtual async Task UpdateValueAsync(ProductAttributeValue attribute)
         {
-            await ProductAttributeValueRepository.UpdateAsync(attribuye);
+            await ProductAttributeValueRepository.UpdateAsync(attribute);
         }
 
         /// <summary>
         /// 删除属性值
         /// </summary>
         /// <param name="ProductAttribute"></param>
-        public virtual async Task DeleteValueAsync(ProductAttributeValue attribuye)
+        public virtual async Task DeleteValueAsync(ProductAttributeValue attribute)
         {
-            await ProductAttributeValueRepository.DeleteAsync(attribuye);
+            await ProductAttributeValueRepository.DeleteAsync(attribute);
         }
 
         /// <summary>
@@ -212,10 +227,89 @@ namespace Vapps.ECommerce.Products
         /// <param name="id"></param>
         public virtual async Task DeleteValueAsync(long id)
         {
-            var attribuye = await ProductAttributeValueRepository.FirstOrDefaultAsync(id);
+            var attribute = await ProductAttributeValueRepository.FirstOrDefaultAsync(id);
 
-            if (attribuye != null)
-                await ProductAttributeValueRepository.DeleteAsync(attribuye);
+            if (attribute != null)
+                await ProductAttributeValueRepository.DeleteAsync(attribute);
+        }
+
+        #endregion
+
+        #region Attribute Mapping
+
+        /// <summary>
+        /// 根据id查找商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<ProductAttributeMapping> FindMappingByIdAsync(long id)
+        {
+            return await ProductAttributeMappingRepository.FirstOrDefaultAsync(id);
+        }
+
+        /// <summary>
+        /// 根据id获取商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<ProductAttributeMapping> GetMappingByIdAsync(long id)
+        {
+            return await ProductAttributeMappingRepository.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 添加/更新商品属性
+        /// </summary>
+        /// <param name="value"></param>
+        public virtual async Task CreateOrUpdateMappingAsync(ProductAttributeMapping value)
+        {
+            if (value.Id > 0)
+            {
+                await UpdateMappingAsync(value);
+            }
+            else
+            {
+                await CreateMappingAsync(value);
+            }
+        }
+
+        /// <summary>
+        /// 添加商品属性
+        /// </summary>
+        /// <param name="attribute"></param>
+        public virtual async Task CreateMappingAsync(ProductAttributeMapping attribute)
+        {
+            await ProductAttributeMappingRepository.InsertAsync(attribute);
+        }
+
+        /// <summary>
+        /// 更新商品属性
+        /// </summary>
+        /// <param name="ProductAttribute"></param>
+        public virtual async Task UpdateMappingAsync(ProductAttributeMapping attribute)
+        {
+            await ProductAttributeMappingRepository.UpdateAsync(attribute);
+        }
+
+        /// <summary>
+        /// 删除商品属性
+        /// </summary>
+        /// <param name="ProductAttribute"></param>
+        public virtual async Task DeleteMappingAsync(ProductAttributeMapping attribute)
+        {
+            await ProductAttributeMappingRepository.DeleteAsync(attribute);
+        }
+
+        /// <summary>
+        /// 删除商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        public virtual async Task DeleteMappingAsync(long id)
+        {
+            var attribute = await ProductAttributeMappingRepository.FirstOrDefaultAsync(id);
+
+            if (attribute != null)
+                await ProductAttributeMappingRepository.DeleteAsync(attribute);
         }
 
         #endregion

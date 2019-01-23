@@ -52,7 +52,6 @@ namespace Vapps.ECommerce.Products
         /// 添加商品
         /// </summary>
         /// <param name="product"></param>
-        [UnitOfWork]
         public virtual async Task CreateAsync(Product product)
         {
             // 创建或更新属性
@@ -77,6 +76,7 @@ namespace Vapps.ECommerce.Products
 
 
             await ProductRepository.InsertAsync(product);
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>

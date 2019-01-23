@@ -59,7 +59,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 货物成本/进货价
         /// </summary>
-        public virtual decimal ProductCost { get; set; }
+        public virtual decimal GoodCost { get; set; }
 
         /// <summary>
         /// 重量（发货毛重）

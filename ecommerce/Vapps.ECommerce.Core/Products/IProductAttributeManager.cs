@@ -12,6 +12,15 @@ namespace Vapps.ECommerce.Products
 
         IQueryable<ProductAttribute> ProductAttributes { get; }
 
+
+        IRepository<ProductAttributeValue, long> ProductAttributeValueRepository { get; }
+
+        IQueryable<ProductAttributeValue> ProductAttributeValues { get; }
+
+        IRepository<ProductAttributeMapping, long> ProductAttributeMappingRepository { get; }
+
+        IQueryable<ProductAttributeMapping> ProductAttributeMappings { get; }
+
         #region ProductAttribute
 
         /// <summary>
@@ -119,6 +128,54 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         Task DeleteValueAsync(long id);
+
+        #endregion
+
+        #region ProductAttribute Mapping
+
+        /// <summary>
+        /// 根据id查找商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeMapping> FindMappingByIdAsync(long id);
+
+        /// <summary>
+        /// 根据id获取商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeMapping> GetMappingByIdAsync(long id);
+
+        /// <summary>
+        /// 添加/更新商品属性
+        /// </summary>
+        /// <param name="Product"></param>
+        Task CreateOrUpdateMappingAsync(ProductAttributeMapping Product);
+
+        /// <summary>
+        /// 添加商品属性
+        /// </summary>
+        /// <param name="Product"></param>
+        Task CreateMappingAsync(ProductAttributeMapping Product);
+
+        /// <summary>
+        /// 修改商品属性
+        /// </summary>
+        /// <param name="Product"></param>
+        Task UpdateMappingAsync(ProductAttributeMapping Product);
+
+        /// <summary>
+        /// 删除商品属性
+        /// </summary>
+        /// <param name="Product"></param>
+        Task DeleteMappingAsync(ProductAttributeMapping Product);
+
+        /// <summary>
+        /// 删除商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        Task DeleteMappingAsync(long id);
 
         #endregion
     }

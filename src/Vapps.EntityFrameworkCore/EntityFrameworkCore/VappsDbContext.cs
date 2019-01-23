@@ -201,6 +201,12 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<Product>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+                b.Property(e => e.Price).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.GoodCost).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Height).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Width).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Length).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Weight).HasColumnType("decimal(18, 4)");
             });
 
             modelBuilder.Entity<ProductCategory>(b =>
@@ -231,6 +237,14 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<PredefinedProductAttributeValue>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.ProductAttributeId });
+            });
+
+            modelBuilder.Entity<ProductAttributeCombination>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.ProductId });
+
+                b.Property(e => e.OverriddenPrice).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.OverriddenGoodCost).HasColumnType("decimal(18, 4)");
             });
 
             modelBuilder.ConfigurePersistedGrantEntity();
