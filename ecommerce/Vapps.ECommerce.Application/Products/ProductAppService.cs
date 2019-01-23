@@ -69,7 +69,6 @@ namespace Vapps.ECommerce.Products
         /// 获取所有可用商品(下拉框)
         /// </summary>
         /// <returns></returns>
-
         public async Task<List<SelectListItemDto>> GetProductSelectList()
         {
             var query = _productManager.Products;
@@ -135,9 +134,6 @@ namespace Vapps.ECommerce.Products
 
             return productDto;
         }
-
-        
-
 
         /// <summary>
         /// 创建或更新商品
@@ -264,6 +260,8 @@ namespace Vapps.ECommerce.Products
         {
             var product = await _productManager.FindByIdAsync(input.Id.Value);
 
+            UpdateProductPictures(input, product);
+            UpdateProductAttribute(input, product);
 
             await _productManager.UpdateAsync(product);
         }
@@ -309,6 +307,46 @@ namespace Vapps.ECommerce.Products
                 }
             }
         }
+
+        /// <summary>
+        /// 更新商品属性
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="product"></param>
+        private static void UpdateProductAttribute(CreateOrUpdateProductInput input, Product product)
+        {
+            var existItemIds = input.Attributes.Select(i => i.Id);
+            var itemsId2Remove = product.Attributes.Where(i => !existItemIds.Contains(i.Id)).ToList();
+
+            //删除不存在的属性
+            foreach (var item in itemsId2Remove)
+            {
+                item.IsDeleted = true;
+                product.Attributes.Remove(item);
+            }
+
+            //添加或更新属性
+            foreach (var itemInput in input.Attributes)
+            {
+                if (itemInput.Id > 0)
+                {
+                    var item = product.Attributes.FirstOrDefault(x => x.Id == itemInput.Id);
+                    if (item != null)
+                    {
+                        item.ProductAttributeId = itemInput.Id;
+                        item.DisplayOrder = itemInput.DisplayOrder;
+                    }
+                }
+                else
+                {
+                    product.Attributes.Add(new ProductAttributeMapping()
+                    {
+
+                    });
+                }
+            }
+        }
+
 
         private async Task<List<JsonProductAttribute>> CreateOrUpdateJsonAttribute(AttributeCombinationDto combinDto)
         {
