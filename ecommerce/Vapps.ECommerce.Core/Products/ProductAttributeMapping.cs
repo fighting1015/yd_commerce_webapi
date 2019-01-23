@@ -23,6 +23,11 @@ namespace Vapps.ECommerce.Products
         public virtual long ProductAttributeId { get; set; }
 
         /// <summary>
+        /// 属性
+        /// </summary>
+        public virtual ProductAttribute ProductAttribute { get; set; }
+
+        /// <summary>
         /// 排序id
         /// </summary>
         public virtual int DisplayOrder { get; set; }

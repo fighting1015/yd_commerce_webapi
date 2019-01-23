@@ -232,6 +232,10 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<ProductAttributeMapping>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.ProductId, e.IsDeleted });
+
+                b.HasOne(o => o.ProductAttribute)
+                 .WithMany()
+                 .HasForeignKey(c => c.ProductAttributeId).OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<PredefinedProductAttributeValue>(b =>
