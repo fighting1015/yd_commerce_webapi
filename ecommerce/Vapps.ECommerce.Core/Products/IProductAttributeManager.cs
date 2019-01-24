@@ -1,7 +1,7 @@
 ﻿using Abp.Domain.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Vapps.ECommerce.Products;
 
 namespace Vapps.ECommerce.Products
 {
@@ -12,10 +12,13 @@ namespace Vapps.ECommerce.Products
 
         IQueryable<ProductAttribute> ProductAttributes { get; }
 
-
         IRepository<ProductAttributeValue, long> ProductAttributeValueRepository { get; }
 
         IQueryable<ProductAttributeValue> ProductAttributeValues { get; }
+
+        IRepository<PredefinedProductAttributeValue, long> PredefinedProductAttributeValueRepository { get; }
+
+        IQueryable<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; }
 
         IRepository<ProductAttributeMapping, long> ProductAttributeMappingRepository { get; }
 
@@ -128,6 +131,61 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         Task DeleteValueAsync(long id);
+
+        #endregion
+
+        #region Predefined Attribute Value
+
+        /// <summary>
+        /// 根据名称查找默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(long attributeId, string name);
+
+        /// <summary>
+        /// 根据id查找默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<PredefinedProductAttributeValue> FindPredefinedValueByIdAsync(long id);
+
+        /// <summary>
+        /// 根据id获取默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id);
+
+        /// <summary>
+        /// 添加/更新默认属性值
+        /// </summary>
+        /// <param name="value"></param>
+        Task CreateOrUpdatePredefinedValueAsync(PredefinedProductAttributeValue value);
+
+        /// <summary>
+        /// 添加默认属性值
+        /// </summary>
+        /// <param name="attribute"></param>
+        Task CreatePredefinedValueAsync(PredefinedProductAttributeValue attribute);
+
+        /// <summary>
+        /// 更新默认属性值
+        /// </summary>
+        /// <param name="ProductAttribute"></param>
+        Task UpdatePredefinedValueAsync(PredefinedProductAttributeValue attribute);
+
+        /// <summary>
+        /// 删除默认属性值
+        /// </summary>
+        /// <param name="ProductAttribute"></param>
+        Task DeletePredefinedValueAsync(PredefinedProductAttributeValue attribute);
+
+        /// <summary>
+        /// 删除默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        Task DeletePredefinedValueAsync(long id);
 
         #endregion
 

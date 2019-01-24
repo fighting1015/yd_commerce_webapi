@@ -71,7 +71,7 @@ namespace Vapps.ECommerce.Products
         /// <returns></returns>
         public async Task<List<SelectListItemDto>> GetProductSelectList()
         {
-            var query = _productManager.Products;
+            var query = _productManager.Products.AsNoTracking();
 
             var productCount = await query.CountAsync();
             var tempalates = await query
@@ -179,7 +179,6 @@ namespace Vapps.ECommerce.Products
             productDto.Attributes = product.Attributes.Select(attribute =>
             {
                 var item = ObjectMapper.Map<ProductAttributeDto>(attribute);
-                item.Name = _productAttributeManager.GetByIdAsync(attribute.ProductAttributeId).Result?.Name ?? string.Empty;
 
                 _productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoaded(attribute, t => t.Values);
 
@@ -220,6 +219,12 @@ namespace Vapps.ECommerce.Products
             await _productManager.UpdateAsync(product);
         }
 
+        /// <summary>
+        /// 创建或更新商品组合
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="product"></param>
+        /// <returns></returns>
         private async Task CreateOrUpdateAttributeCombinations(CreateOrUpdateProductInput input, Product product)
         {
             product.AttributeCombinations = new Collection<ProductAttributeCombination>();
@@ -249,30 +254,54 @@ namespace Vapps.ECommerce.Products
             }
 
             //添加或更新属性
-            foreach (var attribueDto in input.Attributes)
+            foreach (var attributeDto in input.Attributes)
             {
-                var attribue = ObjectMapper.Map<ProductAttribute>(attribueDto);
+                var attribute = ObjectMapper.Map<ProductAttribute>(attributeDto);
 
                 // 创建不存在的属性
-                if (attribue.Id == 0)
-                    await _productAttributeManager.CreateOrUpdateAsync(attribue);
+                if (attribute.Id == 0)
+                    await _productAttributeManager.CreateOrUpdateAsync(attribute);
 
-                attribueDto.Id = attribue.Id;
+                attributeDto.Id = attribute.Id;
 
+                // 属性关联
                 var attributeMapping = new ProductAttributeMapping()
                 {
-                    ProductAttributeId = attribue.Id,
-                    DisplayOrder = attribueDto.DisplayOrder,
-                    Values = attribueDto.Values.Select(i =>
+                    ProductAttributeId = attribute.Id,
+                    DisplayOrder = attributeDto.DisplayOrder,
+                    Values = attributeDto.Values.Select(valueDto =>
                     {
-                        var value = ObjectMapper.Map<ProductAttributeValue>(i);
-                        value.Name = i.Name;
-                        return value;
+                        if (valueDto.Id == 0)
+                        {
+                            // 创建默认属性值
+                            CreateOrUpdatePredefinedAttributeValue(valueDto, attribute);
+                        }
+
+                        return ObjectMapper.Map<ProductAttributeValue>(valueDto);
                     }).ToList()
                 };
 
                 product.Attributes.Add(attributeMapping);
             }
+        }
+
+        /// <summary>
+        /// 创建或更新属性默认值
+        /// </summary>
+        /// <param name="attributeDto"></param>
+        /// <param name="attribute"></param>
+        private void CreateOrUpdatePredefinedAttributeValue(ProductAttributeValueDto attributeDto, ProductAttribute attribute)
+        {
+            var pValue = _productAttributeManager.FindPredefinedValueByNameAsync(attribute.Id, attributeDto.Name);
+
+            if (pValue != null)
+                return;
+
+            _productAttributeManager.CreateOrUpdatePredefinedValueAsync(new PredefinedProductAttributeValue()
+            {
+                ProductAttributeId = attribute.Id,
+                Name = attributeDto.Name,
+            });
         }
 
         /// <summary>
@@ -285,6 +314,7 @@ namespace Vapps.ECommerce.Products
             var product = await _productManager.FindByIdAsync(input.Id.Value);
 
             UpdateProductPictures(input, product);
+
             UpdateProductAttribute(input, product);
 
             await _productManager.UpdateAsync(product);

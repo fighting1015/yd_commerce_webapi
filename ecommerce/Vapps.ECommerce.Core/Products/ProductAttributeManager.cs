@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,9 @@ namespace Vapps.ECommerce.Products
 
         public IQueryable<ProductAttributeValue> ProductAttributeValues => ProductAttributeValueRepository.GetAll().AsNoTracking();
 
+        public IRepository<PredefinedProductAttributeValue, long> PredefinedProductAttributeValueRepository { get; }
+
+        public IQueryable<PredefinedProductAttributeValue> PredefinedProductAttributeValues => PredefinedProductAttributeValueRepository.GetAll().AsNoTracking();
 
         public IRepository<ProductAttributeMapping, long> ProductAttributeMappingRepository { get; }
 
@@ -27,11 +31,14 @@ namespace Vapps.ECommerce.Products
 
         public ProductAttributeManager(IRepository<ProductAttribute, long> attributeRepository,
             IRepository<ProductAttributeValue, long> attributeValueRepository,
-            IRepository<ProductAttributeMapping, long> attributeMappingRepository)
+            IRepository<ProductAttributeMapping, long> attributeMappingRepository,
+            IRepository<PredefinedProductAttributeValue, long> predefinedProductAttributeValueRepository)
         {
             this.ProductAttributeRepository = attributeRepository;
             this.ProductAttributeValueRepository = attributeValueRepository;
             this.ProductAttributeMappingRepository = attributeMappingRepository;
+            this.PredefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
+
         }
 
         #endregion
@@ -231,6 +238,113 @@ namespace Vapps.ECommerce.Products
 
             if (attribute != null)
                 await ProductAttributeValueRepository.DeleteAsync(attribute);
+        }
+
+        #endregion
+
+        #region Predefined Attribute Value
+
+        /// <summary>
+        /// 根据名称查找默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(string name)
+        {
+            return await PredefinedProductAttributeValueRepository.FirstOrDefaultAsync(x => x.Name == name);
+        }
+
+        /// <summary>
+        /// 根据id查找默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<PredefinedProductAttributeValue> FindPredefinedValueByIdAsync(long id)
+        {
+            return await PredefinedProductAttributeValueRepository.FirstOrDefaultAsync(id);
+        }
+
+
+        /// <summary>
+        /// 根据属性id和名称获取默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(long attributeId, string name)
+        {
+            return await PredefinedProductAttributeValueRepository.FirstOrDefaultAsync(a => a.ProductAttributeId == attributeId && a.Name == name);
+        }
+
+        /// <summary>
+        /// 根据id获取默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id)
+        {
+            return await PredefinedProductAttributeValueRepository.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 添加/更新默认属性值
+        /// </summary>
+        /// <param name="value"></param>
+        public virtual async Task CreateOrUpdatePredefinedValueAsync(PredefinedProductAttributeValue value)
+        {
+            if (value.Id == 0)
+            {
+                var entity = await FindPredefinedValueByNameAsync(value.Name);
+                if (entity != null)
+                    value.Id = entity.Id;
+            }
+
+            if (value.Id > 0)
+            {
+                await UpdatePredefinedValueAsync(value);
+            }
+            else
+            {
+                await CreatePredefinedValueAsync(value);
+            }
+        }
+
+        /// <summary>
+        /// 添加默认属性值
+        /// </summary>
+        /// <param name="attribute"></param>
+        public virtual async Task CreatePredefinedValueAsync(PredefinedProductAttributeValue attribute)
+        {
+            await PredefinedProductAttributeValueRepository.InsertAsync(attribute);
+        }
+
+        /// <summary>
+        /// 更新默认属性值
+        /// </summary>
+        /// <param name="ProductAttribute"></param>
+        public virtual async Task UpdatePredefinedValueAsync(PredefinedProductAttributeValue attribute)
+        {
+            await PredefinedProductAttributeValueRepository.UpdateAsync(attribute);
+        }
+
+        /// <summary>
+        /// 删除默认属性值
+        /// </summary>
+        /// <param name="ProductAttribute"></param>
+        public virtual async Task DeletePredefinedValueAsync(PredefinedProductAttributeValue attribute)
+        {
+            await PredefinedProductAttributeValueRepository.DeleteAsync(attribute);
+        }
+
+        /// <summary>
+        /// 删除默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        public virtual async Task DeletePredefinedValueAsync(long id)
+        {
+            var attribute = await PredefinedProductAttributeValueRepository.FirstOrDefaultAsync(id);
+
+            if (attribute != null)
+                await PredefinedProductAttributeValueRepository.DeleteAsync(attribute);
         }
 
         #endregion

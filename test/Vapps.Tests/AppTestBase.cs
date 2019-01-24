@@ -171,7 +171,7 @@ namespace Vapps.Tests
 
         protected void LoginAsDefaultTenantAdmin()
         {
-            LoginAsTenant(Tenant.DefaultTenantName, User.AdminUserName);
+            LoginAsTenant(Tenant.DefaultTenantName, "laozhuorun");
         }
 
         protected void LoginAsHost(string userName)

@@ -18,16 +18,11 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 属性值主键
         /// </summary>
-        public int ProductAttributeId { get; set; }
+        public long ProductAttributeId { get; set; }
 
         /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// 显示顺序
-        /// </summary>
-        public int DisplayOrder { get; set; }
     }
 }
