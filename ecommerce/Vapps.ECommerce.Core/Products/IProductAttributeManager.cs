@@ -79,60 +79,7 @@ namespace Vapps.ECommerce.Products
 
         #endregion
 
-        #region ProductAttributeValue
-
-        /// <summary>
-        /// 根据名称查找属性值
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<ProductAttributeValue> FindValueByNameAsync(string name);
-
-        /// <summary>
-        /// 根据id查找属性值
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<ProductAttributeValue> FindValueByIdAsync(long id);
-
-        /// <summary>
-        /// 根据id获取属性值
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<ProductAttributeValue> GetValueByIdAsync(long id);
-
-        /// <summary>
-        /// 添加/更新属性值
-        /// </summary>
-        /// <param name="Product"></param>
-        Task CreateOrUpdateValueAsync(ProductAttributeValue Product);
-
-        /// <summary>
-        /// 添加属性值
-        /// </summary>
-        /// <param name="Product"></param>
-        Task CreateValueAsync(ProductAttributeValue Product);
-
-        /// <summary>
-        /// 修改属性值
-        /// </summary>
-        /// <param name="Product"></param>
-        Task UpdateValueAsync(ProductAttributeValue Product);
-
-        /// <summary>
-        /// 删除属性值
-        /// </summary>
-        /// <param name="Product"></param>
-        Task DeleteValueAsync(ProductAttributeValue Product);
-
-        /// <summary>
-        /// 删除属性值
-        /// </summary>
-        /// <param name="id"></param>
-        Task DeleteValueAsync(long id);
-
-        #endregion
+  
 
         #region Predefined Attribute Value
 
@@ -234,6 +181,68 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         Task DeleteMappingAsync(long id);
+
+        #endregion
+
+        #region ProductAttributeValue
+
+        /// <summary>
+        /// 根据属性Id和预设值id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId,long pValueId);
+
+        /// <summary>
+        /// 根据名称查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeValue> FindValueByNameAsync(string name);
+
+        /// <summary>
+        /// 根据id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeValue> FindValueByIdAsync(long id);
+
+        /// <summary>
+        /// 根据id获取属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeValue> GetValueByIdAsync(long id);
+
+        /// <summary>
+        /// 添加/更新属性值
+        /// </summary>
+        /// <param name="Product"></param>
+        Task CreateOrUpdateValueAsync(ProductAttributeValue Product);
+
+        /// <summary>
+        /// 添加属性值
+        /// </summary>
+        /// <param name="Product"></param>
+        Task CreateValueAsync(ProductAttributeValue Product);
+
+        /// <summary>
+        /// 修改属性值
+        /// </summary>
+        /// <param name="Product"></param>
+        Task UpdateValueAsync(ProductAttributeValue Product);
+
+        /// <summary>
+        /// 删除属性值
+        /// </summary>
+        /// <param name="Product"></param>
+        Task DeleteValueAsync(ProductAttributeValue Product);
+
+        /// <summary>
+        /// 删除属性值
+        /// </summary>
+        /// <param name="id"></param>
+        Task DeleteValueAsync(long id);
 
         #endregion
     }

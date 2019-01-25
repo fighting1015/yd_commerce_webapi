@@ -77,7 +77,7 @@ namespace Vapps.Migrations.Seed.Tenants
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.IsMainUser);
             if (adminUser == null)
             {
-                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com",string.Empty,string.Empty);
+                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com","defaultAdmin",string.Empty);
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.ShouldChangePasswordOnNextLogin = true;

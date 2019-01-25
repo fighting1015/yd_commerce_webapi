@@ -52,5 +52,8 @@
     <Compile Update="Migrations\20190123090843_Update_Product_Price.Designer.cs">
       <DependentUpon>20190123090843_Update_Product_Price.cs</DependentUpon>
     </Compile>
+    <Compile Update="Migrations\20190125072316_Update_Attribute.Designer.cs">
+      <DependentUpon>20190125072316_Update_Attribute.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

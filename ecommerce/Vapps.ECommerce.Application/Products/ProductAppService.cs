@@ -102,14 +102,14 @@ namespace Vapps.ECommerce.Products
             {
                 var product = await _productManager.GetByIdAsync(input.Id.Value);
 
-                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Categorys);
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Categories);
                 await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Pictures);
                 await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Attributes);
                 await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.AttributeCombinations);
 
                 productDto = ObjectMapper.Map<GetProductForEditOutput>(product);
 
-                productDto.Categorys = product.Categorys.Select(i =>
+                productDto.Categories = product.Categories.Select(i =>
                 {
                     var item = ObjectMapper.Map<ProductCategoryDto>(i);
                     item.Name = _categoryManager.GetByIdAsync(item.CategoryId).Result?.Name ?? string.Empty;
@@ -200,13 +200,11 @@ namespace Vapps.ECommerce.Products
         {
             var product = ObjectMapper.Map<Product>(input);
 
-            product.Categorys = input.Categorys.Select(i =>
+            product.Categories = input.Categories.Select(i =>
             {
                 var item = ObjectMapper.Map<ProductCategory>(i);
                 return item;
             }).ToList();
-
-            await CreateOrUpdateAttribute(input, product);
 
             product.Pictures = input.Pictures.Select(i =>
             {
@@ -214,71 +212,66 @@ namespace Vapps.ECommerce.Products
             }).ToList();
 
             await _productManager.CreateAsync(product);
-            await CreateOrUpdateAttributeCombinations(input, product);
+
+            // 创建属性
+            await InitAttribute(input, product);
+
+            // 创建属性组合
+            CreateOrUpdateAttributeCombination(input, product);
 
             await _productManager.UpdateAsync(product);
         }
 
         /// <summary>
-        /// 创建或更新商品组合
+        /// 创建或更新属性组合
         /// </summary>
         /// <param name="input"></param>
         /// <param name="product"></param>
         /// <returns></returns>
-        private async Task CreateOrUpdateAttributeCombinations(CreateOrUpdateProductInput input, Product product)
+        private void CreateOrUpdateAttributeCombination(CreateOrUpdateProductInput input, Product product)
         {
             product.AttributeCombinations = new Collection<ProductAttributeCombination>();
             foreach (var combinDto in input.AttributeCombinations)
             {
                 var combin = ObjectMapper.Map<ProductAttributeCombination>(combinDto);
-                var jsonAttributes = await CreateOrUpdateJsonAttribute(combinDto);
 
-                combin.AttributesJson = JsonConvert.SerializeObject(jsonAttributes);
+                combin.AttributesJson = JsonConvert.SerializeObject(combinDto.Attributes.GetJsonAttribute());
                 product.AttributeCombinations.Add(combin);
             }
         }
 
-        private async Task CreateOrUpdateAttribute(CreateOrUpdateProductInput input, Product product)
+        /// <summary>
+        /// 创建或者更新属性
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        private async Task InitAttribute(CreateOrUpdateProductInput input, Product product)
         {
             if (product.Id == 0)
+            {
                 product.Attributes = new Collection<ProductAttributeMapping>();
 
-            var existItemIds = input.Attributes.Select(i => i.Id);
-            var itemsId2Remove = product.Attributes.Where(i => !existItemIds.Contains(i.Id)).ToList();
+                var existItemIds = input.Attributes.Select(i => i.Id);
+                var itemsId2Remove = product.Attributes.Where(i => !existItemIds.Contains(i.Id)).ToList();
 
-            //删除不存在的属性
-            foreach (var item in itemsId2Remove)
-            {
-                item.IsDeleted = true;
-                product.Attributes.Remove(item);
+                //删除不存在的属性
+                foreach (var item in itemsId2Remove)
+                {
+                    item.IsDeleted = true;
+                    product.Attributes.Remove(item);
+                }
             }
 
             //添加或更新属性
             foreach (var attributeDto in input.Attributes)
             {
-                var attribute = ObjectMapper.Map<ProductAttribute>(attributeDto);
-
-                // 创建不存在的属性
-                if (attribute.Id == 0)
-                    await _productAttributeManager.CreateOrUpdateAsync(attribute);
-
-                attributeDto.Id = attribute.Id;
-
                 // 属性关联
                 var attributeMapping = new ProductAttributeMapping()
                 {
-                    ProductAttributeId = attribute.Id,
+                    ProductAttributeId = attributeDto.Id,
                     DisplayOrder = attributeDto.DisplayOrder,
-                    Values = attributeDto.Values.Select(valueDto =>
-                    {
-                        if (valueDto.Id == 0)
-                        {
-                            // 创建默认属性值
-                            CreateOrUpdatePredefinedAttributeValue(valueDto, attribute);
-                        }
-
-                        return ObjectMapper.Map<ProductAttributeValue>(valueDto);
-                    }).ToList()
+                    Values = await InitProductAttributeValues(attributeDto)
                 };
 
                 product.Attributes.Add(attributeMapping);
@@ -286,24 +279,36 @@ namespace Vapps.ECommerce.Products
         }
 
         /// <summary>
-        /// 创建或更新属性默认值
+        /// 属性商品属性
         /// </summary>
         /// <param name="attributeDto"></param>
-        /// <param name="attribute"></param>
-        private void CreateOrUpdatePredefinedAttributeValue(ProductAttributeValueDto attributeDto, ProductAttribute attribute)
+        /// <returns></returns>
+        private async Task<List<ProductAttributeValue>> InitProductAttributeValues(ProductAttributeMappingDto attributeDto)
         {
-            var pValue = _productAttributeManager.FindPredefinedValueByNameAsync(attribute.Id, attributeDto.Name);
+            var vauleList = new List<ProductAttributeValue>();
 
-            if (pValue != null)
-                return;
-
-            _productAttributeManager.CreateOrUpdatePredefinedValueAsync(new PredefinedProductAttributeValue()
+            foreach (var valueDto in attributeDto.Values)
             {
-                ProductAttributeId = attribute.Id,
-                Name = attributeDto.Name,
-            });
-        }
+                var predefineValue = await _productAttributeManager.GetPredefinedValueByIdAsync(valueDto.Id);
+                var attributeValue = await _productAttributeManager.FindValueByAttributeIdAndPredefinedValueIdAsync(attributeDto.Id, valueDto.Id);
 
+                if (attributeValue != null)
+                {
+                    attributeValue.Name = predefineValue.Name;
+                    attributeValue.DisplayOrder = valueDto.DisplayOrder;
+                    attributeValue.PictureId = valueDto.PictureId;
+                }
+                else
+                {
+                    attributeValue = ObjectMapper.Map<ProductAttributeValue>(valueDto);
+                }
+
+                vauleList.Add(attributeValue);
+            }
+
+            return vauleList;
+        }
+     
         /// <summary>
         /// 更新商品
         /// </summary>
@@ -319,8 +324,6 @@ namespace Vapps.ECommerce.Products
 
             await _productManager.UpdateAsync(product);
         }
-
-        #region Utility
 
         /// <summary>
         /// 更新图片
@@ -401,54 +404,8 @@ namespace Vapps.ECommerce.Products
             }
         }
 
-
-        private async Task<List<JsonProductAttribute>> CreateOrUpdateJsonAttribute(AttributeCombinationDto combinDto)
-        {
-            var jsonAttributes = new List<JsonProductAttribute>();
-
-            foreach (var attributeDto in combinDto.Attributes)
-            {
-                var jsonAttributeItem = new JsonProductAttribute();
-
-                if (attributeDto.Id == 0)
-                {
-                    var productAttribute = await _productAttributeManager.FindByNameAsync(attributeDto.Name);
-                    jsonAttributeItem.AttributeId = productAttribute.Id;
-                }
-                else
-                {
-                    jsonAttributeItem.AttributeId = attributeDto.Id;
-                }
-
-                jsonAttributeItem.AttributeName = attributeDto.Name;
-
-                foreach (var value in attributeDto.Values)
-                {
-                    var jsonAttributeValue = new JsonProductAttributeValue();
-
-                    if (value.Id == 0)
-                    {
-                        var productAttribute = await _productAttributeManager.FindValueByNameAsync(value.Name);
-                        jsonAttributeValue.AttributeValueId = productAttribute.Id;
-                        jsonAttributeValue.AttributeValueName = productAttribute.Name;
-                    }
-                    else
-                    {
-                        jsonAttributeValue.AttributeValueId = attributeDto.Id;
-                        jsonAttributeValue.AttributeValueName = attributeDto.Name;
-                    }
-                    jsonAttributeValue.DisplayOrder = value.DisplayOrder;
-                    jsonAttributeItem.AttributeValues.Add(jsonAttributeValue);
-                }
-
-                jsonAttributes.Add(jsonAttributeItem);
-            }
-
-            return jsonAttributes;
-        }
-
         /// <summary>
-        /// 
+        /// 初始化属性组合
         /// </summary>
         /// <param name="productDto"></param>
         /// <param name="product"></param>
@@ -459,34 +416,28 @@ namespace Vapps.ECommerce.Products
             {
                 var combinationDto = ObjectMapper.Map<AttributeCombinationDto>(combination);
 
-                var atributeDtoList = new List<ProductAttributeDto>();
-
                 var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(combination.AttributesJson);
 
                 foreach (var jsonAttribute in jsonAttributeList)
                 {
-                    var atributeDto = new ProductAttributeDto();
+                    var atributeDto = new ProductAttributeMappingDto();
                     atributeDto.Id = jsonAttribute.AttributeId;
-                    atributeDto.Name = jsonAttribute.AttributeName;
                     atributeDto.Values = jsonAttribute.AttributeValues.Select(value =>
                     {
                         var valueDto = new ProductAttributeValueDto();
                         valueDto.Id = value.AttributeValueId;
-                        valueDto.AttributeId = jsonAttribute.AttributeId;
-                        valueDto.Name = value.AttributeValueName;
                         valueDto.DisplayOrder = value.DisplayOrder;
                         return valueDto;
                     }).ToList();
                     combinationDto.Attributes.Add(atributeDto);
                 }
 
-                productDto.AttributeCombinations.Add(combinationDto); ;
+                productDto.AttributeCombinations.Add(combinationDto);
             }
         }
 
-
         #endregion
+
     }
 
-    #endregion
 }

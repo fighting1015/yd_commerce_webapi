@@ -85,7 +85,7 @@ namespace Vapps.ECommerce.Products
         /// 分类
         /// </summary>
         [ForeignKey("ProductId")]
-        public virtual ICollection<ProductCategory> Categorys { get; set; }
+        public virtual ICollection<ProductCategory> Categories { get; set; }
 
         /// <summary>
         /// 图片

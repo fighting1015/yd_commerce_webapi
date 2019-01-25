@@ -19,5 +19,10 @@ namespace Vapps.ECommerce.Products
         /// Gets or sets the name
         /// </summary>
         public virtual string Name { get; set; }
-     }
+
+        /// <summary>
+        /// 排序标志
+        /// </summary>
+        public virtual int DisplayOrder { get; set; }
+    }
 }

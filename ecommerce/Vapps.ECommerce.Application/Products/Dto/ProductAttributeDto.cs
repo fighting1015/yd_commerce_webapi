@@ -46,31 +46,4 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         public int DisplayOrder { get; set; }
     }
-
-    /// <summary>
-    /// 属性值
-    /// </summary>
-    [AutoMap(typeof(ProductAttributeValue))]
-    public class ProductAttributeValueDto : EntityDto<long>
-    {
-        /// <summary>
-        /// 属性Id
-        /// </summary>
-        public long AttributeId { get; set; }
-
-        /// <summary>
-        /// 属性值
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 图片id
-        /// </summary>
-        public int PictureId { get; set; }
-
-        /// <summary>
-        /// 排序Id
-        /// </summary>
-        public int DisplayOrder { get; set; }
-    }
 }

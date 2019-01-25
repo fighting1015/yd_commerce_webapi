@@ -1,4 +1,5 @@
-﻿using Abp.AutoMapper;
+﻿using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
 using System.Collections.Generic;
 
 namespace Vapps.ECommerce.Products.Dto
@@ -79,7 +80,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 分类
         /// </summary>
-        public virtual List<ProductCategoryDto> Categorys { get; set; }
+        public virtual List<ProductCategoryDto> Categories { get; set; }
 
         /// <summary>
         /// 图片
@@ -89,11 +90,45 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 商品属性和值
         /// </summary>
-        public virtual List<ProductAttributeDto> Attributes { get; set; }
+        public virtual List<ProductAttributeMappingDto> Attributes { get; set; }
 
         /// <summary>
         /// 商品属性组合
         /// </summary>
         public virtual List<AttributeCombinationDto> AttributeCombinations { get; set; }
     }
+
+    /// <summary>
+    /// 商品属性
+    /// </summary>
+    //[AutoMap(typeof(ProductAttribute))]
+    public class ProductAttributeMappingDto : EntityDto<long>
+    {
+        /// <summary>
+        /// 预定义值/值记录
+        /// </summary>
+        public List<ProductAttributeValueDto> Values { get; set; }
+
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        public int DisplayOrder { get; set; }
+    }
+
+    /// <summary>
+    /// 属性值
+    /// </summary>
+    public class ProductAttributeValueDto : EntityDto<long>
+    {
+        /// <summary>
+        /// 图片id
+        /// </summary>
+        public int PictureId { get; set; }
+
+        /// <summary>
+        /// 排序Id
+        /// </summary>
+        public int DisplayOrder { get; set; }
+    }
+
 }

@@ -47,7 +47,7 @@ namespace Vapps.Tests
 
             if (basePath.Contains("test"))
             {
-                basePath = basePath.Substring(0, basePath.IndexOf(@"\test\Vapps.Tests\bin\Debug\netcoreapp1.1"));
+                basePath = basePath.Substring(0, basePath.IndexOf(@"\test\Vapps.Tests\bin\Debug\netcoreapp2.2"));
             }
 
             env.Setup(m => m.ContentRootPath).Returns(basePath + "\\src\\Vapps.Web.Host");
@@ -171,7 +171,7 @@ namespace Vapps.Tests
 
         protected void LoginAsDefaultTenantAdmin()
         {
-            LoginAsTenant(Tenant.DefaultTenantName, "laozhuorun");
+            LoginAsTenant(Tenant.DefaultTenantName, "defaultAdmin");
         }
 
         protected void LoginAsHost(string userName)
@@ -199,7 +199,11 @@ namespace Vapps.Tests
 
             AbpSession.TenantId = tenant.Id;
 
-            var user = UsingDbContext(context => context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == userName));
+            var user = UsingDbContext(context =>
+            {
+                return context.Users.FirstOrDefault(u => u.TenantId == AbpSession.TenantId && u.UserName == userName);
+            });
+
             if (user == null)
             {
                 throw new Exception("There is no user: " + userName + " for tenant: " + tenancyName);

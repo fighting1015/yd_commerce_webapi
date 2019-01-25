@@ -19,6 +19,42 @@ namespace Vapps.ECommerce.Products
             this._productAttributeManager = productAttributeManager;
         }
 
+        #region Attribute
+
+        /// <summary>
+        /// 创建或更新属性
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<CreateOrUpdateAttributeOutput> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input)
+        {
+            var output = new CreateOrUpdateAttributeOutput();
+            if (input.Id > 0)
+            {
+                var attribute = await _productAttributeManager.GetByIdAsync(input.Id.Value);
+
+                attribute.Name = input.Name;
+                attribute.DisplayOrder = attribute.DisplayOrder;
+                await _productAttributeManager.UpdateAsync(attribute);
+                output.Id = attribute.Id;
+
+            }
+            else
+            {
+                var attribute = new ProductAttribute()
+                {
+                    Name = input.Name,
+                    DisplayOrder = input.DisplayOrder,
+                };
+
+                await _productAttributeManager.CreateAsync(attribute);
+                await CurrentUnitOfWork.SaveChangesAsync();
+                output.Id = attribute.Id;
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// 获取所有可用商品属性
         /// </summary>
@@ -43,11 +79,15 @@ namespace Vapps.ECommerce.Products
             return productSelectListItem;
         }
 
+        #endregion
+
+        #region Attribuete Value
+
         /// <summary>
         /// 获取所有可用商品属性值
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProductAttributeValueDto>> GetAttributeValues(long attributeId)
+        public async Task<List<PredefinedProductAttributeValueDto>> GetAttributeValues(long attributeId)
         {
             var query = _productAttributeManager.PredefinedProductAttributeValues.AsNoTracking()
                 .Where(a => a.ProductAttributeId == attributeId);
@@ -59,7 +99,7 @@ namespace Vapps.ECommerce.Products
 
             var productAttributes = values.Select(x =>
             {
-                return new ProductAttributeValueDto
+                return new PredefinedProductAttributeValueDto
                 {
                     Name = x.Name,
                     Id = x.Id
@@ -67,5 +107,43 @@ namespace Vapps.ECommerce.Products
             }).ToList();
             return productAttributes;
         }
+
+        /// <summary>
+        /// 创建或更新属性值
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<CreateOrUpdateAttributeValueOutput> CreateOrUpdateAttributeValue(CreateOrUpdateAttributeValueInput input)
+        {
+
+            var output = new CreateOrUpdateAttributeValueOutput();
+            if (input.Id > 0)
+            {
+                var attributeValue = await _productAttributeManager.GetPredefinedValueByIdAsync(input.Id.Value);
+
+                attributeValue.Name = input.Name;
+                attributeValue.DisplayOrder = attributeValue.DisplayOrder;
+                await _productAttributeManager.UpdatePredefinedValueAsync(attributeValue);
+                output.Id = attributeValue.Id;
+            }
+            else
+            {
+                var attributeValue = new PredefinedProductAttributeValue()
+                {
+                    ProductAttributeId = input.AttributeId,
+                    Name = input.Name,
+                    DisplayOrder = input.DisplayOrder,
+                };
+
+                await _productAttributeManager.CreatePredefinedValueAsync(attributeValue);
+                await CurrentUnitOfWork.SaveChangesAsync();
+                output.Id = attributeValue.Id;
+            }
+
+            return output;
+        }
+
+
+        #endregion
     }
 }

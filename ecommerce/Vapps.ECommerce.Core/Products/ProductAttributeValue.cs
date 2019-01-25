@@ -17,6 +17,16 @@ namespace Vapps.ECommerce.Products
         public virtual long ProductAttributeMappingId { get; set; }
 
         /// <summary>
+        /// 属性
+        /// </summary>
+        public virtual ProductAttributeMapping ProductAttributeMapping { get; set; }
+
+        /// <summary>
+        /// 预设值Id
+        /// </summary>
+        public virtual long PredefinedProductAttributeValueId { get; set; }
+
+        /// <summary>
         /// 产品Id
         /// </summary>
         public virtual long ProductId { get; set; }

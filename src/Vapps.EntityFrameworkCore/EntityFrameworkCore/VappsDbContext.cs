@@ -227,6 +227,10 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<ProductAttributeValue>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.ProductId, e.ProductAttributeMappingId, e.IsDeleted });
+
+                b.HasOne(o => o.ProductAttributeMapping)
+                  .WithMany(m=>m.Values)
+                  .HasForeignKey(c => c.ProductAttributeMappingId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ProductAttributeMapping>(b =>
@@ -235,7 +239,7 @@ namespace Vapps.EntityFrameworkCore
 
                 b.HasOne(o => o.ProductAttribute)
                  .WithMany()
-                 .HasForeignKey(c => c.ProductAttributeId).OnDelete(DeleteBehavior.Restrict);
+                 .HasForeignKey(c => c.ProductAttributeId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<PredefinedProductAttributeValue>(b =>

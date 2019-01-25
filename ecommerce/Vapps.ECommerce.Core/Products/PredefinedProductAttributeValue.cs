@@ -24,5 +24,10 @@ namespace Vapps.ECommerce.Products
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 排序标志
+        /// </summary>
+        public int DisplayOrder { get; set; }
     }
 }

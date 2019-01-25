@@ -17,9 +17,23 @@ namespace Vapps.ECommerce.Products
         Task<List<ProductAttributeDto>> GetAttributes();
 
         /// <summary>
+        /// 创建或更新属性
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<CreateOrUpdateAttributeOutput> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input);
+
+        /// <summary>
         /// 获取所有可用商品属性值
         /// </summary>
         /// <returns></returns>
-        Task<List<ProductAttributeValueDto>> GetAttributeValues(long attributeId);
+        Task<List<PredefinedProductAttributeValueDto>> GetAttributeValues(long attributeId);
+
+        /// <summary>
+        /// 创建或更新属性值
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<CreateOrUpdateAttributeValueOutput> CreateOrUpdateAttributeValue(CreateOrUpdateAttributeValueInput input);
     }
 }

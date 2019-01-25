@@ -11,21 +11,10 @@ namespace Vapps.ECommerce.Products
     /// </summary>
     public class JsonProductAttribute
     {
-        public JsonProductAttribute()
-        {
-            this.AttributeValues = new List<JsonProductAttributeValue>();
-        }
-
-
         /// <summary>
         /// 属性Id
         /// </summary>
         public long AttributeId { get; set; }
-
-        /// <summary>
-        /// 属性名
-        /// </summary>
-        public string AttributeName { get; set; }
 
         /// <summary>
         /// 属性值Id
@@ -42,11 +31,6 @@ namespace Vapps.ECommerce.Products
         /// 属性值Id
         /// </summary>
         public long AttributeValueId { get; set; }
-
-        /// <summary>
-        /// 属性值
-        /// </summary>
-        public string AttributeValueName { get; set; }
 
         /// <summary>
         /// 排序

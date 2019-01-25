@@ -29,69 +29,68 @@ namespace Vapps.Tests.Product
                 Price = 99,
                 GoodCost = 19
             };
-            productDto.Categorys.Add(new ProductCategoryDto()
+            productDto.Categories.Add(new ProductCategoryDto()
             {
                 CategoryId = 1,
             });
-            productDto.Categorys.Add(new ProductCategoryDto()
+            productDto.Categories.Add(new ProductCategoryDto()
             {
                 CategoryId = 2,
             });
-
 
             var attribute1 = new ProductAttributeDto()
             {
                 Id = 1,
             };
 
-            attribute1.Values.Add(new ProductAttributeValueDto()
-            {
-                AttributeId = 1,
-                Name = "红色",
-            });
+            //attribute1.Values.Add(new ProductAttributeValueDto()
+            //{
+            //    AttributeId = 1,
+            //    Name = "红色",
+            //});
 
-            attribute1.Values.Add(new ProductAttributeValueDto()
-            {
-                AttributeId = 0,
-                Name = "黑色",
-            });
+            //attribute1.Values.Add(new ProductAttributeValueDto()
+            //{
+            //    AttributeId = 0,
+            //    Name = "黑色",
+            //});
 
-            productDto.Attributes.Add(attribute1);
+            //productDto.Attributes.Add(attribute1);
 
-            var attribute2 = new ProductAttributeDto()
-            {
-                Id = 0,
-                Name = "尺码"
-            };
+            //var attribute2 = new ProductAttributeDto()
+            //{
+            //    Id = 0,
+            //    Name = "尺码",
+            //};
 
-            attribute2.Values.Add(new ProductAttributeValueDto()
-            {
-                AttributeId = 0,
-                Name = "大码",
-            });
+            //attribute2.Values.Add(new ProductAttributeValueDto()
+            //{
+            //    AttributeId = 0,
+            //    Name = "大码",
+            //});
 
-            attribute2.Values.Add(new ProductAttributeValueDto()
-            {
-                AttributeId = 0,
-                Name = "小码",
-            });
+            //attribute2.Values.Add(new ProductAttributeValueDto()
+            //{
+            //    AttributeId = 0,
+            //    Name = "小码",
+            //});
 
-            productDto.Attributes.Add(attribute2);
+            //productDto.Attributes.Add(attribute2);
 
-            var combin1 = new AttributeCombinationDto()
-            {
-                Sku = "12345",
-                ThirdPartySku = "12345",
-                OverriddenPrice = 199,
-                OverriddenGoodCost = 29,
-                StockQuantity = 100,
-            };
+            //var combin1 = new AttributeCombinationDto()
+            //{
+            //    Sku = "12345",
+            //    ThirdPartySku = "12345",
+            //    OverriddenPrice = 199,
+            //    OverriddenGoodCost = 29,
+            //    StockQuantity = 100,
+            //};
 
-            combin1.Attributes.Add(new ProductAttributeDto()
-            {
-                Id = 1,
-                Values = new List<ProductAttributeValueDto> { attribute1.Values.First() }
-            });
+            //combin1.Attributes.Add(new ProductAttributeDto()
+            //{
+            //    Id = 1,
+            //    Values = new List<ProductAttributeValueDto> { attribute1.Values.First() }
+            //});
 
             //productDto.AttributeCombinations.Add();
 

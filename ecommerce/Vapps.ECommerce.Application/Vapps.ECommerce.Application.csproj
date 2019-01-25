@@ -10,6 +10,9 @@
     <RootNamespace>Vapps.ECommerce</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Products\ProductAppService.cs~RF52d6b481.TMP" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Abp.AspNetCore" Version="4.0.2" />
     <PackageReference Include="Abp.AutoMapper" Version="4.0.2" />
     <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="2.2.0" />

@@ -149,6 +149,18 @@ namespace Vapps.ECommerce.Products
         #region Attribute Value
 
         /// <summary>
+        /// 根据属性Id和预设值id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId, long pValueId)
+        {
+            return await ProductAttributeValueRepository
+                .FirstOrDefaultAsync(x => x.ProductAttributeMapping.ProductAttributeId == attributeId
+                && x.PredefinedProductAttributeValueId == pValueId);
+        }
+
+        /// <summary>
         /// 根据名称查找属性值
         /// </summary>
         /// <param name="id"></param>

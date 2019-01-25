@@ -16,6 +16,8 @@ using System;
 using System.IO;
 using Vapps.Authorization.Users;
 using Vapps.Configuration;
+using Vapps.ECommerce;
+using Vapps.ECommerce.Products;
 using Vapps.EntityFrameworkCore;
 using Vapps.FileStorage;
 using Vapps.MultiTenancy;
@@ -31,6 +33,7 @@ namespace Vapps.Tests
 {
     [DependsOn(
         typeof(VappsApplicationModule),
+        typeof(VappsECommerceApplicationModule),
         typeof(VappsFileStorageModule),
         typeof(VappsEntityFrameworkCoreModule),
         typeof(AbpTestBaseModule))]
@@ -59,6 +62,9 @@ namespace Vapps.Tests
             IocManager.Register<IAppUrlService, FakeAppUrlService>();
             IocManager.Register<IWebUrlService, FakeWebUrlService>();
             IocManager.Register<ICaptchaValidator, FakeRecaptchaValidator>();
+
+            IocManager.Register<IProductAppService, ProductAppService>();
+            IocManager.Register<IProductAttributeAppService, ProductAttributeAppService>();
 
             //MockHostingEnvironment();
 
