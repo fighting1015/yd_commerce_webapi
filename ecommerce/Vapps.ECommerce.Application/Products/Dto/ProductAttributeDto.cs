@@ -32,11 +32,6 @@ namespace Vapps.ECommerce.Products.Dto
     public class PredefinedProductAttributeValueDto : EntityDto<long>
     {
         /// <summary>
-        /// 属性id
-        /// </summary>
-        public int ProductAttributeId { get; set; }
-
-        /// <summary>
         /// 值
         /// </summary>
         public string Name { get; set; }

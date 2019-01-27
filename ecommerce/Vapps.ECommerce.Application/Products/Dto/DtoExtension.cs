@@ -13,7 +13,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         /// <param name="attributeMappings"></param>
         /// <returns></returns>
-        public static List<JsonProductAttribute> GetJsonAttribute(this List<ProductAttributeMappingDto> attributeMappings)
+        public static List<JsonProductAttribute> GetAttributesJson(this List<ProductAttributeMappingDto> attributeMappings)
         {
             var jsonAttributes = new List<JsonProductAttribute>();
 

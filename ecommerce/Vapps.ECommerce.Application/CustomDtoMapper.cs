@@ -41,7 +41,10 @@ namespace Vapps.ECommerce
             configuration.CreateMap<ProductAttributeValueDto, ProductAttributeValue>();
 
             configuration.CreateMap<ProductAttributeDto, ProductAttributeMapping>();
+            configuration.CreateMap<ProductAttributeMappingDto, ProductAttributeMapping>();
+
             configuration.CreateMap<ProductAttributeMapping, ProductAttributeDto>();
+
 
             configuration.CreateMap<AttributeCombinationDto, ProductAttributeCombination>();
             configuration.CreateMap<ProductAttributeCombination, AttributeCombinationDto>();

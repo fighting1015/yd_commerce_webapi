@@ -14,6 +14,11 @@ namespace Vapps.ECommerce
         {
             //Adding custom AutoMapper configuration
             Configuration.Modules.AbpAutoMapper().Configurators.Add(CustomDtoMapper.CreateMappings);
+
+            Configuration.Modules.AbpAspNetCore()
+           .CreateControllersForAppServices(
+               typeof(VappsECommerceApplicationModule).GetAssembly()
+           );
         }
 
         public override void Initialize()
@@ -23,10 +28,7 @@ namespace Vapps.ECommerce
 
         public override void PostInitialize()
         {
-            Configuration.Modules.AbpAspNetCore()
-            .CreateControllersForAppServices(
-                typeof(VappsECommerceApplicationModule).GetAssembly()
-            );
+           
         }
     }
 }

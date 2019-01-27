@@ -11,6 +11,10 @@ namespace Vapps.ECommerce.Products
     /// </summary>
     public class JsonProductAttribute
     {
+        public JsonProductAttribute() {
+            this.AttributeValues = new List<JsonProductAttributeValue>();
+        }
+
         /// <summary>
         /// 属性Id
         /// </summary>

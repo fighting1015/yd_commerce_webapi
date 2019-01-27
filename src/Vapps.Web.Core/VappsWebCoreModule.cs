@@ -77,11 +77,11 @@ namespace Vapps.Web
 
             //Uncomment this line to use Redis cache instead of in-memory cache.
             //See app.config for Redis configuration and connection string
-            Configuration.Caching.UseRedis(options =>
-            {
-                options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
-                options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
-            });
+            //Configuration.Caching.UseRedis(options =>
+            //{
+            //    options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
+            //    options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
+            //});
 
             Configuration.Caching.Configure(AuthenticateResultCacheItem.CacheName, cache =>
             {
