@@ -89,11 +89,14 @@ namespace Vapps.Web.Startup
                 IdentityServerRegistrar.Register(services, _appConfiguration);
             }
 
-            //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
-            services.AddSwaggerGen(options =>
+            if (bool.Parse(_appConfiguration["AppSettings:EnableSwagger"]))
             {
-                ConfigureSwaggerUi(options);
-            });
+                //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
+                services.AddSwaggerGen(options =>
+                {
+                    ConfigureSwaggerUi(options);
+                });
+            }
 
             //Hangfire (Enable to use Hangfire instead of default job manager)
             services.AddHangfire(config =>
@@ -167,13 +170,17 @@ namespace Vapps.Web.Startup
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger();
-            // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
-            app.UseHSwaggerUI(options =>
+
+            if (bool.Parse(_appConfiguration["AppSettings:EnableSwagger"]))
             {
-                ConfigureHSwaggerUI(options);
-            });
+                // Enable middleware to serve generated Swagger as a JSON endpoint
+                app.UseSwagger();
+                // Enable middleware to serve swagger-ui assets (HTML, JS, CSS etc.)
+                app.UseHSwaggerUI(options =>
+                {
+                    ConfigureHSwaggerUI(options);
+                });
+            }
         }
 
         /// <summary>
