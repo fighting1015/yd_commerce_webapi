@@ -172,17 +172,31 @@ namespace Vapps.ECommerce.Products
 
         #region Utilities
 
+        /// <summary>
+        /// 初始化商品属性
+        /// </summary>
+        /// <param name="productDto"></param>
+        /// <param name="product"></param>
         private void PrepareProductAttribute(GetProductForEditOutput productDto, Product product)
         {
             productDto.Attributes = product.Attributes.Select(attribute =>
             {
                 var item = ObjectMapper.Map<ProductAttributeDto>(attribute);
+                item.Id = attribute.ProductAttributeId;
+
+                _productAttributeManager.ProductAttributeMappingRepository.EnsurePropertyLoaded(attribute, t => t.ProductAttribute);
+
+                item.Name = attribute.ProductAttribute.Name;
 
                 _productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoaded(attribute, t => t.Values);
 
+                // 属性值
                 item.Values = attribute.Values.Select(value =>
                 {
-                    var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
+                    var valueDto = ObjectMapper.Map<PredefinedProductAttributeValueDto>(value);
+
+                    valueDto.Id = value.PredefinedProductAttributeValueId;
+
                     return valueDto;
                 }).ToList();
 

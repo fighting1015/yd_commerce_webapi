@@ -14,37 +14,6 @@ namespace Vapps.Authorization
 
         public const string Dashboard = "BusiCenter.Dashboard";
 
-        //[Permission(Self)]
-        //public class BookingManage
-        //{
-        //    public const string Self = "BusiCenter.BookingManage";
-
-        //    [Permission(Self)]
-        //    public class Bookings
-        //    {
-        //        public const string Self = "BusiCenter.BookingManage.Bookings";
-
-        //        public const string Create = "BusiCenter.BookingManage.Booking.Create";
-        //        public const string Edit = "BusiCenter.BookingManage.Booking.Edit";
-        //        public const string Delete = "BusiCenter.BookingManage.Booking.Delete";
-
-        //        public const string Disable = "BusiCenter.BookingManage.Booking.Disable";
-        //        public const string Copy = "BusiCenter.BookingManage.Booking.Copy";
-        //    }
-
-        //    [Permission(Self)]
-        //    public class BookingOrders
-        //    {
-        //        public const string Self = "BusiCenter.BookingManage.BookingOrders";
-
-        //        public const string Edit = "BusiCenter.BookingManage.BookingOrder.Edit";
-        //        public const string Delete = "BusiCenter.BookingManage.BookingOrder.Delete";
-
-        //        public const string Confirm = "BusiCenter.BookingManage.BookingOrder.Confirm";
-        //        public const string Remark = "BusiCenter.BookingManage.BookingOrder.Remark";
-        //    }
-        //}
-
         [Permission(Self)]
         public class Organization
         {
@@ -72,6 +41,33 @@ namespace Vapps.Authorization
                 public const string Delete = "BusiCenter.Organization.Contactor.Delete";
             }
         }
+
+        [Permission(Self)]
+        public class ECommerce
+        {
+            public const string Self = "BusiCenter.ECommerce";
+
+            [Permission(Self)]
+            public class Category
+            {
+                public const string Self = "BusiCenter.ECommerce.Category";
+
+                public const string Create = "BusiCenter.ECommerce.Category.Create";
+                public const string Edit = "BusiCenter.ECommerce.Category.Edit";
+                public const string Delete = "BusiCenter.ECommerce.Category.Delete";
+            }
+
+            [Permission(Self)]
+            public class Product
+            {
+                public const string Self = "BusiCenter.ECommerce.Product";
+
+                public const string Create = "BusiCenter.ECommerce.Product.Create";
+                public const string Edit = "BusiCenter.ECommerce.Product.Edit";
+                public const string Delete = "BusiCenter.ECommerce.Product.Delete";
+            }
+        }
+
 
         [Permission(Self)]
         public class ContentManage

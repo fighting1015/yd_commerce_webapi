@@ -15,6 +15,11 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// 商品Sku
+        /// </summary>
+        public string Sku { get; set; }
+
         public void Normalize()
         {
             if (string.IsNullOrEmpty(Sorting))

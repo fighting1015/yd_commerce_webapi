@@ -114,21 +114,4 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         public int DisplayOrder { get; set; }
     }
-
-    /// <summary>
-    /// 属性值
-    /// </summary>
-    public class ProductAttributeValueDto : EntityDto<long>
-    {
-        /// <summary>
-        /// 图片id
-        /// </summary>
-        public int PictureId { get; set; }
-
-        /// <summary>
-        /// 排序Id
-        /// </summary>
-        public int DisplayOrder { get; set; }
-    }
-
 }

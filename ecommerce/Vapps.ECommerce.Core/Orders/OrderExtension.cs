@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Vapps.Extensions;
+using Vapps.Helpers;
 
 namespace Vapps.ECommerce.Orders
 {
@@ -15,8 +13,20 @@ namespace Vapps.ECommerce.Orders
         /// <param name="order"></param>
         public static void ResetOrderGuidAndNumber(this Order order)
         {
-            order.OrderGuid = Guid.NewGuid();
-            order.CustomOrderNumber = order.OrderGuid.ToLongId().ToString();
+            order.CustomOrderNumber = Guid.NewGuid().ToLongId().ToString();
+        }
+
+        /// <summary>
+        /// 生成订单号（4位毫秒+2位随机数）
+        /// </summary>
+        /// <param name="order"></param>
+        public static void GenerateOrderNumber(this Order order)
+        {
+            string sarNum = DateTime.Now.ToString("yyyyMMddHHmmssffff");
+
+            var randomNum = CommonHelper.GenerateRandomDigitCode(2);
+
+            order.CustomOrderNumber = string.Concat(sarNum, randomNum);
         }
     }
 }

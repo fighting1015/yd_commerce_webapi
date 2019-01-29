@@ -1,4 +1,5 @@
 ﻿using Abp.Runtime.Caching;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,13 @@ namespace Vapps.ECommerce.Products
             }
             else
             {
-                var attribute = new ProductAttribute()
+                var attribute = await _productAttributeManager.FindByNameAsync(input.Name);
+                if (attribute != null)
+                {
+                    throw new UserFriendlyException("属性已存在");
+                }
+
+                attribute = new ProductAttribute()
                 {
                     Name = input.Name,
                     DisplayOrder = input.DisplayOrder,
@@ -59,18 +66,18 @@ namespace Vapps.ECommerce.Products
         /// 获取所有可用商品属性
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProductAttributeDto>> GetAttributes()
+        public async Task<List<ProductAttributeListDto>> GetAttributes()
         {
             var query = _productAttributeManager.ProductAttributes.AsNoTracking();
 
             var attributeCount = await query.CountAsync();
-            var tempalates = await query
+            var attribute = await query
                 .OrderByDescending(st => st.Id)
                 .ToListAsync();
 
-            var productSelectListItem = tempalates.Select(x =>
+            var productSelectListItem = attribute.Select(x =>
             {
-                return new ProductAttributeDto
+                return new ProductAttributeListDto
                 {
                     Name = x.Name,
                     Id = x.Id
@@ -128,7 +135,13 @@ namespace Vapps.ECommerce.Products
             }
             else
             {
-                var attributeValue = new PredefinedProductAttributeValue()
+                var attributeValue = await _productAttributeManager.FindPredefinedValueByNameAsync(input.AttributeId, input.Name);
+                if (attributeValue != null)
+                {
+                    throw new UserFriendlyException("属性值已存在");
+                }
+
+                attributeValue = new PredefinedProductAttributeValue()
                 {
                     ProductAttributeId = input.AttributeId,
                     Name = input.Name,
@@ -142,7 +155,6 @@ namespace Vapps.ECommerce.Products
 
             return output;
         }
-
 
         #endregion
     }

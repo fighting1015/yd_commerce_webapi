@@ -14,7 +14,7 @@ namespace Vapps.ECommerce.Products
         /// 获取所有可用商品属性
         /// </summary>
         /// <returns></returns>
-        Task<List<ProductAttributeDto>> GetAttributes();
+        Task<List<ProductAttributeListDto>> GetAttributes();
 
         /// <summary>
         /// 创建或更新属性
