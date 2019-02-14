@@ -49,6 +49,7 @@ namespace Vapps.ECommerce.Products
         {
             var query = _productManager
                 .Products
+                .Include(p => p.Pictures)
                 .WhereIf(!input.Name.IsNullOrWhiteSpace(), r => r.Name.Contains(input.Name));
 
             var productCount = await query.CountAsync();
@@ -58,7 +59,18 @@ namespace Vapps.ECommerce.Products
                 .PageBy(input)
                 .ToListAsync();
 
-            var productListDtos = ObjectMapper.Map<List<ProductListDto>>(products);
+            var productListDtos = products.Select(p =>
+            {
+                var productDto = ObjectMapper.Map<ProductListDto>(p);
+
+                if (p.Pictures != null && p.Pictures.Any())
+                {
+                    productDto.PictureUrl = _pictureManager.GetPictureUrl(p.Pictures.FirstOrDefault().PictureId);
+                }
+
+                return productDto;
+            }).ToList();
+
             return new PagedResultDto<ProductListDto>(
                 productCount,
                 productListDtos);
@@ -122,7 +134,7 @@ namespace Vapps.ECommerce.Products
                 productDto.Pictures = product.Pictures.Select(i =>
                 {
                     var item = ObjectMapper.Map<ProductPictureDto>(i);
-                    item.PictureUrl = _pictureManager.GetPictureUrl(i.Id);
+                    item.PictureUrl = _pictureManager.GetPictureUrl(i.PictureId);
                     return item;
                 }).ToList();
             }
@@ -233,7 +245,7 @@ namespace Vapps.ECommerce.Products
             await CreateOrUpdateProductAttributes(input, product);
 
             await _productManager.CreateAsync(product);
-         
+
             await CreateOrUpdateAttributeCombination(input, product);
 
             await _productManager.UpdateWithRelateAttributeAsync(product);
