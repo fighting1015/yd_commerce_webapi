@@ -71,17 +71,20 @@ namespace Vapps.Web
             }
 
             Configuration.ReplaceService<IAppConfigurationAccessor, AppConfigurationAccessor>();
-            
+
             //Uncomment this line to use Hangfire instead of default background job manager (remember also to uncomment related lines in Startup.cs file(s)).
             Configuration.BackgroundJobs.UseHangfire();
 
             //Uncomment this line to use Redis cache instead of in-memory cache.
             //See app.config for Redis configuration and connection string
-            //Configuration.Caching.UseRedis(options =>
-            //{
-            //    options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
-            //    options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
-            //});
+            if (_appConfiguration["Abp:RedisCache:IsEnabled"] != null && bool.Parse(_appConfiguration["Abp:RedisCache:IsEnabled"]))
+            {
+                Configuration.Caching.UseRedis(options =>
+                {
+                    options.ConnectionString = _appConfiguration["Abp:RedisCache:ConnectionString"];
+                    options.DatabaseId = _appConfiguration.GetValue<int>("Abp:RedisCache:DatabaseId");
+                });
+            }
 
             Configuration.Caching.Configure(AuthenticateResultCacheItem.CacheName, cache =>
             {

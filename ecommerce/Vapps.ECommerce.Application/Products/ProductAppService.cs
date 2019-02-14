@@ -212,16 +212,22 @@ namespace Vapps.ECommerce.Products
         {
             var product = ObjectMapper.Map<Product>(input);
 
-            product.Categories = input.Categories.Select(i =>
+            if (input.Categories != null)
             {
-                var item = ObjectMapper.Map<ProductCategory>(i);
-                return item;
-            }).ToList();
+                product.Categories = input.Categories.Select(i =>
+                {
+                    var item = ObjectMapper.Map<ProductCategory>(i);
+                    return item;
+                }).ToList();
+            }
 
-            product.Pictures = input.Pictures.Select(i =>
+            if (input.Pictures != null)
             {
-                return ObjectMapper.Map<ProductPicture>(i);
-            }).ToList();
+                product.Pictures = input.Pictures.Select(i =>
+                {
+                    return ObjectMapper.Map<ProductPicture>(i);
+                }).ToList();
+            }
 
             // 创建属性
             await CreateOrUpdateProductAttributes(input, product);

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace Vapps.ECommerce.Products.Dto
 {
     /// <summary>
-    /// 商品属性2
+    /// 商品属性
     /// </summary>
     public class ProductAttributeListDto : EntityDto<long>
     {
