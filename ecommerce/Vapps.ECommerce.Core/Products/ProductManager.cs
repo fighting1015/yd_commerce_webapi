@@ -1,6 +1,8 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,11 +13,9 @@ namespace Vapps.ECommerce.Products
         #region Ctor
 
         public IRepository<Product, long> ProductRepository { get; }
-
         public IQueryable<Product> Products => ProductRepository.GetAll().AsNoTracking();
 
         private readonly IProductAttributeManager _productAttributeManager;
-
 
         public ProductManager(IRepository<Product, long> productRepository,
             IProductAttributeManager productAttributeManager)
@@ -27,6 +27,21 @@ namespace Vapps.ECommerce.Products
         #endregion
 
         #region Method
+
+        /// <summary>
+        /// 根据Sku查找商品
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<Product> FindBySkuAsync(string sku)
+        {
+            if (String.IsNullOrEmpty(sku))
+                return null;
+
+            sku = sku.Trim();
+
+            return await ProductRepository.FirstOrDefaultAsync(p => p.Sku == sku);
+        }
 
         /// <summary>
         /// 根据id查找商品
@@ -54,26 +69,9 @@ namespace Vapps.ECommerce.Products
         /// <param name="product"></param>
         public virtual async Task CreateAsync(Product product)
         {
-            // 创建或更新属性
-            foreach (var attribute in product.Attributes)
-            {
-                //if (attribute.ProductAttributeId == 0)
-                //{
-                //    _productAttributeManager.FindByNameAsync(attribute.na);
-
-                    //_productAttributeManager.CreateAsync();
-                //}
-            }
-
-
-            // 创建或更新属性
-            foreach (var combination in product.AttributeCombinations)
-            {
-
-            }
-
-            // 创建或更新属性组合
-
+            var existedProduct = await FindBySkuAsync(product.Sku);
+            if (existedProduct != null)
+                throw new UserFriendlyException($"Sku : {product.Sku} 已存在");
 
             await ProductRepository.InsertAsync(product);
             await CurrentUnitOfWork.SaveChangesAsync();
@@ -87,6 +85,31 @@ namespace Vapps.ECommerce.Products
         {
             await ProductRepository.UpdateAsync(product);
         }
+
+        /// <summary>
+        /// 更新商品及关联属性
+        /// </summary>
+        /// <param name="Product"></param>
+        public virtual async Task UpdateWithRelateAttributeAsync(Product product)
+        {
+            product.Attributes.Each(a =>
+            {
+                a.ProductId = product.Id;
+
+                a.Values.Each(v =>
+                {
+                    v.ProductId = product.Id;
+                });
+            });
+
+            product.AttributeCombinations.Each(a =>
+            {
+                a.ProductId = product.Id;
+            });
+
+            await ProductRepository.UpdateAsync(product);
+        }
+
 
         /// <summary>
         /// 删除商品

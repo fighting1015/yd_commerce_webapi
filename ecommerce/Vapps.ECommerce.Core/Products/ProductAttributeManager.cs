@@ -1,7 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,36 +9,38 @@ namespace Vapps.ECommerce.Products
 {
     public class ProductAttributeManager : VappsDomainServiceBase, IProductAttributeManager
     {
-        #region Ctor
+        #region Repository
 
         public IRepository<ProductAttribute, long> ProductAttributeRepository { get; }
-
         public IQueryable<ProductAttribute> ProductAttributes => ProductAttributeRepository.GetAll().AsNoTracking();
 
-
         public IRepository<ProductAttributeValue, long> ProductAttributeValueRepository { get; }
-
         public IQueryable<ProductAttributeValue> ProductAttributeValues => ProductAttributeValueRepository.GetAll().AsNoTracking();
 
         public IRepository<PredefinedProductAttributeValue, long> PredefinedProductAttributeValueRepository { get; }
-
         public IQueryable<PredefinedProductAttributeValue> PredefinedProductAttributeValues => PredefinedProductAttributeValueRepository.GetAll().AsNoTracking();
 
         public IRepository<ProductAttributeMapping, long> ProductAttributeMappingRepository { get; }
-
         public IQueryable<ProductAttributeMapping> ProductAttributeMappings => ProductAttributeMappingRepository.GetAll().AsNoTracking();
 
+        public IRepository<ProductAttributeCombination, long> ProductAttributeCombinationRepository { get; }
+        public IQueryable<ProductAttributeCombination> ProductAttributeCombinations => ProductAttributeCombinationRepository.GetAll().AsNoTracking();
+
+        #endregion
+
+        #region Ctor
 
         public ProductAttributeManager(IRepository<ProductAttribute, long> attributeRepository,
             IRepository<ProductAttributeValue, long> attributeValueRepository,
             IRepository<ProductAttributeMapping, long> attributeMappingRepository,
-            IRepository<PredefinedProductAttributeValue, long> predefinedProductAttributeValueRepository)
+            IRepository<PredefinedProductAttributeValue, long> predefinedProductAttributeValueRepository,
+            IRepository<ProductAttributeCombination, long> productAttributeCombinationRepository)
         {
             this.ProductAttributeRepository = attributeRepository;
             this.ProductAttributeValueRepository = attributeValueRepository;
             this.ProductAttributeMappingRepository = attributeMappingRepository;
             this.PredefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
-
+            this.ProductAttributeCombinationRepository = productAttributeCombinationRepository;
         }
 
         #endregion
@@ -276,7 +278,6 @@ namespace Vapps.ECommerce.Products
             return await PredefinedProductAttributeValueRepository.FirstOrDefaultAsync(id);
         }
 
-
         /// <summary>
         /// 根据属性id和名称获取默认属性值
         /// </summary>
@@ -292,9 +293,15 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id)
+        public virtual async Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id, bool includeDeleted = false)
         {
-            return await PredefinedProductAttributeValueRepository.GetAsync(id);
+            if (!includeDeleted)
+                return await PredefinedProductAttributeValueRepository.GetAsync(id);
+
+            using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+            {
+                return await PredefinedProductAttributeValueRepository.GetAsync(id);
+            }
         }
 
         /// <summary>
@@ -436,6 +443,85 @@ namespace Vapps.ECommerce.Products
 
             if (attribute != null)
                 await ProductAttributeMappingRepository.DeleteAsync(attribute);
+        }
+
+        #endregion
+
+        #region Attribute combinations
+
+        /// <summary>
+        /// 根据Sku查找属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<ProductAttributeCombination> FindCombinationBySkuAsync(string sku)
+        {
+            if (String.IsNullOrEmpty(sku))
+                return null;
+
+            return await ProductAttributeCombinationRepository.FirstOrDefaultAsync(x => x.Sku == sku);
+        }
+
+        /// <summary>
+        /// 根据id查找属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<ProductAttributeCombination> FindCombinationByIdAsync(long id)
+        {
+            if (id == 0)
+                return null;
+
+            return await ProductAttributeCombinationRepository.FirstOrDefaultAsync(id);
+        }
+
+        /// <summary>
+        /// 根据id获取属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<ProductAttributeCombination> GetCombinationByIdAsync(long id)
+        {
+            return await ProductAttributeCombinationRepository.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 添加属性组合
+        /// </summary>
+        /// <param name="combination"></param>
+        public virtual async Task CreateCombinationAsync(ProductAttributeCombination combination)
+        {
+            await ProductAttributeCombinationRepository.InsertAsync(combination);
+        }
+
+        /// <summary>
+        /// 更新属性组合
+        /// </summary>
+        /// <param name="combination"></param>
+        public virtual async Task UpdateCombinationAsync(ProductAttributeCombination combination)
+        {
+            await ProductAttributeCombinationRepository.UpdateAsync(combination);
+        }
+
+        /// <summary>
+        /// 删除属性组合
+        /// </summary>
+        /// <param name="combination"></param>
+        public virtual async Task DeleteCombinationAsync(ProductAttributeCombination combination)
+        {
+            await ProductAttributeCombinationRepository.DeleteAsync(combination);
+        }
+
+        /// <summary>
+        /// 删除属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        public virtual async Task DeleteCombinationAsync(long id)
+        {
+            var combination = await ProductAttributeCombinationRepository.FirstOrDefaultAsync(id);
+
+            if (combination != null)
+                await ProductAttributeCombinationRepository.DeleteAsync(combination);
         }
 
         #endregion

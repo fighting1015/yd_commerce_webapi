@@ -51,6 +51,10 @@ namespace Vapps.ECommerce
             configuration.CreateMap<AttributeCombinationDto, ProductAttributeCombination>();
             configuration.CreateMap<ProductAttributeCombination, AttributeCombinationDto>();
 
+
+            configuration.CreateMap<ProductPictureDto, ProductPicture>();
+            configuration.CreateMap<ProductPicture, ProductPictureDto>();
+
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
     }

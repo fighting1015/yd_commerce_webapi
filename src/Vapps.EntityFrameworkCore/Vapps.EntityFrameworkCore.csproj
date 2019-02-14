@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20190110042023_Add_Categories.Designer.cs" />
     <Compile Remove="Migrations\20190123084759_Update_Product_Price.cs" />
     <Compile Remove="Migrations\20190123084759_Update_Product_Price.Designer.cs" />
+    <Compile Remove="Migrations\20190130081939_Add_ProductAttributeMapping_Values_ForeignKey.cs" />
+    <Compile Remove="Migrations\20190130081939_Add_ProductAttributeMapping_Values_ForeignKey.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

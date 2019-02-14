@@ -1,28 +1,25 @@
 ﻿using Abp.Domain.Repositories;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Vapps.ECommerce.Products
 {
-
     public interface IProductAttributeManager
     {
         IRepository<ProductAttribute, long> ProductAttributeRepository { get; }
-
         IQueryable<ProductAttribute> ProductAttributes { get; }
 
         IRepository<ProductAttributeValue, long> ProductAttributeValueRepository { get; }
-
         IQueryable<ProductAttributeValue> ProductAttributeValues { get; }
 
         IRepository<PredefinedProductAttributeValue, long> PredefinedProductAttributeValueRepository { get; }
-
         IQueryable<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; }
 
         IRepository<ProductAttributeMapping, long> ProductAttributeMappingRepository { get; }
-
         IQueryable<ProductAttributeMapping> ProductAttributeMappings { get; }
+
+        IRepository<ProductAttributeCombination, long> ProductAttributeCombinationRepository { get; }
+        IQueryable<ProductAttributeCombination> ProductAttributeCombinations { get; }
 
         #region ProductAttribute
 
@@ -79,8 +76,6 @@ namespace Vapps.ECommerce.Products
 
         #endregion
 
-  
-
         #region Predefined Attribute Value
 
         /// <summary>
@@ -102,7 +97,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id);
+        Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id, bool includeDeleted = false);
 
         /// <summary>
         /// 添加/更新默认属性值
@@ -191,7 +186,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId,long pValueId);
+        Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId, long pValueId);
 
         /// <summary>
         /// 根据名称查找属性值
@@ -243,6 +238,55 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         Task DeleteValueAsync(long id);
+
+        #endregion
+
+        #region Attribute combinations
+
+        /// <summary>
+        /// 根据Sku查找属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeCombination> FindCombinationBySkuAsync(string sku);
+
+        /// <summary>
+        /// 根据id查找属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeCombination> FindCombinationByIdAsync(long id);
+
+        /// <summary>
+        /// 根据id获取属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeCombination> GetCombinationByIdAsync(long id);
+
+        /// <summary>
+        /// 添加属性组合
+        /// </summary>
+        /// <param name="Product"></param>
+        Task CreateCombinationAsync(ProductAttributeCombination combination);
+
+        /// <summary>
+        /// 修改属性组合
+        /// </summary>
+        /// <param name="Product"></param>
+        Task UpdateCombinationAsync(ProductAttributeCombination combination);
+
+        /// <summary>
+        /// 删除属性组合
+        /// </summary>
+        /// <param name="Product"></param>
+        Task DeleteCombinationAsync(ProductAttributeCombination combination);
+
+        /// <summary>
+        /// 删除属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        Task DeleteCombinationAsync(long id);
 
         #endregion
     }

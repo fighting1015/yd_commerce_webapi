@@ -40,6 +40,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 属性值
         /// </summary>
+        [ForeignKey("ProductAttributeMappingId")]
         public virtual ICollection<ProductAttributeValue> Values { get; set; }
     }
 }

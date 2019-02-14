@@ -28,7 +28,7 @@ namespace Vapps.ECommerce.Products.Dto
                 {
                     jsonAttributeItem.AttributeValues.Add(new JsonProductAttributeValue()
                     {
-                        AttributeValueId = attributeDto.Id,
+                        AttributeValueId = value.Id,
                         DisplayOrder = attributeDto.DisplayOrder,
                     });
                 }
