@@ -90,7 +90,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 商品属性和值
         /// </summary>
-        public virtual List<ProductAttributeMappingDto> Attributes { get; set; }
+        public virtual List<ProductAttributeDto> Attributes { get; set; }
 
         /// <summary>
         /// 商品属性组合
@@ -102,16 +102,21 @@ namespace Vapps.ECommerce.Products.Dto
     /// 商品属性
     /// </summary>
     //[AutoMap(typeof(ProductAttribute))]
-    public class ProductAttributeMappingDto : EntityDto<long>
-    {
-        /// <summary>
-        /// 预定义值/值记录
-        /// </summary>
-        public List<ProductAttributeValueDto> Values { get; set; }
+    //public class ProductAttributeMappingDto : EntityDto<long>
+    //{
+    //    /// <summary>
+    //    /// 属性名
+    //    /// </summary>
+    //    public string Name { get; set; }
 
-        /// <summary>
-        /// 排序Id
-        /// </summary>
-        public int DisplayOrder { get; set; }
-    }
+    //    /// <summary>
+    //    /// 预定义值/值记录
+    //    /// </summary>
+    //    public List<ProductAttributeValueDto> Values { get; set; }
+
+    //    /// <summary>
+    //    /// 排序Id
+    //    /// </summary>
+    //    public int DisplayOrder { get; set; }
+    //}
 }

@@ -32,7 +32,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdateProduct(CreateOrUpdateProductInput input);
+        Task<EntityDto<long>> CreateOrUpdateProduct(CreateOrUpdateProductInput input);
 
         /// <summary>
         /// 删除商品

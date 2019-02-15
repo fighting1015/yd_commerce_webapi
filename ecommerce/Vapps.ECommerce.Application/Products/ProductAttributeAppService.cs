@@ -1,4 +1,5 @@
-﻿using Abp.Runtime.Caching;
+﻿using Abp.Application.Services.Dto;
+using Abp.Runtime.Caching;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -27,9 +28,9 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<CreateOrUpdateAttributeOutput> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input)
+        public async Task<EntityDto<long>> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input)
         {
-            var output = new CreateOrUpdateAttributeOutput();
+            var output = new EntityDto<long>();
             if (input.Id > 0)
             {
                 var attribute = await _productAttributeManager.GetByIdAsync(input.Id.Value);
@@ -120,10 +121,9 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<CreateOrUpdateAttributeValueOutput> CreateOrUpdateAttributeValue(CreateOrUpdateAttributeValueInput input)
+        public async Task<EntityDto<long>> CreateOrUpdateAttributeValue(CreateOrUpdateAttributeValueInput input)
         {
-
-            var output = new CreateOrUpdateAttributeValueOutput();
+            var output = new EntityDto<long>();
             if (input.Id > 0)
             {
                 var attributeValue = await _productAttributeManager.GetPredefinedValueByIdAsync(input.Id.Value);

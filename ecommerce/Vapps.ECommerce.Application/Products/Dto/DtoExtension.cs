@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Abp.Domain.Uow;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,11 @@ namespace Vapps.ECommerce.Products.Dto
         /// 初始化属性组合
         /// </summary>
         /// <param name="attributeMappings"></param>
+        /// <param name="product"></param>
         /// <returns></returns>
-        public static List<JsonProductAttribute> GetAttributesJson(this List<ProductAttributeMappingDto> attributeMappings)
+        [UnitOfWork]
+        public static List<JsonProductAttribute> GetAttributesJson(this List<ProductAttributeDto> attributeMappings,
+            Product product)
         {
             var jsonAttributes = new List<JsonProductAttribute>();
 
@@ -26,9 +30,11 @@ namespace Vapps.ECommerce.Products.Dto
 
                 foreach (var value in attributeDto.Values)
                 {
+                    var attributeValue = FindAttributValue(product, value);
+
                     jsonAttributeItem.AttributeValues.Add(new JsonProductAttributeValue()
                     {
-                        AttributeValueId = value.Id,
+                        AttributeValueId = attributeValue.Id,
                         DisplayOrder = attributeDto.DisplayOrder,
                     });
                 }
@@ -37,6 +43,21 @@ namespace Vapps.ECommerce.Products.Dto
             }
 
             return jsonAttributes;
+        }
+
+        private static ProductAttributeValue FindAttributValue(Product product, ProductAttributeValueDto value)
+        {
+            ProductAttributeValue attributeValue = null;
+
+            foreach (var attribute in product.Attributes)
+            {
+                attributeValue = attribute.Values.FirstOrDefault(v => v.PredefinedProductAttributeValueId == value.Id);
+
+                if (attributeValue != null)
+                    return attributeValue;
+
+            }
+            return attributeValue;
         }
     }
 }

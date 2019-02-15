@@ -92,7 +92,7 @@ namespace Vapps.EntityFrameworkCore
         public virtual DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
 
         public virtual DbSet<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; set; }
-        
+
 
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
@@ -229,8 +229,12 @@ namespace Vapps.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.ProductId, e.ProductAttributeMappingId, e.IsDeleted });
 
                 b.HasOne(o => o.ProductAttributeMapping)
-                  .WithMany(m=>m.Values)
+                  .WithMany(m => m.Values)
                   .HasForeignKey(c => c.ProductAttributeMappingId).OnDelete(DeleteBehavior.Cascade);
+
+                b.HasOne(o => o.Product)
+                 .WithMany()
+                 .HasForeignKey(c => c.ProductId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ProductAttributeMapping>(b =>

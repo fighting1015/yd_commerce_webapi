@@ -31,11 +31,11 @@ namespace Vapps.Tests.Product
             };
             productDto.Categories.Add(new ProductCategoryDto()
             {
-                CategoryId = 1,
+                Id = 1,
             });
             productDto.Categories.Add(new ProductCategoryDto()
             {
-                CategoryId = 2,
+                Id = 2,
             });
 
             var attribute1 = new ProductAttributeDto()

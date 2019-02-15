@@ -11,13 +11,13 @@ namespace Vapps.ECommerce.Products.Dto
     {
         public AttributeCombinationDto()
         {
-            this.Attributes = new List<ProductAttributeMappingDto>();
+            this.Attributes = new List<ProductAttributeDto>();
         }
 
         /// <summary>
         /// 属性值
         /// </summary>
-        public List<ProductAttributeMappingDto> Attributes { get; set; }
+        public List<ProductAttributeDto> Attributes { get; set; }
 
         /// <summary>
         /// 库存

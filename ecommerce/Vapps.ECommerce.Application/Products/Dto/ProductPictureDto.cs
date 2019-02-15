@@ -5,17 +5,17 @@ namespace Vapps.ECommerce.Products.Dto
     /// <summary>
     /// 产品图片
     /// </summary>
-    public class ProductPictureDto : NullableIdDto<long>
+    public class ProductPictureDto 
     {
         /// <summary>
         /// 图片Id
         /// </summary>
-        public virtual long PictureId { get; set; }
+        public virtual long Id { get; set; }
 
         /// <summary>
         /// 图片Url
         /// </summary>
-        public virtual string PictureUrl { get; set; }
+        public virtual string Url { get; set; }
 
         /// <summary>
         /// 排序

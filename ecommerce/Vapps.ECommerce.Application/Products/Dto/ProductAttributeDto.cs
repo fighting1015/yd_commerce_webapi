@@ -29,7 +29,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 预定义值/值记录
         /// </summary>
-        public List<PredefinedProductAttributeValueDto> Values { get; set; }
+        public List<ProductAttributeValueDto> Values { get; set; }
 
         /// <summary>
         /// 排序Id
@@ -58,6 +58,11 @@ namespace Vapps.ECommerce.Products.Dto
     /// </summary>
     public class ProductAttributeValueDto : EntityDto<long>
     {
+        /// <summary>
+        /// 值名称
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// 图片id
         /// </summary>

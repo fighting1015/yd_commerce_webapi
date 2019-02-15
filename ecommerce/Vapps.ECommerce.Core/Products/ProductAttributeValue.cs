@@ -32,6 +32,11 @@ namespace Vapps.ECommerce.Products
         public virtual long ProductId { get; set; }
 
         /// <summary>
+        /// 商品
+        /// </summary>
+        public virtual Product Product { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public virtual string Name { get; set; }

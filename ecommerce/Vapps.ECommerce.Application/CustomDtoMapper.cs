@@ -27,7 +27,9 @@ namespace Vapps.ECommerce
             configuration.CreateMap<Category, CategoryListDto>();
 
             //product
-            configuration.CreateMap<CreateOrUpdateProductInput, Product>();
+            configuration.CreateMap<CreateOrUpdateProductInput, Product>()
+                .ForMember(dto => dto.AttributeCombinations, options => options.Ignore());
+
             configuration.CreateMap<ProductCategoryDto, ProductCategory>();
             configuration.CreateMap<ProductCategory, ProductCategoryDto>();
             configuration.CreateMap<Product, CreateOrUpdateProductInput>();
@@ -44,7 +46,7 @@ namespace Vapps.ECommerce
 
 
             configuration.CreateMap<ProductAttributeDto, ProductAttributeMapping>();
-            configuration.CreateMap<ProductAttributeMappingDto, ProductAttributeMapping>();
+            //configuration.CreateMap<ProductAttributeMappingDto, ProductAttributeMapping>();
 
             configuration.CreateMap<ProductAttributeMapping, ProductAttributeDto>();
 

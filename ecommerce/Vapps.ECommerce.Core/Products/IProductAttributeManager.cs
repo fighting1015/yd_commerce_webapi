@@ -35,6 +35,13 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        ProductAttribute FindById(long id);
+
+        /// <summary>
+        /// 根据id查找属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<ProductAttribute> FindByIdAsync(long id);
 
         /// <summary>
@@ -91,6 +98,13 @@ namespace Vapps.ECommerce.Products
         /// <param name="id"></param>
         /// <returns></returns>
         Task<PredefinedProductAttributeValue> FindPredefinedValueByIdAsync(long id);
+
+        /// <summary>
+        /// 根据id获取默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        PredefinedProductAttributeValue GetPredefinedValueById(long id, bool includeDeleted = false);
 
         /// <summary>
         /// 根据id获取默认属性值
@@ -182,11 +196,25 @@ namespace Vapps.ECommerce.Products
         #region ProductAttributeValue
 
         /// <summary>
+        /// 根据预设值id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long pValueId);
+
+        /// <summary>
         /// 根据属性Id和预设值id查找属性值
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId, long pValueId);
+
+        /// <summary>
+        /// 根据商品id,属性Id和预设值id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeValue> FindValueAsync(long productId, long attributeId, long pValueId);
 
         /// <summary>
         /// 根据名称查找属性值
@@ -200,7 +228,21 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        ProductAttributeValue FindValueById(long id);
+
+        /// <summary>
+        /// 根据id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<ProductAttributeValue> FindValueByIdAsync(long id);
+
+        /// <summary>
+        /// 根据id获取属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        ProductAttributeValue GetValueById(long id);
 
         /// <summary>
         /// 根据id获取属性值

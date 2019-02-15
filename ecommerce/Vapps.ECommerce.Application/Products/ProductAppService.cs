@@ -122,19 +122,26 @@ namespace Vapps.ECommerce.Products
 
                 productDto.Categories = product.Categories.Select(i =>
                 {
-                    var item = ObjectMapper.Map<ProductCategoryDto>(i);
-                    item.Name = _categoryManager.GetByIdAsync(item.CategoryId).Result?.Name ?? string.Empty;
+                    var item = new ProductCategoryDto()
+                    {
+                        Id = i.CategoryId,
+                    };
+                    item.Name = _categoryManager.GetByIdAsync(item.Id).Result?.Name ?? string.Empty;
                     return item;
                 }).ToList();
 
                 PrepareProductAttribute(productDto, product);
 
-                PrepareProductAttributeCombination(productDto, product);
+                await PrepareProductAttributeCombination(productDto, product);
 
                 productDto.Pictures = product.Pictures.Select(i =>
                 {
-                    var item = ObjectMapper.Map<ProductPictureDto>(i);
-                    item.PictureUrl = _pictureManager.GetPictureUrl(i.PictureId);
+                    var item = new ProductPictureDto()
+                    {
+                        Id = i.PictureId,
+                        Url = _pictureManager.GetPictureUrl(i.PictureId)
+                    };
+
                     return item;
                 }).ToList();
             }
@@ -151,18 +158,18 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task CreateOrUpdateProduct(CreateOrUpdateProductInput input)
+        public async Task<EntityDto<long>> CreateOrUpdateProduct(CreateOrUpdateProductInput input)
         {
             if (input.Id.HasValue && input.Id.Value > 0)
             {
                 await UpdateProductAsync(input);
+
+                return new EntityDto<long>() { Id = input.Id.Value };
             }
             else
             {
-                await CreateProductAsync(input);
+                return await CreateProductAsync(input);
             }
-
-            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
@@ -206,8 +213,8 @@ namespace Vapps.ECommerce.Products
                 // 属性值
                 item.Values = attribute.Values.Select(value =>
                 {
-                    var valueDto = ObjectMapper.Map<PredefinedProductAttributeValueDto>(value);
-
+                    var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
+                    valueDto.Name = value.Name;
                     valueDto.Id = value.PredefinedProductAttributeValueId;
 
                     return valueDto;
@@ -221,7 +228,7 @@ namespace Vapps.ECommerce.Products
         /// 创建商品
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task CreateProductAsync(CreateOrUpdateProductInput input)
+        protected virtual async Task<EntityDto<long>> CreateProductAsync(CreateOrUpdateProductInput input)
         {
             var product = ObjectMapper.Map<Product>(input);
 
@@ -229,8 +236,10 @@ namespace Vapps.ECommerce.Products
             {
                 product.Categories = input.Categories.Select(i =>
                 {
-                    var item = ObjectMapper.Map<ProductCategory>(i);
-                    return item;
+                    return new ProductCategory()
+                    {
+                        CategoryId = i.Id,
+                    };
                 }).ToList();
             }
 
@@ -238,7 +247,12 @@ namespace Vapps.ECommerce.Products
             {
                 product.Pictures = input.Pictures.Select(i =>
                 {
-                    return ObjectMapper.Map<ProductPicture>(i);
+                    return new ProductPicture()
+                    {
+                        PictureId = i.Id,
+                        DisplayOrder = i.DisplayOrder,
+                        ProductId = input.Id ?? 0,
+                    };
                 }).ToList();
             }
 
@@ -249,6 +263,8 @@ namespace Vapps.ECommerce.Products
             await CreateOrUpdateAttributeCombination(input, product);
 
             await _productManager.UpdateWithRelateAttributeAsync(product);
+
+            return new EntityDto<long>() { Id = product.Id };
         }
 
         /// <summary>
@@ -282,7 +298,7 @@ namespace Vapps.ECommerce.Products
         /// <returns></returns>
         private async Task CreateOrUpdateAttributeCombination(CreateOrUpdateProductInput input, Product product)
         {
-            if (product.Id == 0)
+            if (input.Id == 0)
             {
                 product.AttributeCombinations = new Collection<ProductAttributeCombination>();
             }
@@ -308,9 +324,9 @@ namespace Vapps.ECommerce.Products
                 }
 
                 ProductAttributeCombination combin = null;
-                var attributesJson = JsonConvert.SerializeObject(combinDto.Attributes.GetAttributesJson());
+                var attributesJson = JsonConvert.SerializeObject(combinDto.Attributes.GetAttributesJson(product));
 
-                if (product.Id != 0)
+                if (input.Id != 0 && combinDto.Id != 0)
                 {
                     combin = product.AttributeCombinations.FirstOrDefault(c => c.Id == combinDto.Id
                             || c.AttributesJson == attributesJson);
@@ -416,7 +432,7 @@ namespace Vapps.ECommerce.Products
         /// <param name="attributeMapping"></param>
         /// <param name="attributeDto"></param>
         /// <returns></returns>
-        private async Task CreateOrUpdateProductAttributeValues(ProductAttributeMapping attributeMapping, ProductAttributeMappingDto attributeDto)
+        private async Task CreateOrUpdateProductAttributeValues(ProductAttributeMapping attributeMapping, ProductAttributeDto attributeDto)
         {
             if (attributeMapping.Id > 0)
             {
@@ -475,9 +491,7 @@ namespace Vapps.ECommerce.Products
         {
             //删除不存在的图片
             var existItemIds = input.Pictures.Select(i => i.Id);
-            var itemsId2Remove = product.Pictures.Where(i => !existItemIds.Contains(i.Id)).ToList();
-
-            //删除不存在的图片
+            var itemsId2Remove = product.Pictures.Where(i => !existItemIds.Contains(i.PictureId)).ToList();
             foreach (var item in itemsId2Remove)
             {
                 product.Pictures.Remove(item);
@@ -486,21 +500,50 @@ namespace Vapps.ECommerce.Products
             //添加或更新图片
             foreach (var itemInput in input.Pictures)
             {
-                if (itemInput.Id.HasValue && itemInput.Id.Value > 0)
+                var item = product.Pictures.FirstOrDefault(x => x.PictureId == itemInput.Id);
+                if (item != null)
                 {
-                    var item = product.Pictures.FirstOrDefault(x => x.Id == itemInput.Id.Value);
-                    if (item != null)
-                    {
-                        item.PictureId = itemInput.PictureId;
-                        item.DisplayOrder = itemInput.DisplayOrder;
-                    }
+                    item.DisplayOrder = itemInput.DisplayOrder;
                 }
                 else
                 {
                     product.Pictures.Add(new ProductPicture()
                     {
-                        PictureId = itemInput.PictureId,
+                        PictureId = itemInput.Id,
                         DisplayOrder = itemInput.DisplayOrder,
+                    });
+                }
+            }
+        }
+
+        /// <summary>
+        /// 更新分类
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="product"></param>
+        private static void CreateOrUpdateCategories(CreateOrUpdateProductInput input, Product product)
+        {
+            //删除不存在的分类
+            var existItemIds = input.Categories.Select(i => i.Id);
+            var itemsId2Remove = product.Categories.Where(i => !existItemIds.Contains(i.CategoryId)).ToList();
+            foreach (var item in itemsId2Remove)
+            {
+                product.Categories.Remove(item);
+            }
+
+            //添加或更新分类
+            foreach (var itemInput in input.Categories)
+            {
+                var item = product.Categories.FirstOrDefault(x => x.CategoryId == itemInput.Id);
+                if (item != null)
+                {
+                    continue;
+                }
+                else
+                {
+                    product.Categories.Add(new ProductCategory()
+                    {
+                        CategoryId = itemInput.Id,
                     });
                 }
             }
@@ -511,7 +554,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="productDto"></param>
         /// <param name="product"></param>
-        private void PrepareProductAttributeCombination(GetProductForEditOutput productDto, Product product)
+        private async Task PrepareProductAttributeCombination(GetProductForEditOutput productDto, Product product)
         {
             productDto.AttributeCombinations = new List<AttributeCombinationDto>();
             foreach (var combination in product.AttributeCombinations)
@@ -522,13 +565,26 @@ namespace Vapps.ECommerce.Products
 
                 foreach (var jsonAttribute in jsonAttributeList)
                 {
-                    var atributeDto = new ProductAttributeMappingDto();
+                    var atributeDto = new ProductAttributeDto();
+
+                    var attribute = await _productAttributeManager.GetByIdAsync(jsonAttribute.AttributeId);
+
                     atributeDto.Id = jsonAttribute.AttributeId;
+                    atributeDto.Name = attribute.Name;
                     atributeDto.Values = jsonAttribute.AttributeValues.Select(value =>
                     {
-                        var valueDto = new ProductAttributeValueDto();
-                        valueDto.Id = value.AttributeValueId;
-                        valueDto.DisplayOrder = value.DisplayOrder;
+                        var valueDto = new ProductAttributeValueDto()
+                        {
+                            Id = value.AttributeValueId,
+                            DisplayOrder = value.DisplayOrder
+                        };
+
+                        var attributeValue = _productAttributeManager.FindValueById(value.AttributeValueId);
+                        if (attributeValue == null)
+                            valueDto.Name = _productAttributeManager.GetPredefinedValueById(value.AttributeValueId).Name;
+                        else
+                            valueDto.Name = attributeValue.Name;
+
                         return valueDto;
                     }).ToList();
                     combinationDto.Attributes.Add(atributeDto);

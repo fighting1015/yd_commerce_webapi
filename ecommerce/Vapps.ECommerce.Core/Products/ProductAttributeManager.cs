@@ -57,6 +57,15 @@ namespace Vapps.ECommerce.Products
             return await ProductAttributeRepository.FirstOrDefaultAsync(x => x.Name == name);
         }
 
+        /// 根据id查找属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual ProductAttribute FindById(long id)
+        {
+            return ProductAttributeRepository.FirstOrDefault(id);
+        }
+
         /// <summary>
         /// 根据id查找属性
         /// </summary>
@@ -151,6 +160,17 @@ namespace Vapps.ECommerce.Products
         #region Attribute Value
 
         /// <summary>
+        /// 根据预设值id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long pValueId)
+        {
+            return await ProductAttributeValueRepository
+                .FirstOrDefaultAsync(x => x.PredefinedProductAttributeValueId == pValueId);
+        }
+
+        /// <summary>
         /// 根据属性Id和预设值id查找属性值
         /// </summary>
         /// <param name="id"></param>
@@ -159,6 +179,18 @@ namespace Vapps.ECommerce.Products
         {
             return await ProductAttributeValueRepository
                 .FirstOrDefaultAsync(x => x.ProductAttributeMapping.ProductAttributeId == attributeId
+                && x.PredefinedProductAttributeValueId == pValueId);
+        }
+
+        /// <summary>
+        /// 根据商品id,属性Id和预设值id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ProductAttributeValue> FindValueAsync(long productId, long attributeId, long pValueId)
+        {
+            return await ProductAttributeValueRepository.GetAllIncluding(x => x.ProductAttributeMapping)
+                .FirstOrDefaultAsync(x => x.ProductId == productId && x.ProductAttributeMapping.ProductAttributeId == attributeId
                 && x.PredefinedProductAttributeValueId == pValueId);
         }
 
@@ -177,9 +209,29 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        public virtual ProductAttributeValue FindValueById(long id)
+        {
+            return ProductAttributeValueRepository.FirstOrDefault(id);
+        }
+
+        /// <summary>
+        /// 根据id查找属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual async Task<ProductAttributeValue> FindValueByIdAsync(long id)
         {
             return await ProductAttributeValueRepository.FirstOrDefaultAsync(id);
+        }
+
+        /// <summary>
+        /// 根据id获取属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual ProductAttributeValue GetValueById(long id)
+        {
+            return ProductAttributeValueRepository.Get(id);
         }
 
         /// <summary>
@@ -286,6 +338,22 @@ namespace Vapps.ECommerce.Products
         public virtual async Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(long attributeId, string name)
         {
             return await PredefinedProductAttributeValueRepository.FirstOrDefaultAsync(a => a.ProductAttributeId == attributeId && a.Name == name);
+        }
+
+        /// <summary>
+        /// 根据id获取默认属性值
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual PredefinedProductAttributeValue GetPredefinedValueById(long id, bool includeDeleted = false)
+        {
+            if (!includeDeleted)
+                return PredefinedProductAttributeValueRepository.Get(id);
+
+            using (UnitOfWorkManager.Current.DisableFilter(AbpDataFilters.SoftDelete))
+            {
+                return PredefinedProductAttributeValueRepository.Get(id);
+            }
         }
 
         /// <summary>

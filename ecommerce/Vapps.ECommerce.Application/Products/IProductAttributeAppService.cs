@@ -21,7 +21,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<CreateOrUpdateAttributeOutput> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input);
+        Task<EntityDto<long>> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input);
 
         /// <summary>
         /// 获取所有可用商品属性值
@@ -34,6 +34,6 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<CreateOrUpdateAttributeValueOutput> CreateOrUpdateAttributeValue(CreateOrUpdateAttributeValueInput input);
+        Task<EntityDto<long>> CreateOrUpdateAttributeValue(CreateOrUpdateAttributeValueInput input);
     }
 }
