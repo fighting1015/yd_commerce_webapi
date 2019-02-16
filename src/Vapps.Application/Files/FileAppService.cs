@@ -73,8 +73,8 @@ namespace Vapps.Files
             await CurrentUnitOfWork.SaveChangesAsync();
             return new UploadPictureOutput()
             {
-                PictureId = picture.Id,
-                OriginalUrl = picture.OriginalUrl
+                Id = picture.Id,
+                Url = picture.OriginalUrl
             };
         }
 

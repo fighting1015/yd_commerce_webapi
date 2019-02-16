@@ -2,8 +2,8 @@
 {
     public class UploadPictureOutput
     {
-        public long PictureId { get; set; }
+        public long Id { get; set; }
 
-        public string OriginalUrl { get; set; }
+        public string Url { get; set; }
     }
 }
