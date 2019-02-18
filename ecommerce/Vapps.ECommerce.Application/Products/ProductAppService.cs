@@ -285,6 +285,10 @@ namespace Vapps.ECommerce.Products
 
             await CreateOrUpdateProductAttributes(input, product);
 
+            // 执行保存
+            await _productManager.UpdateAsync(product);
+            await CurrentUnitOfWork.SaveChangesAsync();
+
             await CreateOrUpdateAttributeCombination(input, product);
 
             await _productManager.UpdateWithRelateAttributeAsync(product);
