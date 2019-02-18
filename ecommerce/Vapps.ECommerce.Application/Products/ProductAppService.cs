@@ -216,7 +216,7 @@ namespace Vapps.ECommerce.Products
                     var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
                     valueDto.Name = value.Name;
                     valueDto.Id = value.PredefinedProductAttributeValueId;
-
+                    valueDto.PictureUrl = _pictureManager.GetPictureUrl(value.PictureId);
                     return valueDto;
                 }).ToList();
 
@@ -573,17 +573,16 @@ namespace Vapps.ECommerce.Products
                     atributeDto.Name = attribute.Name;
                     atributeDto.Values = jsonAttribute.AttributeValues.Select(value =>
                     {
-                        var valueDto = new ProductAttributeValueDto()
-                        {
-                            Id = value.AttributeValueId,
-                            DisplayOrder = value.DisplayOrder
-                        };
+                        var valueDto = new ProductAttributeValueDto();
 
                         var attributeValue = _productAttributeManager.FindValueById(value.AttributeValueId);
                         if (attributeValue == null)
                             valueDto.Name = _productAttributeManager.GetPredefinedValueById(value.AttributeValueId).Name;
                         else
                             valueDto.Name = attributeValue.Name;
+
+                        valueDto.Id = attributeValue.PredefinedProductAttributeValueId;
+                        valueDto.DisplayOrder = valueDto.DisplayOrder;
 
                         return valueDto;
                     }).ToList();

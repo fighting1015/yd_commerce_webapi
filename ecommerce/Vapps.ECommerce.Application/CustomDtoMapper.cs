@@ -41,6 +41,8 @@ namespace Vapps.ECommerce
 
             configuration.CreateMap<ProductAttributeDto, ProductAttribute>();
             configuration.CreateMap<ProductAttributeValueDto, ProductAttributeValue>();
+            configuration.CreateMap<ProductAttributeValue, ProductAttributeValueDto>()
+                .ForMember(dto => dto.PictureUrl, options => options.Ignore());
 
             configuration.CreateMap<ProductAttribute, ProductAttributeListDto>();
 

@@ -69,6 +69,11 @@ namespace Vapps.ECommerce.Products.Dto
         public int PictureId { get; set; }
 
         /// <summary>
+        /// 图片Url
+        /// </summary>
+        public string PictureUrl { get; set; }
+
+        /// <summary>
         /// 排序Id
         /// </summary>
         public int DisplayOrder { get; set; }
