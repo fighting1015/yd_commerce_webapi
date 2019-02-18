@@ -1,12 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Vapps.ECommerce.Payments
+﻿namespace Vapps.ECommerce.Payments
 {
-    class PaymentType
+    public enum PaymentType
     {
+        /// <summary>
+        /// 所有
+        /// </summary>
+        All = 0,
+
+        /// <summary>
+        /// 支付宝
+        /// </summary>
+        AliPay = 1,
+
+        /// <summary>
+        /// 微信
+        /// </summary>
+        WeChat = 2,
+
+        /// <summary>
+        /// 货到付款
+        /// </summary>
+        PayOnDelivery = 3,
     }
 }

@@ -4,7 +4,7 @@ using Abp.Domain.Entities.Auditing;
 namespace Vapps.ECommerce.Shipping
 {
     /// <summary>
-    /// 发货子项
+    /// 子物流单
     /// </summary>
     public partial class ShipmentItem : FullAuditedEntity<long>, IMustHaveTenant
     {
@@ -14,7 +14,7 @@ namespace Vapps.ECommerce.Shipping
         public virtual int TenantId { get; set; }
 
         /// <summary>
-        /// 发货信息
+        /// 父物流单Id
         /// </summary>
         public int ShipmentId { get; set; }
 

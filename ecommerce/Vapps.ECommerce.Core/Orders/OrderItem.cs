@@ -19,9 +19,9 @@ namespace Vapps.ECommerce.Orders
         public virtual int TenantId { get; set; }
 
         /// <summary>
-        /// Gets or sets the order item identifier
+        /// 子订单号
         /// </summary>
-        public virtual Guid OrderItemGuid { get; set; }
+        public string OrderItemNumber { get; set; }
 
         /// <summary>
         /// 订单Id
@@ -31,7 +31,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 商品id
         /// </summary>
-        public virtual int ProductId { get; set; }
+        public virtual long ProductId { get; set; }
 
         /// <summary>
         /// 数量
