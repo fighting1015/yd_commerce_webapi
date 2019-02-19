@@ -3,12 +3,14 @@ using Abp.Domain.Entities.Auditing;
 using System;
 
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Shipping
 {
     /// <summary>
     /// 物流单
     /// </summary>
+    [Table("Shipment")]
     public partial class Shipment : FullAuditedEntity<long>, IMustHaveTenant
     {
         /// <summary>

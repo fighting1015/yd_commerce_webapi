@@ -2,6 +2,7 @@
 using Abp.Domain.Entities.Auditing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Vapps.ECommerce.Payments;
 using Vapps.ECommerce.Shipping;
 
@@ -10,6 +11,7 @@ namespace Vapps.ECommerce.Orders
     /// <summary>
     /// Represents an order
     /// </summary>
+    [Table("Orders")]
     public partial class Order : FullAuditedEntity<long>, IMustHaveTenant
     {
         private ICollection<OrderItem> _orderItems;
@@ -117,21 +119,6 @@ namespace Vapps.ECommerce.Orders
         #endregion
 
         /// <summary>
-        /// 付款方式
-        /// </summary>
-        public string PaymentMethodSystemName { get; set; }
-
-        /// <summary>
-        /// 付款银行名称
-        /// </summary>
-        public string PaymentBankSystemName { get; set; }
-
-        /// <summary>
-        /// 交易订单号
-        /// </summary>
-        public string PurchaseOrderNumber { get; set; }
-
-        /// <summary>
         /// 用户Ip地址
         /// </summary>
         public string CustomerIp { get; set; }
@@ -177,12 +164,17 @@ namespace Vapps.ECommerce.Orders
         public ShippingStatus ShippingStatus { get; set; }
 
         /// <summary>
-        /// Gets or sets the Order source type
+        /// 订单来源
         /// </summary>
         public OrderSource OrderSource { get; set; }
 
-        #endregion
+        /// <summary>
+        /// 付款类型
+        /// </summary>
+        public PaymentType Payment { get; set; }
 
+        #endregion
+        
         /// <summary>
         /// Gets or sets order items
         /// 订单条目

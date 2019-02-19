@@ -461,7 +461,8 @@ namespace Vapps.ECommerce.Products
 
                 if (attributeMapping.Id != 0)
                     attributeValue = attributeMapping.Values
-                       .FirstOrDefault(pav => pav.ProductAttributeMapping.ProductAttributeId == attributeDto.Id
+                       .FirstOrDefault(pav => pav.ProductAttributeMappingId > 0 
+                       && pav.ProductAttributeMapping.ProductAttributeId == attributeDto.Id
                        && pav.PredefinedProductAttributeValueId == valueDto.Id);
 
                 if (attributeValue != null)

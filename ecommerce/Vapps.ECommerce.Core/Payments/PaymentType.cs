@@ -8,6 +8,27 @@
         All = 0,
 
         /// <summary>
+        /// 在线支付
+        /// </summary>
+        PayOnline = 1,
+
+        /// <summary>
+        /// 货到付款
+        /// </summary>
+        PayOnDelivery = 2,
+    }
+
+    /// <summary>
+    /// 支付方法
+    /// </summary>
+    public enum PaymentMethod
+    {
+        /// <summary>
+        /// 所有
+        /// </summary>
+        All = 0,
+
+        /// <summary>
         /// 支付宝
         /// </summary>
         AliPay = 1,

@@ -13,7 +13,7 @@ namespace Vapps.ECommerce.Orders
         /// <param name="order"></param>
         public static void ResetOrderGuidAndNumber(this Order order)
         {
-            order.CustomOrderNumber = Guid.NewGuid().ToLongId().ToString();
+            order.OrderNumber = Guid.NewGuid().ToLongId().ToString();
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Vapps.ECommerce.Orders
 
             var randomNum = CommonHelper.GenerateRandomDigitCode(2);
 
-            order.CustomOrderNumber = string.Concat(sarNum, randomNum);
+            order.OrderNumber = string.Concat(sarNum, randomNum);
         }
     }
 }

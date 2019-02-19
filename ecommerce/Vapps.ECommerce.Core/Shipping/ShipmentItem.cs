@@ -1,11 +1,13 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vapps.ECommerce.Shipping
 {
     /// <summary>
     /// 子物流单
     /// </summary>
+    [Table("ShipmentItems")]
     public partial class ShipmentItem : FullAuditedEntity<long>, IMustHaveTenant
     {
         /// <summary>

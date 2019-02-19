@@ -1,5 +1,4 @@
 ﻿using Abp.Domain.Entities;
-using System.Collections.Generic;
 
 namespace Vapps.ECommerce.Products
 {
