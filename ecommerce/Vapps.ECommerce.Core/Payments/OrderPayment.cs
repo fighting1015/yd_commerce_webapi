@@ -7,8 +7,8 @@ namespace Vapps.ECommerce.Payments
     /// <summary>
     /// 订单支付表
     /// </summary>
-    [Table("OrderPaymsents")]
-    public class OrderPaymsent : FullAuditedEntity<long>, IMustHaveTenant
+    [Table("OrderPayments")]
+    public class OrderPayment : FullAuditedEntity<long>, IMustHaveTenant
     {
         /// <summary>
         /// 租户Id

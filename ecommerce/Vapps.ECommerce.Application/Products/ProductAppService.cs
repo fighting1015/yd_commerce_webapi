@@ -101,6 +101,26 @@ namespace Vapps.ECommerce.Products
         }
 
         /// <summary>
+        /// 获取商品的属性及值
+        /// </summary>
+        /// <returns></returns>
+        public async Task<GetProductAttributeMappingOutput> GetProductAttributeMapping(long productId)
+        {
+            var output = new GetProductAttributeMappingOutput();
+            var product = await _productManager.FindByIdAsync(productId);
+
+            await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Categories);
+            await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Pictures);
+            await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Attributes);
+            await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.AttributeCombinations);
+
+            PrepareProductAttribute(output.Attributes, product);
+            await PrepareProductAttributeCombination(output.AttributeCombinations, product);
+
+            return output;
+        }
+
+        /// <summary>
         /// 获取商品详情
         /// </summary>
         /// <param name="input"></param>
@@ -120,7 +140,7 @@ namespace Vapps.ECommerce.Products
 
                 productDto = ObjectMapper.Map<GetProductForEditOutput>(product);
 
-                productDto.Categories = product.Categories.Select(i =>
+                productDto.Categories = product.Categories.ToList().Select(i =>
                 {
                     var item = new ProductCategoryDto()
                     {
@@ -130,20 +150,20 @@ namespace Vapps.ECommerce.Products
                     return item;
                 }).ToList();
 
-                PrepareProductAttribute(productDto, product);
+                PrepareProductAttribute(productDto.Attributes, product);
 
-                await PrepareProductAttributeCombination(productDto, product);
+                await PrepareProductAttributeCombination(productDto.AttributeCombinations, product);
 
-                productDto.Pictures = product.Pictures.Select(i =>
-                {
-                    var item = new ProductPictureDto()
-                    {
-                        Id = i.PictureId,
-                        Url = _pictureManager.GetPictureUrl(i.PictureId)
-                    };
+                productDto.Pictures = product.Pictures.OrderBy(p => p.DisplayOrder).ToList().Select(i =>
+                  {
+                      var item = new ProductPictureDto()
+                      {
+                          Id = i.PictureId,
+                          Url = _pictureManager.GetPictureUrl(i.PictureId)
+                      };
 
-                    return item;
-                }).ToList();
+                      return item;
+                  }).ToList();
             }
             else
             {
@@ -177,7 +197,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DeleteProduct(BatchDeleteInput<long> input)
+        public async Task DeleteProduct(BatchInput<long> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
             {
@@ -195,33 +215,33 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 初始化商品属性
         /// </summary>
-        /// <param name="productDto"></param>
+        /// <param name="attributeDtoList"></param>
         /// <param name="product"></param>
-        private void PrepareProductAttribute(GetProductForEditOutput productDto, Product product)
+        private void PrepareProductAttribute(List<ProductAttributeDto> attributeDtoList, Product product)
         {
-            productDto.Attributes = product.Attributes.Select(attribute =>
-            {
-                var item = ObjectMapper.Map<ProductAttributeDto>(attribute);
-                item.Id = attribute.ProductAttributeId;
+            attributeDtoList = product.Attributes.OrderBy(a => a.DisplayOrder).ToList().Select(attribute =>
+              {
+                  var item = ObjectMapper.Map<ProductAttributeDto>(attribute);
+                  item.Id = attribute.ProductAttributeId;
 
-                _productAttributeManager.ProductAttributeMappingRepository.EnsurePropertyLoaded(attribute, t => t.ProductAttribute);
+                  _productAttributeManager.ProductAttributeMappingRepository.EnsurePropertyLoaded(attribute, t => t.ProductAttribute);
 
-                item.Name = attribute.ProductAttribute.Name;
+                  item.Name = attribute.ProductAttribute.Name;
 
-                _productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoaded(attribute, t => t.Values);
+                  _productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoaded(attribute, t => t.Values);
 
-                // 属性值
-                item.Values = attribute.Values.Select(value =>
-                {
-                    var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
-                    valueDto.Name = value.Name;
-                    valueDto.Id = value.PredefinedProductAttributeValueId;
-                    valueDto.PictureUrl = _pictureManager.GetPictureUrl(value.PictureId);
-                    return valueDto;
-                }).ToList();
+                  // 属性值
+                  item.Values = attribute.Values.OrderBy(v => v.DisplayOrder).ToList().Select(value =>
+                    {
+                        var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
+                        valueDto.Name = value.Name;
+                        valueDto.Id = value.PredefinedProductAttributeValueId;
+                        valueDto.PictureUrl = _pictureManager.GetPictureUrl(value.PictureId);
+                        return valueDto;
+                    }).ToList();
 
-                return item;
-            }).ToList();
+                  return item;
+              }).ToList();
         }
 
         /// <summary>
@@ -245,12 +265,13 @@ namespace Vapps.ECommerce.Products
 
             if (input.Pictures != null)
             {
+                int displayOrder = 0;
                 product.Pictures = input.Pictures.Select(i =>
                 {
                     return new ProductPicture()
                     {
                         PictureId = i.Id,
-                        DisplayOrder = i.DisplayOrder,
+                        DisplayOrder = ++displayOrder,
                         ProductId = input.Id ?? 0,
                     };
                 }).ToList();
@@ -280,6 +301,21 @@ namespace Vapps.ECommerce.Products
             await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Pictures);
             await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Attributes);
             await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.AttributeCombinations);
+
+            // 更新基础属性
+            product.Name = input.Name;
+            product.ShortDescription = input.ShortDescription;
+            product.Price = input.Price;
+            product.GoodCost = input.GoodCost;
+            product.Sku = input.Sku;
+            product.ThirdPartySku = input.ThirdPartySku;
+            product.StockQuantity = input.StockQuantity;
+            product.Height = input.Height;
+            product.Weight = input.Weight;
+            product.Width = input.Width;
+            product.Length = input.Length;
+            product.NotifyQuantityBelow = input.NotifyQuantityBelow;
+            product.FullDescription = input.FullDescription;
 
             CreateOrUpdateProductPictures(input, product);
 
@@ -319,6 +355,7 @@ namespace Vapps.ECommerce.Products
                 }
             }
 
+            var displayOrder = 0;
             foreach (var combinDto in input.AttributeCombinations)
             {
                 // sku去重
@@ -345,6 +382,7 @@ namespace Vapps.ECommerce.Products
                 combin.OverriddenPrice = combinDto.OverriddenPrice;
                 combin.OverriddenGoodCost = combinDto.OverriddenGoodCost;
                 combin.StockQuantity = combinDto.StockQuantity;
+                combin.DisplayOrder = displayOrder;
 
                 if (combin.Id == 0)
                     product.AttributeCombinations.Add(combin);
@@ -402,6 +440,7 @@ namespace Vapps.ECommerce.Products
             }
 
             //添加或更新属性
+            int displayOrder = 0;
             foreach (var attributeDto in input.Attributes)
             {
                 ProductAttributeMapping attributeMapping = null;
@@ -414,7 +453,7 @@ namespace Vapps.ECommerce.Products
                     attributeMapping = new ProductAttributeMapping()
                     {
                         ProductAttributeId = attributeDto.Id,
-                        DisplayOrder = attributeDto.DisplayOrder,
+                        DisplayOrder = ++displayOrder,
                         Values = new Collection<ProductAttributeValue>()
                     };
 
@@ -422,7 +461,7 @@ namespace Vapps.ECommerce.Products
                 }
                 else
                 {
-                    attributeMapping.DisplayOrder = attributeDto.DisplayOrder;
+                    attributeMapping.DisplayOrder = ++displayOrder;
                 }
 
                 //添加或更新属性值
@@ -453,6 +492,7 @@ namespace Vapps.ECommerce.Products
                 }
             }
 
+            int displayOrder = 0;
             foreach (var valueDto in attributeDto.Values)
             {
                 var predefineValue = await _productAttributeManager.GetPredefinedValueByIdAsync(valueDto.Id);
@@ -461,14 +501,14 @@ namespace Vapps.ECommerce.Products
 
                 if (attributeMapping.Id != 0)
                     attributeValue = attributeMapping.Values
-                       .FirstOrDefault(pav => pav.ProductAttributeMappingId > 0 
+                       .FirstOrDefault(pav => pav.ProductAttributeMappingId > 0
                        && pav.ProductAttributeMapping.ProductAttributeId == attributeDto.Id
                        && pav.PredefinedProductAttributeValueId == valueDto.Id);
 
                 if (attributeValue != null)
                 {
                     attributeValue.Name = predefineValue.Name;
-                    attributeValue.DisplayOrder = valueDto.DisplayOrder;
+                    attributeValue.DisplayOrder = ++displayOrder;
                     attributeValue.PictureId = valueDto.PictureId;
                 }
                 else
@@ -476,7 +516,7 @@ namespace Vapps.ECommerce.Products
                     attributeValue = new ProductAttributeValue()
                     {
                         Name = predefineValue.Name,
-                        DisplayOrder = valueDto.DisplayOrder,
+                        DisplayOrder = ++displayOrder,
                         PictureId = valueDto.PictureId,
                         PredefinedProductAttributeValueId = valueDto.Id,
                         ProductId = attributeMapping.ProductId
@@ -503,19 +543,20 @@ namespace Vapps.ECommerce.Products
             }
 
             //添加或更新图片
+            var displayOrder = 0;
             foreach (var itemInput in input.Pictures)
             {
                 var item = product.Pictures.FirstOrDefault(x => x.PictureId == itemInput.Id);
                 if (item != null)
                 {
-                    item.DisplayOrder = itemInput.DisplayOrder;
+                    item.DisplayOrder = ++displayOrder;
                 }
                 else
                 {
                     product.Pictures.Add(new ProductPicture()
                     {
                         PictureId = itemInput.Id,
-                        DisplayOrder = itemInput.DisplayOrder,
+                        DisplayOrder = ++displayOrder
                     });
                 }
             }
@@ -557,12 +598,16 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 初始化属性组合
         /// </summary>
-        /// <param name="productDto"></param>
+        /// <param name="combinDtoList"></param>
         /// <param name="product"></param>
-        private async Task PrepareProductAttributeCombination(GetProductForEditOutput productDto, Product product)
+        private async Task PrepareProductAttributeCombination(List<AttributeCombinationDto> combinDtoList, Product product)
         {
-            productDto.AttributeCombinations = new List<AttributeCombinationDto>();
-            foreach (var combination in product.AttributeCombinations)
+            if (combinDtoList == null)
+                combinDtoList = new List<AttributeCombinationDto>();
+
+            var combins = product.AttributeCombinations.OrderBy(c => c.DisplayOrder).ToList();
+
+            foreach (var combination in combins)
             {
                 var combinationDto = ObjectMapper.Map<AttributeCombinationDto>(combination);
 
@@ -587,14 +632,13 @@ namespace Vapps.ECommerce.Products
                             valueDto.Name = attributeValue.Name;
 
                         valueDto.Id = attributeValue.PredefinedProductAttributeValueId;
-                        valueDto.DisplayOrder = valueDto.DisplayOrder;
 
                         return valueDto;
                     }).ToList();
                     combinationDto.Attributes.Add(atributeDto);
                 }
 
-                productDto.AttributeCombinations.Add(combinationDto);
+                combinDtoList.Add(combinationDto);
             }
         }
 

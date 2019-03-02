@@ -40,7 +40,7 @@ namespace Vapps.Pictures
         /// 批量删除图片
         /// </summary>
         /// <returns></returns>
-        Task DeleteAsync(BatchDeleteInput<long> input);
+        Task DeleteAsync(BatchInput<long> input);
 
         /// <summary>
         /// 批量移动图片

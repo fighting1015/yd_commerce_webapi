@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Vapps.Media;
+using Vapps.Media.Cache;
 
 namespace Vapps.ECommerce.Products
 {
@@ -15,18 +17,15 @@ namespace Vapps.ECommerce.Products
         public IRepository<Product, long> ProductRepository { get; }
         public IQueryable<Product> Products => ProductRepository.GetAll().AsNoTracking();
 
-        private readonly IProductAttributeManager _productAttributeManager;
 
-        public ProductManager(IRepository<Product, long> productRepository,
-            IProductAttributeManager productAttributeManager)
+        public ProductManager(IRepository<Product, long> productRepository)
         {
             this.ProductRepository = productRepository;
-            this._productAttributeManager = productAttributeManager;
         }
 
         #endregion
 
-        #region Method
+        #region Product
 
         /// <summary>
         /// 根据Sku查找商品
@@ -133,5 +132,7 @@ namespace Vapps.ECommerce.Products
         }
 
         #endregion
+
+      
     }
 }

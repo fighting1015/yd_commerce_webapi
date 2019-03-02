@@ -35,10 +35,5 @@ namespace Vapps.ECommerce.Products
         /// 属性值Id
         /// </summary>
         public long AttributeValueId { get; set; }
-
-        /// <summary>
-        /// 排序
-        /// </summary>
-        public int DisplayOrder { get; set; }
     }
 }

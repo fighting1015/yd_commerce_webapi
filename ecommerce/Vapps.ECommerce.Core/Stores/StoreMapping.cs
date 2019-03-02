@@ -20,12 +20,12 @@ namespace Vapps.ECommerce.Stores
         public string EntityName { get; set; }
 
         /// <summary>
-        /// Gets or sets the store identifier
+        /// Gets or sets the logistics identifier
         /// </summary>
         public int StoreId { get; set; }
 
         /// <summary>
-        /// Gets or sets the store
+        /// Gets or sets the logistics
         /// </summary>
         public virtual Store Store { get; set; }
     }

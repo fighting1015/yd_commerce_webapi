@@ -49,17 +49,12 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 低库存通知（暂不实现）
         /// </summary>
-        public virtual int NotifyAdminForQuantityBelow { get; set; }
+        public virtual int NotifyQuantityBelow { get; set; }
 
         /// <summary>
         /// 售价
         /// </summary>
         public virtual decimal Price { get; set; }
-
-        /// <summary>
-        /// 货物成本/进货价
-        /// </summary>
-        public virtual decimal GoodCost { get; set; }
 
         /// <summary>
         /// 重量（发货毛重）
@@ -80,6 +75,21 @@ namespace Vapps.ECommerce.Products
         /// 高
         /// </summary>
         public virtual decimal Height { get; set; }
+
+        /// <summary>
+        /// 已发布
+        /// </summary>
+        public virtual bool Published { get; set; }
+
+        /// <summary>
+        /// 货物成本/进货价
+        /// </summary>
+        public virtual decimal GoodCost { get; set; }
+
+        /// <summary>
+        /// 进货链接
+        /// </summary>
+        public virtual string GoodsUrl { get; set; }
 
         /// <summary>
         /// 分类

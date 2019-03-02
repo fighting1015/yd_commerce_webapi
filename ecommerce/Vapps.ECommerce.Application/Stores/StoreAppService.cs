@@ -107,18 +107,21 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task CreateOrUpdateStore(CreateOrUpdateStoreInput input)
+        public async Task<EntityDto<long>> CreateOrUpdateStore(CreateOrUpdateStoreInput input)
         {
+            Store store;
             if (input.Id.HasValue && input.Id.Value > 0)
             {
-                await UpdateStoreAsync(input);
+                store = await UpdateStoreAsync(input);
             }
             else
             {
-                await CreateStoreAsync(input);
+                store = await CreateStoreAsync(input);
             }
 
             await CurrentUnitOfWork.SaveChangesAsync();
+
+            return new EntityDto<long> { Id = store.Id };
         }
 
         /// <summary>
@@ -126,7 +129,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task DeleteStore(BatchDeleteInput<int> input)
+        public async Task DeleteStore(BatchInput<int> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
             {
@@ -145,10 +148,12 @@ namespace Vapps.ECommerce.Stores
         /// 创建店铺
         /// </summary>
         /// <returns></returns>
-        protected virtual async Task CreateStoreAsync(CreateOrUpdateStoreInput input)
+        protected virtual async Task<Store> CreateStoreAsync(CreateOrUpdateStoreInput input)
         {
             var store = ObjectMapper.Map<Store>(input);
             await _storeManager.CreateAsync(store);
+
+            return store;
         }
 
         /// <summary>
@@ -156,12 +161,16 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        protected virtual async Task UpdateStoreAsync(CreateOrUpdateStoreInput input)
+        protected virtual async Task<Store> UpdateStoreAsync(CreateOrUpdateStoreInput input)
         {
             var store = ObjectMapper.Map<Store>(input);
             await _storeManager.UpdateAsync(store);
+
+            return store;
         }
+
+        #endregion
+
     }
 
-    #endregion
 }

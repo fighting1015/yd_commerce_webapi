@@ -30,11 +30,6 @@ namespace Vapps.ECommerce.Products.Dto
         /// 预定义值/值记录
         /// </summary>
         public List<ProductAttributeValueDto> Values { get; set; }
-
-        /// <summary>
-        /// 排序Id
-        /// </summary>
-        public int DisplayOrder { get; set; }
     }
 
     /// <summary>
@@ -72,11 +67,5 @@ namespace Vapps.ECommerce.Products.Dto
         /// 图片Url
         /// </summary>
         public string PictureUrl { get; set; }
-
-        /// <summary>
-        /// 排序Id
-        /// </summary>
-        public int DisplayOrder { get; set; }
     }
-
 }

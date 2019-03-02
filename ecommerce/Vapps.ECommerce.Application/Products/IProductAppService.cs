@@ -21,6 +21,12 @@ namespace Vapps.ECommerce.Products
         Task<List<SelectListItemDto>> GetProductSelectList();
 
         /// <summary>
+        /// 获取商品的属性及值
+        /// </summary>
+        /// <returns></returns>
+        Task<GetProductAttributeMappingOutput> GetProductAttributeMapping(long productId);
+
+        /// <summary>
         /// 获取商品详情
         /// </summary>
         /// <param name="input"></param>
@@ -39,6 +45,6 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteProduct(BatchDeleteInput<long> input);
+        Task DeleteProduct(BatchInput<long> input);
     }
 }

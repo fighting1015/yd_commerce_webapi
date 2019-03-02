@@ -57,7 +57,7 @@ namespace Vapps.Tests.Media
 
             var picture = await GetPictureByKeyOrNullAsync("1/test.jpg");
 
-            await PictureAppService.DeleteAsync(new BatchDeleteInput<long>()
+            await PictureAppService.DeleteAsync(new BatchInput<long>()
             {
                 Ids = new long[] { picture.Id }
             });

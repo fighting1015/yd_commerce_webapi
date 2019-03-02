@@ -1,6 +1,10 @@
 ﻿namespace Vapps.Dto
 {
-    public class BatchDeleteInput<T>
+    /// <summary>
+    /// 批量操作
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class BatchInput<T>
     {
         /// <summary>
         /// id数组

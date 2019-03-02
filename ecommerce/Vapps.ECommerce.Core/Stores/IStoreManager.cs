@@ -29,20 +29,20 @@ namespace Vapps.ECommerce.Stores
         /// <summary>
         /// 添加店铺
         /// </summary>
-        /// <param name="store"></param>
-        Task CreateAsync(Store store);
+        /// <param name="logistics"></param>
+        Task CreateAsync(Store logistics);
 
         /// <summary>
         /// 修改店铺
         /// </summary>
-        /// <param name="store"></param>
-        Task UpdateAsync(Store store);
+        /// <param name="logistics"></param>
+        Task UpdateAsync(Store logistics);
 
         /// <summary>
         /// 删除店铺
         /// </summary>
-        /// <param name="store"></param>
-        Task DeleteAsync(Store store);
+        /// <param name="logistics"></param>
+        Task DeleteAsync(Store logistics);
 
         /// <summary>
         /// 删除店铺

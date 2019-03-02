@@ -1,7 +1,6 @@
-﻿namespace Vapps.ECommerce.Shipping
+﻿namespace Vapps.ECommerce.Shippings
 {
     /// <summary>
-    /// Represents the shipping status enumeration
     /// 发货状态枚举
     /// </summary>
     public enum ShippingStatus : int
@@ -49,7 +48,7 @@
         /// <summary>
         /// 已签收
         /// </summary>
-        Delivered = 3,
+        Received = 3,
 
         /// <summary>
         /// 问题件

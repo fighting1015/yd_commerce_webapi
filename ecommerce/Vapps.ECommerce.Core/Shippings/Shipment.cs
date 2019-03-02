@@ -4,13 +4,14 @@ using System;
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Vapps.ECommerce.Orders;
 
-namespace Vapps.ECommerce.Shipping
+namespace Vapps.ECommerce.Shippings
 {
     /// <summary>
     /// 物流单
     /// </summary>
-    [Table("Shipment")]
+    [Table("Shipments")]
     public partial class Shipment : FullAuditedEntity<long>, IMustHaveTenant
     {
         /// <summary>
@@ -21,22 +22,37 @@ namespace Vapps.ECommerce.Shipping
         /// <summary>
         /// 订单Id
         /// </summary>
-        public virtual int OrderId { get; set; }
+        public virtual long OrderId { get; set; }
 
         /// <summary>
-        /// 快递单号
+        /// 订单
         /// </summary>
-        public virtual string TrackingNumber { get; set; }
+        public virtual Order Order { get; set; }
+
+        /// <summary>
+        /// 订单号
+        /// </summary>
+        public virtual string OrderNumber { get; set; }
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public virtual ShippingStatus Status { get; set; }
 
         /// <summary>
         /// 重量
         /// </summary>
-        public virtual decimal? TotalWeight { get; set; }
+        public virtual decimal TotalWeight { get; set; }
+
+        /// <summary>
+        /// 体积
+        /// </summary>
+        public virtual decimal TotalVolume { get; set; }
 
         /// <summary>
         /// 签收时间
         /// </summary>
-        public virtual DateTime? DeliveryDateUtc { get; set; }
+        public virtual DateTime? ReceivedOn { get; set; }
 
         /// <summary>
         /// 备注
@@ -44,7 +60,7 @@ namespace Vapps.ECommerce.Shipping
         public virtual string AdminComment { get; set; }
 
         /// <summary>
-        /// 快递Id
+        /// 快递Id(非租户绑定的快递Id)
         /// </summary>
         public virtual int? LogisticsId { get; set; }
 
@@ -54,18 +70,19 @@ namespace Vapps.ECommerce.Shipping
         public virtual string LogisticsName { get; set; }
 
         /// <summary>
+        /// 快递单号
+        /// </summary>
+        public virtual string LogisticsNumber { get; set; }
+
+        /// <summary>
         /// 快递详情信息（格式化物流跟踪信息）
         /// </summary>
         public virtual string ShipmentDetail { get; set; }
 
         /// <summary>
-        /// 运费是否已结算
-        /// </summary>
-        public virtual bool IsCleared { get; set; }
-
-        /// <summary>
         /// Gets or sets the shipment items
         /// </summary>
-        public virtual ICollection<ShipmentItem> ShipmentItems { get; set; }
+        [ForeignKey("ShipmentId")]
+        public virtual ICollection<ShipmentItem> Items { get; set; }
     }
 }

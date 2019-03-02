@@ -27,7 +27,7 @@
     <ProjectReference Include="..\Vapps.ECommerce.Core\Vapps.ECommerce.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Orders\" />
+    <Folder Include="Payments\" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\net461\Vapps.ECommerce.Application.xml</DocumentationFile>

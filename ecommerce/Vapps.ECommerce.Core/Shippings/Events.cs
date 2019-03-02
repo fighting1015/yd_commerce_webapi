@@ -1,4 +1,4 @@
-﻿namespace Vapps.ECommerce.Shipping
+﻿namespace Vapps.ECommerce.Shippings
 {
     /// <summary>
     /// 发货事件

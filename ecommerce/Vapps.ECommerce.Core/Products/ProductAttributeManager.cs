@@ -2,6 +2,7 @@
 using Abp.Domain.Uow;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -164,10 +165,10 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long pValueId)
+        public async Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long productId, long pValueId)
         {
             return await ProductAttributeValueRepository
-                .FirstOrDefaultAsync(x => x.PredefinedProductAttributeValueId == pValueId);
+                .FirstOrDefaultAsync(x => x.ProductId == productId && x.PredefinedProductAttributeValueId == pValueId);
         }
 
         /// <summary>
@@ -443,6 +444,16 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        public virtual async Task<ProductAttributeMapping> FindMappingAsync(long productId, long attributeId)
+        {
+            return await ProductAttributeMappingRepository.FirstOrDefaultAsync(m => m.ProductId == productId && m.ProductAttributeId == attributeId);
+        }
+
+        /// <summary>
+        /// 根据id查找商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public virtual async Task<ProductAttributeMapping> FindMappingByIdAsync(long id)
         {
             return await ProductAttributeMappingRepository.FirstOrDefaultAsync(id);
@@ -456,6 +467,19 @@ namespace Vapps.ECommerce.Products
         public virtual async Task<ProductAttributeMapping> GetMappingByIdAsync(long id)
         {
             return await ProductAttributeMappingRepository.GetAsync(id);
+        }
+
+        /// <summary>
+        /// 根据商品id获取商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<List<ProductAttributeMapping>> GetMappingByProductIdAsync(long productId, bool readOnly = false)
+        {
+            if (readOnly)
+                return await ProductAttributeMappings.Include(pam => pam.Values).Where(pam => pam.ProductId == productId).ToListAsync();
+            else
+                return await ProductAttributeMappingRepository.GetAll().Include(pam => pam.Values).Where(pam => pam.ProductId == productId).ToListAsync();
         }
 
         /// <summary>
@@ -516,6 +540,19 @@ namespace Vapps.ECommerce.Products
         #endregion
 
         #region Attribute combinations
+
+        /// <summary>
+        /// 根据Json查找属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<ProductAttributeCombination> FindCombinationByAttributesJsonAsync(string attributesJson)
+        {
+            if (String.IsNullOrEmpty(attributesJson))
+                return null;
+
+            return await ProductAttributeCombinationRepository.FirstOrDefaultAsync(x => x.AttributesJson == attributesJson);
+        }
 
         /// <summary>
         /// 根据Sku查找属性组合

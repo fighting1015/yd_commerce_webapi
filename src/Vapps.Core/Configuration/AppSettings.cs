@@ -86,41 +86,13 @@ namespace Vapps.Configuration
             public const string TenantRegistrationCache = "TenantRegistrationCache";
         }
 
-        public static class UiManagement
+        public static class Shipping
         {
-            public const string LayoutType = "App.UiManagement.LayoutType";
+            public const string ApiId = "Shipping.ApiId";
 
-            public const string ContentSkin = "App.UiManagement.ContentSkin";
+            public const string ApiSecret = "Shipping.ApiSecret";
 
-            public const string Theme = "App.UiManagement.Theme";
-
-            public static class Header
-            {
-                public const string DesktopFixedHeader = "App.UiManagement.Header.DesktopFixedHeader";
-                public const string DesktopMinimizeMode = "App.UiManagement.Header.DesktopMinimizeMode";
-                public const string MobileFixedHeader = "App.UiManagement.Header.MobileFixedHeader";
-                public const string Skin = "App.UiManagement.Header.Skin";
-                public const string DisplaySubmenuArrowDesktop = "App.UiManagement.Header.DisplaySubmenuArrow_Desktop";
-            }
-
-            public static class LeftAside
-            {
-                public const string Position = "App.UiManagement.Left.Position";
-                public const string AsideSkin = "App.UiManagement.Left.AsideSkin";
-                public const string FixedAside = "App.UiManagement.Left.FixedAside";
-                public const string AllowAsideMinimizing = "App.UiManagement.Left.AllowAsideMinimizing";
-                public const string DefaultMinimizedAside = "App.UiManagement.Left.DefaultMinimizedAside";
-                public const string AllowAsideHiding = "App.UiManagement.Left.AllowAsideHiding";
-                public const string DefaultHiddenAside = "App.UiManagement.Left.DefaultHiddenAside";
-                public const string DropdownSubmenuSkin = "App.UiManagement.Left.DropdownSubmenuSkin";
-                public const string DropdownSubmenuArrow = "App.UiManagement.Left.DropdownSubmenuArrow";
-            }
-
-            public static class Footer
-            {
-                public const string FixedFooter = "App.UiManagement.Footer.FixedFooter";
-            }
-
+            public const string ApiUrl = "Shipping.ApiUrl";
         }
     }
 }

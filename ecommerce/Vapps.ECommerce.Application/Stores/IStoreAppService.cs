@@ -33,13 +33,13 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task CreateOrUpdateStore(CreateOrUpdateStoreInput input);
+        Task<EntityDto<long>> CreateOrUpdateStore(CreateOrUpdateStoreInput input);
 
         /// <summary>
         /// 删除店铺
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task DeleteStore(BatchDeleteInput<int> input);
+        Task DeleteStore(BatchInput<int> input);
     }
 }

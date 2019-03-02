@@ -1,8 +1,14 @@
 ﻿using AutoMapper;
 using Vapps.ECommerce.Catalog;
 using Vapps.ECommerce.Catalog.Dto;
+using Vapps.ECommerce.Orders;
+using Vapps.ECommerce.Orders.Dto;
 using Vapps.ECommerce.Products;
 using Vapps.ECommerce.Products.Dto;
+using Vapps.ECommerce.Shippings;
+using Vapps.ECommerce.Shippings.Dto;
+using Vapps.ECommerce.Shippings.Dto.Logisticses;
+using Vapps.ECommerce.Shippings.Dto.Shipments;
 using Vapps.ECommerce.Stores;
 using Vapps.ECommerce.Stores.Dto;
 
@@ -58,6 +64,33 @@ namespace Vapps.ECommerce
 
             configuration.CreateMap<ProductPictureDto, ProductPicture>();
             configuration.CreateMap<ProductPicture, ProductPictureDto>();
+
+            configuration.CreateMap<OrderDetailDto, Order>();
+            configuration.CreateMap<Order, OrderDetailDto>();
+            configuration.CreateMap<OrderItem, OrderDetailItemDto>()
+                .ForMember(dto => dto.PictureUrl, options => options.Ignore());
+            configuration.CreateMap<OrderDetailItemDto, OrderItem>();
+
+            configuration.CreateMap<OrderListDto, Order>();
+            configuration.CreateMap<Order, OrderListDto>();
+            configuration.CreateMap<OrderListItemDto, OrderItem>();
+            configuration.CreateMap<OrderItem, OrderListItemDto>();
+
+            configuration.CreateMap<ShipmentListDto, Shipment>();
+            configuration.CreateMap<Shipment, ShipmentListDto>();
+            configuration.CreateMap<ShipmentDto, Shipment>();
+            configuration.CreateMap<Shipment, ShipmentDto>();
+            configuration.CreateMap<ShipmentItemDto, ShipmentItem>();
+            configuration.CreateMap<ShipmentItem, ShipmentItemDto>();
+            configuration.CreateMap<Shipment, GetShipmentForEditOutput>();
+
+
+            configuration.CreateMap<LogisticsListDto, Logistics>();
+            configuration.CreateMap<Logistics, LogisticsListDto>();
+            configuration.CreateMap<CreateOrUpdateLogisticsInput, Logistics>();
+            configuration.CreateMap<Logistics, CreateOrUpdateLogisticsInput>();
+
+            configuration.CreateMap<TenantLogistics, TenantLogisticsDto>();
 
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }

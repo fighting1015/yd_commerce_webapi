@@ -11,6 +11,7 @@ namespace Vapps.Common
     {
         public override void PreInitialize()
         {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
         public override void Initialize()

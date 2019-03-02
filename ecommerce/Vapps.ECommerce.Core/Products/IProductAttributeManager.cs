@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -152,6 +153,13 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        Task<ProductAttributeMapping> FindMappingAsync(long productId, long attributeId);
+
+        /// <summary>
+        /// 根据id查找商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<ProductAttributeMapping> FindMappingByIdAsync(long id);
 
         /// <summary>
@@ -160,6 +168,13 @@ namespace Vapps.ECommerce.Products
         /// <param name="id"></param>
         /// <returns></returns>
         Task<ProductAttributeMapping> GetMappingByIdAsync(long id);
+
+        /// <summary>
+        /// 根据商品id获取商品属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<List<ProductAttributeMapping>> GetMappingByProductIdAsync(long productId, bool readOnly = false);
 
         /// <summary>
         /// 添加/更新商品属性
@@ -200,7 +215,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long pValueId);
+        Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long productId, long pValueId);
 
         /// <summary>
         /// 根据属性Id和预设值id查找属性值
@@ -284,6 +299,13 @@ namespace Vapps.ECommerce.Products
         #endregion
 
         #region Attribute combinations
+
+        /// <summary>
+        /// 根据Json查找属性组合
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ProductAttributeCombination> FindCombinationByAttributesJsonAsync(string attributesJson);
 
         /// <summary>
         /// 根据Sku查找属性组合

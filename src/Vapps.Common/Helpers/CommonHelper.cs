@@ -540,8 +540,10 @@ namespace Vapps.Helpers
 
         #endregion
 
+        #region Address
+
         /// <summary>
-        /// 根据Ip解析地址
+        /// 根据Ip解析地址(淘宝)
         /// </summary>
         /// <returns></returns>
         public async static Task<Ip2AddressEntity> AnalysisIp2AddressAsync(string ip)
@@ -588,7 +590,7 @@ namespace Vapps.Helpers
         }
 
         /// <summary>
-        /// 根据Ip解析地址
+        /// 根据经纬度解析地址(腾讯地图)
         /// </summary>
         /// <returns></returns>
         public async static Task<Longitude2Address> AnalysisLongitude2AddressAsync(string longitude)
@@ -623,6 +625,80 @@ namespace Vapps.Helpers
                 string logDebug = $"获取客户端IP地址出错. {longitude},{webEx.Status},{webEx.Message},{webEx.StackTrace},{webEx.Source}";
                 return ip2AddressEntity;
             }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 通过汉字区位码得到其首字母(小写)
+        /// </summary>
+        /// <param name="nCode">汉字编码</param>
+        /// <returns></returns>
+        public static string FirstLetter(int nCode)
+        {
+            if (nCode >= 1601 && nCode < 1637) return "a";
+            if (nCode >= 1637 && nCode < 1833) return "b";
+            if (nCode >= 1833 && nCode < 2078) return "c";
+            if (nCode >= 2078 && nCode < 2274) return "d";
+            if (nCode >= 2274 && nCode < 2302) return "e";
+            if (nCode >= 2302 && nCode < 2433) return "f";
+            if (nCode >= 2433 && nCode < 2594) return "g";
+            if (nCode >= 2594 && nCode < 2787) return "h";
+            if (nCode >= 2787 && nCode < 3106) return "j";
+            if (nCode >= 3106 && nCode < 3212) return "k";
+            if (nCode >= 3212 && nCode < 3472) return "l";
+            if (nCode >= 3472 && nCode < 3635) return "m";
+            if (nCode >= 3635 && nCode < 3722) return "n";
+            if (nCode >= 3722 && nCode < 3730) return "o";
+            if (nCode >= 3730 && nCode < 3858) return "p";
+            if (nCode >= 3858 && nCode < 4027) return "q";
+            if (nCode >= 4027 && nCode < 4086) return "r";
+            if (nCode >= 4086 && nCode < 4390) return "s";
+            if (nCode >= 4390 && nCode < 4558) return "t";
+            if (nCode >= 4558 && nCode < 4684) return "w";
+            if (nCode >= 4684 && nCode < 4925) return "x";
+            if (nCode >= 4925 && nCode < 5249) return "y";
+            if (nCode >= 5249 && nCode < 5590) return "z";
+            return "";
+        }
+
+
+
+        ///   <summary>  
+        ///   判断是否为汉字  
+        ///   </summary>  
+        ///   <param   name="chrStr">待检测字符串</param>  
+        ///   <returns>是汉字返回true</returns>  
+        public static bool IsChineseCharacters(string chrStr)
+        {
+            Regex CheckStr = new Regex("[\u4e00-\u9fa5]");
+            return CheckStr.IsMatch(chrStr);
+        }
+
+        /// <summary>
+        /// 得到每个汉字的字首拼音码字母(小写)
+        /// </summary>
+        /// <param name="chrStr">输入字符串</param>
+        /// <returns>返回结果</returns>
+        public static string ChangeByName(string chrStr)
+        {
+            string strHeadString = string.Empty;
+            Encoding gb = System.Text.Encoding.GetEncoding("gb2312");
+            for (int i = 0; i < chrStr.Length; i++)
+            {
+                //检测该字符是否为汉字
+                if (!IsChineseCharacters(chrStr.Substring(i, 1)))
+                {
+                    strHeadString += chrStr.Substring(i, 1);
+                    continue;
+                }
+                byte[] bytes = gb.GetBytes(chrStr.Substring(i, 1));
+                string lowCode = System.Convert.ToString(bytes[0] - 0xA0, 16);
+                string hightCode = System.Convert.ToString(bytes[1] - 0xA0, 16);
+                int nCode = Convert.ToUInt16(lowCode, 16) * 100 + Convert.ToUInt16(hightCode, 16);      //得到区位码
+                strHeadString += FirstLetter(nCode);
+            }
+            return strHeadString.ToUpper();
         }
     }
 }

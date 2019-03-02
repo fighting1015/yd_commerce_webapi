@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vapps.ECommerce.Payments;
-using Vapps.ECommerce.Shipping;
+using Vapps.ECommerce.Shippings;
 
 namespace Vapps.ECommerce.Orders
 {
@@ -14,9 +14,6 @@ namespace Vapps.ECommerce.Orders
     [Table("Orders")]
     public partial class Order : FullAuditedEntity<long>, IMustHaveTenant
     {
-        private ICollection<OrderItem> _orderItems;
-        private ICollection<Shipment> _shipments;
-
         #region Properties
 
         /// <summary>
@@ -64,7 +61,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 收货地址(电话)
         /// </summary>
-        public string ShippingTepephone { get; set; }
+        public string ShippingPhoneNumber { get; set; }
 
         /// <summary>
         /// 收货地址(姓名)
@@ -91,7 +88,7 @@ namespace Vapps.ECommerce.Orders
         public decimal ShippingAmount { get; set; }
 
         /// <summary>
-        /// 订单提成金额
+        /// 订单提成/佣金
         /// </summary>
         public decimal RewardAmount { get; set; }
 
@@ -121,12 +118,17 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 用户Ip地址
         /// </summary>
-        public string CustomerIp { get; set; }
+        public string IpAddress { get; set; }
 
         /// <summary>
         /// 付款时间
         /// </summary>
-        public DateTime? PaidDateUtc { get; set; }
+        public DateTime? PaidOn { get; set; }
+
+        /// <summary>
+        /// 签收时间
+        /// </summary>
+        public virtual DateTime? ReceivedOn { get; set; }
 
         /// <summary>
         /// 货运方式
@@ -146,6 +148,12 @@ namespace Vapps.ECommerce.Orders
         #endregion Properties
 
         #region Enum Properties
+
+        /// <summary>
+        /// Gets or sets the order status
+        /// 订单状态
+        /// </summary>
+        public OrderType OrderType { get; set; }
 
         /// <summary>
         /// Gets or sets the order status
@@ -171,7 +179,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 付款类型
         /// </summary>
-        public PaymentType Payment { get; set; }
+        public PaymentType PaymentType { get; set; }
 
         #endregion
         
@@ -179,12 +187,14 @@ namespace Vapps.ECommerce.Orders
         /// Gets or sets order items
         /// 订单条目
         /// </summary>
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        [ForeignKey("OrderId")]
+        public virtual ICollection<OrderItem> Items { get; set; }
 
         /// <summary>
         /// Gets or sets shipments
         /// 发货条目
         /// </summary>
+        [ForeignKey("OrderId")]
         public virtual ICollection<Shipment> Shipments { get; set; }
     }
 }

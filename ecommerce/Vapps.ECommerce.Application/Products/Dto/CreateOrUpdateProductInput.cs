@@ -45,7 +45,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 低库存通知（暂不实现）
         /// </summary>
-        public int NotifyAdminForQuantityBelow { get; set; }
+        public int NotifyQuantityBelow { get; set; }
 
         /// <summary>
         /// 售价
@@ -97,26 +97,4 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         public virtual List<AttributeCombinationDto> AttributeCombinations { get; set; }
     }
-
-    /// <summary>
-    /// 商品属性
-    /// </summary>
-    //[AutoMap(typeof(ProductAttribute))]
-    //public class ProductAttributeMappingDto : EntityDto<long>
-    //{
-    //    /// <summary>
-    //    /// 属性名
-    //    /// </summary>
-    //    public string Name { get; set; }
-
-    //    /// <summary>
-    //    /// 预定义值/值记录
-    //    /// </summary>
-    //    public List<ProductAttributeValueDto> Values { get; set; }
-
-    //    /// <summary>
-    //    /// 排序Id
-    //    /// </summary>
-    //    public int DisplayOrder { get; set; }
-    //}
 }

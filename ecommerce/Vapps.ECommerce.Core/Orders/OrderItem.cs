@@ -28,7 +28,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 订单Id
         /// </summary>
-        public virtual int OrderId { get; set; }
+        public virtual long OrderId { get; set; }
 
         /// <summary>
         /// 商品id
@@ -59,6 +59,11 @@ namespace Vapps.ECommerce.Orders
         /// 货物成本
         /// </summary>
         public virtual decimal OriginalProductCost { get; set; }
+
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public virtual string ProductName { get; set; }
 
         /// <summary>
         /// 商品属性描述

@@ -50,28 +50,28 @@ namespace Vapps.ECommerce.Stores
         /// <summary>
         /// 添加店铺
         /// </summary>
-        /// <param name="store"></param>
-        public virtual async Task CreateAsync(Store store)
+        /// <param name="logistics"></param>
+        public virtual async Task CreateAsync(Store logistics)
         {
-            await StoreRepository.InsertAsync(store);
+            await StoreRepository.InsertAsync(logistics);
         }
 
         /// <summary>
         /// 更新店铺
         /// </summary>
-        /// <param name="store"></param>
-        public virtual async Task UpdateAsync(Store store)
+        /// <param name="logistics"></param>
+        public virtual async Task UpdateAsync(Store logistics)
         {
-            await StoreRepository.UpdateAsync(store);
+            await StoreRepository.UpdateAsync(logistics);
         }
 
         /// <summary>
         /// 删除店铺
         /// </summary>
-        /// <param name="store"></param>
-        public virtual async Task DeleteAsync(Store store)
+        /// <param name="logistics"></param>
+        public virtual async Task DeleteAsync(Store logistics)
         {
-            await StoreRepository.DeleteAsync(store);
+            await StoreRepository.DeleteAsync(logistics);
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace Vapps.ECommerce.Stores
         /// <param name="id"></param>
         public virtual async Task DeleteAsync(int id)
         {
-            var store = await StoreRepository.FirstOrDefaultAsync(id);
+            var logistics = await StoreRepository.FirstOrDefaultAsync(id);
 
-            if (store != null)
-                await StoreRepository.DeleteAsync(store);
+            if (logistics != null)
+                await StoreRepository.DeleteAsync(logistics);
         }
 
         #endregion

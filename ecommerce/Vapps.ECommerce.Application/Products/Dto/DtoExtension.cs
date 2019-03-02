@@ -1,9 +1,6 @@
 ﻿using Abp.Domain.Uow;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vapps.ECommerce.Products.Dto
 {
@@ -35,7 +32,6 @@ namespace Vapps.ECommerce.Products.Dto
                     jsonAttributeItem.AttributeValues.Add(new JsonProductAttributeValue()
                     {
                         AttributeValueId = attributeValue.Id,
-                        DisplayOrder = attributeDto.DisplayOrder,
                     });
                 }
 

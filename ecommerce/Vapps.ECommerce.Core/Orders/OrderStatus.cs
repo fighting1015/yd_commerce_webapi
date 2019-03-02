@@ -6,9 +6,9 @@
     public enum OrderStatus : int
     {
         /// <summary>
-        /// 待处理
+        /// 待确认
         /// </summary>
-        Pending = 10,
+        WaitConfirm = 10,
 
         /// <summary>
         /// 处理中

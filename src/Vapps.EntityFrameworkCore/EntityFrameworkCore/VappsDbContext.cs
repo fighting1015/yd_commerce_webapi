@@ -7,7 +7,10 @@ using Vapps.Authorization.Roles;
 using Vapps.Authorization.Users;
 using Vapps.DataStatistics;
 using Vapps.ECommerce.Catalog;
+using Vapps.ECommerce.Orders;
+using Vapps.ECommerce.Payments;
 using Vapps.ECommerce.Products;
+using Vapps.ECommerce.Shippings;
 using Vapps.ECommerce.Stores;
 using Vapps.Editions;
 using Vapps.Media;
@@ -93,6 +96,13 @@ namespace Vapps.EntityFrameworkCore
 
         public virtual DbSet<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; set; }
 
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<Shipment> Shipments { get; set; }
+        public virtual DbSet<ShipmentItem> ShipmentItems { get; set; }
+        public virtual DbSet<Logistics> Logisticses { get; set; }
+        public virtual DbSet<TenantLogistics> TenantLogisticses { get; set; }
+        public virtual DbSet<OrderPayment> OrderPayments { get; set; }
 
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
@@ -257,6 +267,65 @@ namespace Vapps.EntityFrameworkCore
 
                 b.Property(e => e.OverriddenPrice).HasColumnType("decimal(18, 4)");
                 b.Property(e => e.OverriddenGoodCost).HasColumnType("decimal(18, 4)");
+            });
+
+            modelBuilder.Entity<Order>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.UserId, e.IsDeleted });
+                b.HasIndex(e => new { e.TenantId, e.OrderStatus });
+                b.HasIndex(e => new { e.TenantId, e.PaymentStatus });
+                b.HasIndex(e => new { e.TenantId, e.ShippingStatus });
+
+                b.Property(e => e.DiscountAmount).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.SubTotalDiscountAmount).HasColumnType("decimal(18, 4)");
+
+                b.Property(e => e.RefundedAmount).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.RewardAmount).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.ShippingAmount).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.SubtotalAmount).HasColumnType("decimal(18, 4)");
+
+                b.Property(e => e.TotalAmount).HasColumnType("decimal(18, 4)");
+
+                b.Property(e => e.PaymentMethodAdditionalFee).HasColumnType("decimal(18, 4)");
+            });
+
+            modelBuilder.Entity<OrderItem>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.OrderId, e.IsDeleted });
+                b.HasIndex(e => new { e.TenantId, e.ProductId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<OrderPayment>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.OrderId, e.IsDeleted });
+
+                b.Property(e => e.Amount).HasColumnType("decimal(18, 4)");
+            });
+
+            modelBuilder.Entity<Shipment>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+
+                b.Property(e => e.TotalWeight).HasColumnType("decimal(18, 4)");
+
+                b.HasOne(e => e.Order)
+                 .WithMany(o => o.Shipments)
+                 .HasForeignKey(c => c.OrderId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ShipmentItem>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<Logistics>(b =>
+            {
+                b.HasIndex(e => new { e.IsDeleted });
+            });
+
+            modelBuilder.Entity<TenantLogistics>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId });
             });
 
             modelBuilder.ConfigurePersistedGrantEntity();

@@ -33,6 +33,11 @@ namespace Vapps.Migrations.Seed.Host
 
             //Languages
             AddSettingIfNotExists(LocalizationSettingNames.DefaultLanguage, "zh-CN");
+
+            //Ship
+            AddSettingIfNotExists(AppSettings.Shipping.ApiId, "1337086");
+            AddSettingIfNotExists(AppSettings.Shipping.ApiSecret, "73f47271-8ba4-4625-9089-34d97b7cb693");
+            AddSettingIfNotExists(AppSettings.Shipping.ApiUrl, "http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx");
         }
 
         private void AddSettingIfNotExists(string name, string value, int? tenantId = null)

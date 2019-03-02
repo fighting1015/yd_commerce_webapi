@@ -16,10 +16,5 @@ namespace Vapps.ECommerce.Products.Dto
         /// 图片Url
         /// </summary>
         public virtual string Url { get; set; }
-
-        /// <summary>
-        /// 排序
-        /// </summary>
-        public virtual int DisplayOrder { get; set; }
     }
 }

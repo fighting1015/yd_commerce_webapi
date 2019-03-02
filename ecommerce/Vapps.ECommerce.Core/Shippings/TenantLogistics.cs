@@ -2,13 +2,13 @@
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Vapps.ECommerce.Shipping
+namespace Vapps.ECommerce.Shippings
 {
     /// <summary>
-    /// 子物流单
+    /// 租户绑定快递公司
     /// </summary>
-    [Table("ShipmentItems")]
-    public partial class ShipmentItem : FullAuditedEntity<long>, IMustHaveTenant
+    [Table("TenantLogisticses")]
+    public class TenantLogistics : CreationAuditedEntity<int>, IMustHaveTenant
     {
         /// <summary>
         /// 租户Id
@@ -16,18 +16,18 @@ namespace Vapps.ECommerce.Shipping
         public virtual int TenantId { get; set; }
 
         /// <summary>
-        /// 父物流单Id
+        /// 快递名称
         /// </summary>
-        public int ShipmentId { get; set; }
+        public virtual string Name { get; set; }
 
         /// <summary>
-        /// 订单item id
+        /// 排序
         /// </summary>
-        public int OrderItemId { get; set; }
+        public virtual int DisplayOrder { get; set; }
 
         /// <summary>
-        /// 数量
+        /// 物流Id
         /// </summary>
-        public int Quantity { get; set; }
+        public virtual int LogisticsId { get; set; }
     }
 }

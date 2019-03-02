@@ -1165,6 +1165,201 @@ namespace Vapps.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Vapps.ECommerce.Orders.Order", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdminComment");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("CustomerComment");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<string>("IpAddress");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("OrderNumber");
+
+                    b.Property<int>("OrderSource");
+
+                    b.Property<int>("OrderStatus");
+
+                    b.Property<int>("OrderType");
+
+                    b.Property<DateTime?>("PaidOn");
+
+                    b.Property<decimal>("PaymentMethodAdditionalFee")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<int>("PaymentStatus");
+
+                    b.Property<int>("PaymentType");
+
+                    b.Property<DateTime?>("ReceivedOn");
+
+                    b.Property<decimal>("RefundedAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<decimal>("RewardAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<string>("ShippingAddress");
+
+                    b.Property<decimal>("ShippingAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<string>("ShippingCity");
+
+                    b.Property<string>("ShippingDistrict");
+
+                    b.Property<string>("ShippingMethod");
+
+                    b.Property<string>("ShippingName");
+
+                    b.Property<string>("ShippingPhoneNumber");
+
+                    b.Property<string>("ShippingProvice");
+
+                    b.Property<int>("ShippingStatus");
+
+                    b.Property<int>("StoreId");
+
+                    b.Property<decimal>("SubTotalDiscountAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<decimal>("SubtotalAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "OrderStatus");
+
+                    b.HasIndex("TenantId", "PaymentStatus");
+
+                    b.HasIndex("TenantId", "ShippingStatus");
+
+                    b.HasIndex("TenantId", "UserId", "IsDeleted");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Orders.OrderItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AttributeDescription");
+
+                    b.Property<string>("AttributesJson");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<decimal>("DiscountAmount");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<long>("OrderId");
+
+                    b.Property<string>("OrderItemNumber");
+
+                    b.Property<decimal>("OriginalProductCost");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<string>("ProductName");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<decimal>("UnitPrice");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("TenantId", "OrderId", "IsDeleted");
+
+                    b.HasIndex("TenantId", "ProductId", "IsDeleted");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Payments.OrderPayment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<string>("ExternalOrderNumber");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<long>("OrderId");
+
+                    b.Property<string>("Payer");
+
+                    b.Property<string>("PaymentBankSystemName");
+
+                    b.Property<int>("PaymentMethod");
+
+                    b.Property<int>("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "OrderId", "IsDeleted");
+
+                    b.ToTable("OrderPayments");
+                });
+
             modelBuilder.Entity("Vapps.ECommerce.Products.PredefinedProductAttributeValue", b =>
                 {
                     b.Property<long>("Id")
@@ -1207,6 +1402,8 @@ namespace Vapps.Migrations
                     b.Property<decimal>("GoodCost")
                         .HasColumnType("decimal(18, 4)");
 
+                    b.Property<string>("GoodsUrl");
+
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(18, 4)");
 
@@ -1221,10 +1418,12 @@ namespace Vapps.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("NotifyAdminForQuantityBelow");
+                    b.Property<int>("NotifyQuantityBelow");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18, 4)");
+
+                    b.Property<bool>("Published");
 
                     b.Property<string>("ShortDescription");
 
@@ -1287,6 +1486,8 @@ namespace Vapps.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AttributesJson");
+
+                    b.Property<int>("DisplayOrder");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1366,6 +1567,8 @@ namespace Vapps.Migrations
 
                     b.HasIndex("ProductAttributeMappingId");
 
+                    b.HasIndex("ProductId");
+
                     b.HasIndex("TenantId", "ProductId", "ProductAttributeMappingId", "IsDeleted");
 
                     b.ToTable("ProductAttributeValues");
@@ -1411,6 +1614,151 @@ namespace Vapps.Migrations
                     b.HasIndex("TenantId", "ProductId");
 
                     b.ToTable("ProductPictures");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Shippings.Logistics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("Key");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Memo");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("Logisticses");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Shippings.Shipment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AdminComment");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<int?>("LogisticsId");
+
+                    b.Property<string>("LogisticsName");
+
+                    b.Property<string>("LogisticsNumber");
+
+                    b.Property<long>("OrderId");
+
+                    b.Property<string>("OrderNumber");
+
+                    b.Property<DateTime?>("ReceivedOn");
+
+                    b.Property<string>("ShipmentDetail");
+
+                    b.Property<int>("Status");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<decimal>("TotalVolume");
+
+                    b.Property<decimal>("TotalWeight")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("TenantId", "IsDeleted");
+
+                    b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Shippings.ShipmentItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<long>("OrderItemId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<long>("ShipmentId");
+
+                    b.Property<int>("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShipmentId");
+
+                    b.HasIndex("TenantId", "IsDeleted");
+
+                    b.ToTable("ShipmentItems");
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Shippings.TenantLogistics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("DisplayOrder");
+
+                    b.Property<int>("LogisticsId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("TenantLogisticses");
                 });
 
             modelBuilder.Entity("Vapps.ECommerce.Stores.Store", b =>
@@ -2221,9 +2569,17 @@ namespace Vapps.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
+            modelBuilder.Entity("Vapps.ECommerce.Orders.OrderItem", b =>
+                {
+                    b.HasOne("Vapps.ECommerce.Orders.Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductAttributeCombination", b =>
                 {
-                    b.HasOne("Vapps.ECommerce.Products.Product")
+                    b.HasOne("Vapps.ECommerce.Products.Product", "Product")
                         .WithMany("AttributeCombinations")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -2248,12 +2604,17 @@ namespace Vapps.Migrations
                         .WithMany("Values")
                         .HasForeignKey("ProductAttributeMappingId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Vapps.ECommerce.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductCategory", b =>
                 {
                     b.HasOne("Vapps.ECommerce.Products.Product")
-                        .WithMany("Categorys")
+                        .WithMany("Categories")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -2263,6 +2624,22 @@ namespace Vapps.Migrations
                     b.HasOne("Vapps.ECommerce.Products.Product")
                         .WithMany("Pictures")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Shippings.Shipment", b =>
+                {
+                    b.HasOne("Vapps.ECommerce.Orders.Order", "Order")
+                        .WithMany("Shipments")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vapps.ECommerce.Shippings.ShipmentItem", b =>
+                {
+                    b.HasOne("Vapps.ECommerce.Shippings.Shipment")
+                        .WithMany("Items")
+                        .HasForeignKey("ShipmentId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

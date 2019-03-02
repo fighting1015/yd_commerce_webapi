@@ -18,6 +18,11 @@ namespace Vapps.ECommerce.Products
         public virtual long ProductId { get; set; }
 
         /// <summary>
+        /// Gets or sets the product 
+        /// </summary>
+        public virtual Product Product { get; set; }
+
+        /// <summary>
         /// 属性和值序列化字符串
         /// </summary>
         public virtual string AttributesJson { get; set; }
@@ -51,5 +56,10 @@ namespace Vapps.ECommerce.Products
         /// 是否删除
         /// </summary>
         public virtual bool IsDeleted { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public virtual int DisplayOrder { get; set; }
     }
 }

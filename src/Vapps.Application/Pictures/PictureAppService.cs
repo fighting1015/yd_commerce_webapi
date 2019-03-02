@@ -129,7 +129,7 @@ namespace Vapps.Pictures
         /// 批量删除图片
         /// </summary>
         /// <returns></returns>
-        public async Task DeleteAsync(BatchDeleteInput<long> input)
+        public async Task DeleteAsync(BatchInput<long> input)
         {
             foreach (var id in input.Ids)
             {

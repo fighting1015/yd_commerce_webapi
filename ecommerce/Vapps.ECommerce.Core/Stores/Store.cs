@@ -7,7 +7,7 @@ using Vapps.Orders;
 namespace Vapps.ECommerce.Stores
 {
     /// <summary>
-    /// Represents a store
+    /// Represents a logistics
     /// </summary>
     [Table("Stores")]
     public class Store : FullAuditedEntity, IMustHaveTenant
