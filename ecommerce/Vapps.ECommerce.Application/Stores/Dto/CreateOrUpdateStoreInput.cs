@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Vapps.Orders;
+using Vapps.ECommerce.Orders;
 
 namespace Vapps.ECommerce.Stores.Dto
 {

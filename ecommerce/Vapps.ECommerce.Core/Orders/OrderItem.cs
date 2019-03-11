@@ -1,11 +1,6 @@
 ﻿using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vapps.ECommerce.Orders
 {
@@ -29,6 +24,11 @@ namespace Vapps.ECommerce.Orders
         /// 订单Id
         /// </summary>
         public virtual long OrderId { get; set; }
+
+        /// <summary>
+        /// 订单
+        /// </summary>
+        public virtual Order Order { get; set; }
 
         /// <summary>
         /// 商品id

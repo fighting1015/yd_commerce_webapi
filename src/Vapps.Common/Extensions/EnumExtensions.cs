@@ -29,6 +29,9 @@ namespace Vapps
         {
             var enumType = GetEnumTypeInfo(moduleType, enumName);
 
+            if (enumType == null)
+                return null;
+
             return EnumToSelectListItem(enumType, sourceName, valuesToExclude, includeDefault);
         }
 

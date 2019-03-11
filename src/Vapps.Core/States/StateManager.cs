@@ -1,6 +1,8 @@
 ﻿using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Vapps.States
@@ -252,6 +254,8 @@ namespace Vapps.States
 
             await DistrictRepository.DeleteAsync(district);
         }
+
+     
 
         #endregion
     }

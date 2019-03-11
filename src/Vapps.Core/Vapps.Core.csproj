@@ -58,6 +58,10 @@
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Orders\" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\net461\Vapps.Core.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>

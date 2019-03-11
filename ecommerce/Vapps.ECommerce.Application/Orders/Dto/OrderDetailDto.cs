@@ -93,12 +93,12 @@ namespace Vapps.ECommerce.Orders.Dto
         /// <summary>
         /// 收货地址(省份)
         /// </summary>
-        public string ShippingProvice { get; set; }
+        public string ShippingProvince { get; set; }
 
         /// <summary>
         /// 收货地址(省份id)
         /// </summary>
-        public int ShippingProviceId { get; set; }
+        public int ShippingProvinceId { get; set; }
 
         /// <summary>
         /// 收货地址(城市)

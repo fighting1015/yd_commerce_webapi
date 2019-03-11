@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Vapps.ECommerce.Catalog;
 using Vapps.ECommerce.Catalog.Dto;
+using Vapps.ECommerce.Customers;
+using Vapps.ECommerce.Customers.Dto;
 using Vapps.ECommerce.Orders;
 using Vapps.ECommerce.Orders.Dto;
 using Vapps.ECommerce.Products;
@@ -65,16 +67,39 @@ namespace Vapps.ECommerce
             configuration.CreateMap<ProductPictureDto, ProductPicture>();
             configuration.CreateMap<ProductPicture, ProductPictureDto>();
 
+            configuration.CreateMap<OrderListDto, Order>();
+            configuration.CreateMap<Order, OrderListDto>();
             configuration.CreateMap<OrderDetailDto, Order>();
             configuration.CreateMap<Order, OrderDetailDto>();
             configuration.CreateMap<OrderItem, OrderDetailItemDto>()
                 .ForMember(dto => dto.PictureUrl, options => options.Ignore());
             configuration.CreateMap<OrderDetailItemDto, OrderItem>();
 
-            configuration.CreateMap<OrderListDto, Order>();
-            configuration.CreateMap<Order, OrderListDto>();
             configuration.CreateMap<OrderListItemDto, OrderItem>();
             configuration.CreateMap<OrderItem, OrderListItemDto>();
+            configuration.CreateMap<OrderItemDto, OrderItem>();
+
+            configuration.CreateMap<CreateOrUpdateOrderInput, Order>()
+                .ForMember(dto => dto.DiscountAmount, options => options.Ignore())
+                .ForMember(dto => dto.RefundedAmount, options => options.Ignore())
+                .ForMember(dto => dto.ShippingAmount, options => options.Ignore())
+                .ForMember(dto => dto.RewardAmount, options => options.Ignore())
+                .ForMember(dto => dto.SubtotalAmount, options => options.Ignore())
+                .ForMember(dto => dto.SubTotalDiscountAmount, options => options.Ignore())
+                .ForMember(dto => dto.TotalAmount, options => options.Ignore())
+                .ForMember(dto => dto.PaymentMethodAdditionalFee, options => options.Ignore())
+                .ForMember(dto => dto.OrderStatus, options => options.Ignore())
+                .ForMember(dto => dto.PaymentStatus, options => options.Ignore())
+                .ForMember(dto => dto.ShippingStatus, options => options.Ignore())
+                .ForMember(dto => dto.OrderType, options => options.Ignore())
+                .ForMember(dto => dto.PaymentType, options => options.Ignore())
+                .ForMember(dto => dto.OrderSource, options => options.Ignore())
+                .ForMember(dto => dto.Items, options => options.Ignore());
+
+            configuration.CreateMap<OrderItemDto, OrderItem>()
+               .ForMember(dto => dto.Price, options => options.Ignore())
+               .ForMember(dto => dto.UnitPrice, options => options.Ignore())
+               .ForMember(dto => dto.DiscountAmount, options => options.Ignore());
 
             configuration.CreateMap<ShipmentListDto, Shipment>();
             configuration.CreateMap<Shipment, ShipmentListDto>();
@@ -84,7 +109,6 @@ namespace Vapps.ECommerce
             configuration.CreateMap<ShipmentItem, ShipmentItemDto>();
             configuration.CreateMap<Shipment, GetShipmentForEditOutput>();
 
-
             configuration.CreateMap<LogisticsListDto, Logistics>();
             configuration.CreateMap<Logistics, LogisticsListDto>();
             configuration.CreateMap<CreateOrUpdateLogisticsInput, Logistics>();
@@ -92,6 +116,10 @@ namespace Vapps.ECommerce
 
             configuration.CreateMap<TenantLogistics, TenantLogisticsDto>();
 
+            configuration.CreateMap<Customer, CustomerListDto>();
+            configuration.CreateMap<Customer, CustomerDetailDto>();
+            configuration.CreateMap<CreateOrUpdateCustomerInput, Customer>();
+            configuration.CreateMap<Customer, CreateOrUpdateCustomerInput>();
             /* ADD YOUR OWN CUSTOM AUTOMAPPER MAPPINGS HERE */
         }
     }

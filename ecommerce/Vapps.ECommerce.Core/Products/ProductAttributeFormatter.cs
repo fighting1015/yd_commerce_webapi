@@ -28,42 +28,45 @@ namespace Vapps.ECommerce.Products
         }
 
         /// <summary>
-        /// Formats attributesXml
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="attributesXml">Attributes</param>
-        /// <returns>Attributes</returns>
-        public string FormatAttributes(Product product, string attributesXml)
-        {
-            return FormatAttributes(product, attributesXml);
-        }
-
-        /// <summary>
-        /// Formats attributesXml
+        /// 格式化属性描述
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesJson">Attributes</param>
-        /// <param name="serapator">Serapator</param>
-        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public async Task<string> FormatAttributes(Product product, string attributesJson,
+        public async Task<string> FormatAttributes(Product product,
+            List<JsonProductAttribute> attributesJson)
+        {
+            return await FormatAttributes(product, attributesJson, "<br />", true);
+        }
+
+        /// <summary>
+        /// 格式化属性描述
+        /// </summary>
+        /// <param name="product">商品</param>
+        /// <param name="attributesJson">属性json对象</param>
+        /// <param name="serapator">分隔符</param>
+        /// <param name="htmlEncode">是否需要Html编码</param>
+        /// <returns>格式化实行描述</returns>
+        public async Task<string> FormatAttributes(Product product,
+            List<JsonProductAttribute> attributesJson,
             string serapator = "<br />", bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
-            foreach (var attribute in await _productAttributeParser.ParseProductAttributeMappingsAsync(product.Id, attributesJson))
+            var attributeMappings = await _productAttributeParser.ParseProductAttributeMappingsAsync(product.Id, attributesJson);
+            foreach (var attributeMapping in attributeMappings)
             {
-                await _productAttributeManager.ProductAttributeMappingRepository.EnsurePropertyLoadedAsync(attribute, a => a.ProductAttribute);
+                await _productAttributeManager.ProductAttributeMappingRepository.EnsurePropertyLoadedAsync(attributeMapping, a => a.ProductAttribute);
 
                 //attributes without values
-                if (!attribute.ShouldHaveValues())
+                if (!attributeMapping.ShouldHaveValues())
                 {
-                    foreach (var value in await _productAttributeParser.ParseProductAttributeValuesAsync(product.Id, attributesJson, attribute.Id))
+                    foreach (var value in await _productAttributeParser.ParseProductAttributeValuesAsync(product.Id, attributesJson, attributeMapping.Id))
                     {
                         var formattedAttribute = string.Empty;
 
                         //other attributes (textbox, datepicker)
-                        formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.Name, value);
+                        formattedAttribute = string.Format("{0}: {1}", attributeMapping.ProductAttribute.Name, value);
 
                         //encode (if required)
                         if (htmlEncode)
@@ -80,10 +83,10 @@ namespace Vapps.ECommerce.Products
                 //product attribute values
                 else
                 {
-                    foreach (var attributeValue in await _productAttributeParser.ParseProductAttributeValuesAsync(product.Id, attributesJson, attribute.Id))
+                    foreach (var attributeValue in await _productAttributeParser.ParseProductAttributeValuesAsync(product.Id, attributesJson, attributeMapping.ProductAttributeId))
                     {
                         var formattedAttribute = string.Format("{0}: {1}",
-                            attribute.ProductAttribute.Name,
+                            attributeMapping.ProductAttribute.Name,
                             attributeValue.Name);
 
                         //encode (if required)

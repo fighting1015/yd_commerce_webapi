@@ -41,7 +41,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 收货地址(省份)
         /// </summary>
-        public string ShippingProvice { get; set; }
+        public string ShippingProvince { get; set; }
 
         /// <summary>
         /// 收货地址(城市)
@@ -187,7 +187,6 @@ namespace Vapps.ECommerce.Orders
         /// Gets or sets order items
         /// 订单条目
         /// </summary>
-        [ForeignKey("OrderId")]
         public virtual ICollection<OrderItem> Items { get; set; }
 
         /// <summary>

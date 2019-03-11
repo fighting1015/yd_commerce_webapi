@@ -2,8 +2,12 @@
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Vapps.Caching;
 using Vapps.Common.Dto;
@@ -26,6 +30,86 @@ namespace Vapps.States
             this._stateManager = stateManager;
             this._cacheManager = cacheManager;
         }
+
+        //public async Task ImportState()
+        //{
+        //    var dataJsonString = GetFileJson(@"C:\Users\Victor_Lo\Downloads\china-area-data-master\v4\data.json");
+
+        //    var states = (JObject)JsonConvert.DeserializeObject(dataJsonString);
+        //    var jsonProvices = states["86"];
+        //    foreach (var jsonProvince in jsonProvices.Children())
+        //    {
+        //        var provinceName = jsonProvince.First().Value<string>();
+        //        var province = await _stateManager.FindProvinceByNameAsync(provinceName);
+
+        //        if (province == null)
+        //        {
+        //            province = new Province()
+        //            {
+        //                Name = provinceName,
+        //                IsActive = true,
+        //            };
+
+        //            await _stateManager.CreateProvinceAsync(province);
+
+        //            await CurrentUnitOfWork.SaveChangesAsync();
+        //        }
+
+        //        var provinceJsonId = ((JProperty)jsonProvince).Name;
+
+        //        var jsonCitys = states[provinceJsonId];
+
+        //        if (jsonCitys == null)
+        //            continue;
+
+        //        foreach (var jsonCity in jsonCitys.Children())
+        //        {
+        //            var cityName = jsonCity.First().Value<string>();
+        //            var city = await _stateManager.FindCityByNameAsync(cityName);
+
+        //            if (city == null)
+        //            {
+        //                city = new City()
+        //                {
+        //                    Name = cityName,
+        //                    IsActive = true,
+        //                    ProvinceId = province.Id
+        //                };
+
+        //                await _stateManager.CreateCityAsync(city);
+
+        //                await CurrentUnitOfWork.SaveChangesAsync();
+        //            }
+
+        //            var cityJsonId = ((JProperty)jsonCity).Name;
+
+        //            var jsonDistricts = states[cityJsonId];
+
+        //            if (jsonDistricts == null)
+        //                continue;
+
+        //            foreach (var jsonDistrict in jsonDistricts.Children())
+        //            {
+        //                var districtName = jsonDistrict.First().Value<string>();
+        //                var district = await _stateManager.FindDistrictByNameAsync(districtName);
+
+        //                if (district == null)
+        //                {
+        //                    district = new District()
+        //                    {
+        //                        Name = districtName,
+        //                        IsActive = true,
+        //                        CityId = city.Id
+        //                    };
+
+        //                    await _stateManager.CreateDistrictAsync(district);
+
+        //                    await CurrentUnitOfWork.SaveChangesAsync();
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         #region Provinces
 
@@ -365,6 +449,19 @@ namespace Vapps.States
             district.DisplayOrder = input.Display;
 
             await _stateManager.UpdateDistrictAsync(district);
+        }
+
+        public string GetFileJson(string filepath)
+        {
+            string json = string.Empty;
+            using (FileStream fs = new FileStream(filepath, FileMode.Open, System.IO.FileAccess.Read, FileShare.ReadWrite))
+            {
+                using (StreamReader sr = new StreamReader(fs, Encoding.Default))
+                {
+                    json = sr.ReadToEnd().ToString();
+                }
+            }
+            return json;
         }
 
         #endregion

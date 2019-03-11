@@ -2,7 +2,7 @@
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Vapps.ECommerce.Customer
+namespace Vapps.ECommerce.Customers
 {
     /// <summary>
     /// 租户客户
@@ -21,6 +21,11 @@ namespace Vapps.ECommerce.Customer
         public virtual int UserId { get; set; }
 
         /// <summary>
+        /// 头像Id
+        /// </summary>
+        public virtual int AvatarPictureId { get; set; }
+
+        /// <summary>
         /// 客户名称
         /// </summary>
         public virtual string Name { get; set; }
@@ -33,7 +38,7 @@ namespace Vapps.ECommerce.Customer
         /// <summary>
         /// 消费总额
         /// </summary>
-        public decimal TotalConsumption { get; set; }
+        public decimal TotalConsumes { get; set; }
 
         /// <summary>
         /// 购买频次

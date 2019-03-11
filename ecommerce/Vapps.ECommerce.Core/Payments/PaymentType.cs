@@ -3,11 +3,6 @@
     public enum PaymentType
     {
         /// <summary>
-        /// 所有
-        /// </summary>
-        All = 0,
-
-        /// <summary>
         /// 在线支付
         /// </summary>
         PayOnline = 1,
@@ -23,11 +18,6 @@
     /// </summary>
     public enum PaymentMethod
     {
-        /// <summary>
-        /// 所有
-        /// </summary>
-        All = 0,
-
         /// <summary>
         /// 支付宝
         /// </summary>

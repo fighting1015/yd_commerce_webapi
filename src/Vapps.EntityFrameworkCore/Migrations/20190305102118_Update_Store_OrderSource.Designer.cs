@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vapps.EntityFrameworkCore;
 
 namespace Vapps.Migrations
 {
     [DbContext(typeof(VappsDbContext))]
-    partial class VappsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190305102118_Update_Store_OrderSource")]
+    partial class Update_Store_OrderSource
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1273,7 +1275,7 @@ namespace Vapps.Migrations
 
                     b.Property<string>("ShippingPhoneNumber");
 
-                    b.Property<string>("ShippingProvince");
+                    b.Property<string>("ShippingProvice");
 
                     b.Property<int>("ShippingStatus");
 

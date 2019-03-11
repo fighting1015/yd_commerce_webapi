@@ -77,6 +77,8 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         public decimal Height { get; set; }
 
+      
+
         /// <summary>
         /// 分类
         /// </summary>

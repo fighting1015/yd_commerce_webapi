@@ -201,7 +201,7 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 {
                     Name = order.ShippingName,
                     Mobile = order.ShippingPhoneNumber,
-                    ProvinceName = order.ShippingProvice ?? string.Empty,
+                    ProvinceName = order.ShippingProvince ?? string.Empty,
                     CityName = order.ShippingCity ?? string.Empty,
                     ExpAreaName = order.ShippingDistrict ?? string.Empty,
                     Address = order.ShippingAddress ?? string.Empty,

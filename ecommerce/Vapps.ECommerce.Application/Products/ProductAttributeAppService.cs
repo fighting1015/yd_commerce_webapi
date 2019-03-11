@@ -145,7 +145,7 @@ namespace Vapps.ECommerce.Products
                 {
                     ProductAttributeId = input.AttributeId,
                     Name = input.Name,
-                    DisplayOrder = input.DisplayOrder,
+                    DisplayOrder = input.DisplayOrder.Value,
                 };
 
                 await _productAttributeManager.CreatePredefinedValueAsync(attributeValue);

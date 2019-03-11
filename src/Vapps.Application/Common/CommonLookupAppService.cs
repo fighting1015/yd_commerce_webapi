@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Vapps.Editions.Dto;
 using Abp.Collections.Extensions;
 using Vapps.Dto;
+using Vapps.ECommerce.Core;
 
 namespace Vapps.Common
 {
@@ -100,6 +101,9 @@ namespace Vapps.Common
         public List<SelectListItemDto> GetEnumSelectItemSource(string enumName)
         {
             var result = EnumExtensions.EnumToSelectListItem(typeof(VappsCoreModule), enumName, VappsConsts.ServerSideLocalizationSourceName);
+
+            if (result == null)
+                result = EnumExtensions.EnumToSelectListItem(typeof(VappsECommerceCoreModule), enumName, VappsConsts.ServerSideLocalizationSourceName);
 
             var resultDto = ObjectMapper.Map<List<SelectListItemDto>>(result);
 

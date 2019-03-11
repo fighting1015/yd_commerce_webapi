@@ -114,8 +114,8 @@ namespace Vapps.ECommerce.Products
             await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Attributes);
             await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.AttributeCombinations);
 
-            PrepareProductAttribute(output.Attributes, product);
-            await PrepareProductAttributeCombination(output.AttributeCombinations, product);
+            output.Attributes = PrepareProductAttribute(product, false);
+            output.AttributeCombinations = await PrepareProductAttributeCombination(product, false);
 
             return output;
         }
@@ -150,9 +150,9 @@ namespace Vapps.ECommerce.Products
                     return item;
                 }).ToList();
 
-                PrepareProductAttribute(productDto.Attributes, product);
+                productDto.Attributes = PrepareProductAttribute(product);
 
-                await PrepareProductAttributeCombination(productDto.AttributeCombinations, product);
+                productDto.AttributeCombinations = await PrepareProductAttributeCombination(product);
 
                 productDto.Pictures = product.Pictures.OrderBy(p => p.DisplayOrder).ToList().Select(i =>
                   {
@@ -215,11 +215,12 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 初始化商品属性
         /// </summary>
-        /// <param name="attributeDtoList"></param>
         /// <param name="product"></param>
-        private void PrepareProductAttribute(List<ProductAttributeDto> attributeDtoList, Product product)
+        /// <param name="createOrUpdateProduct"></param>
+        /// <returns></returns>
+        private List<ProductAttributeDto> PrepareProductAttribute(Product product, bool createOrUpdateProduct = true)
         {
-            attributeDtoList = product.Attributes.OrderBy(a => a.DisplayOrder).ToList().Select(attribute =>
+            var attributeDtoList = product.Attributes.OrderBy(a => a.DisplayOrder).ToList().Select(attribute =>
               {
                   var item = ObjectMapper.Map<ProductAttributeDto>(attribute);
                   item.Id = attribute.ProductAttributeId;
@@ -235,13 +236,15 @@ namespace Vapps.ECommerce.Products
                     {
                         var valueDto = ObjectMapper.Map<ProductAttributeValueDto>(value);
                         valueDto.Name = value.Name;
-                        valueDto.Id = value.PredefinedProductAttributeValueId;
+                        valueDto.Id = createOrUpdateProduct ? value.PredefinedProductAttributeValueId : value.Id;
                         valueDto.PictureUrl = _pictureManager.GetPictureUrl(value.PictureId);
                         return valueDto;
                     }).ToList();
 
                   return item;
               }).ToList();
+
+            return attributeDtoList;
         }
 
         /// <summary>
@@ -284,6 +287,8 @@ namespace Vapps.ECommerce.Products
             await CreateOrUpdateAttributeCombination(input, product);
 
             await _productManager.UpdateWithRelateAttributeAsync(product);
+
+            await CurrentUnitOfWork.SaveChangesAsync();
 
             return new EntityDto<long>() { Id = product.Id };
         }
@@ -365,7 +370,8 @@ namespace Vapps.ECommerce.Products
                 }
 
                 ProductAttributeCombination combin = null;
-                var attributesJson = JsonConvert.SerializeObject(combinDto.Attributes.GetAttributesJson(product));
+                var attributesJson = JsonConvert.SerializeObject(combinDto.Attributes
+                    .GetAttributesJson(product, _productAttributeManager, true));
 
                 if (input.Id != 0 && combinDto.Id != 0)
                 {
@@ -598,12 +604,12 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 初始化属性组合
         /// </summary>
-        /// <param name="combinDtoList"></param>
         /// <param name="product"></param>
-        private async Task PrepareProductAttributeCombination(List<AttributeCombinationDto> combinDtoList, Product product)
+        /// <param name="createOrUpdateProduct"></param>
+        /// <returns></returns>
+        private async Task<List<AttributeCombinationDto>> PrepareProductAttributeCombination(Product product, bool createOrUpdateProduct = true)
         {
-            if (combinDtoList == null)
-                combinDtoList = new List<AttributeCombinationDto>();
+            var combinDtoList = new List<AttributeCombinationDto>();
 
             var combins = product.AttributeCombinations.OrderBy(c => c.DisplayOrder).ToList();
 
@@ -631,7 +637,7 @@ namespace Vapps.ECommerce.Products
                         else
                             valueDto.Name = attributeValue.Name;
 
-                        valueDto.Id = attributeValue.PredefinedProductAttributeValueId;
+                        valueDto.Id = createOrUpdateProduct ? attributeValue.PredefinedProductAttributeValueId : attributeValue.Id;
 
                         return valueDto;
                     }).ToList();
@@ -640,10 +646,10 @@ namespace Vapps.ECommerce.Products
 
                 combinDtoList.Add(combinationDto);
             }
+
+            return combinDtoList;
         }
 
         #endregion
-
     }
-
 }

@@ -46,7 +46,7 @@ namespace Vapps.ECommerce.Orders.Dto
         /// <summary>
         /// 省份Id
         /// </summary>
-        public int? ProviceId { get; set; }
+        public int? ProvinceId { get; set; }
 
         /// <summary>
         /// 城市Id

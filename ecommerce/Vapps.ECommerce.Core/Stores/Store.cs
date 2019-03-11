@@ -2,7 +2,7 @@
 using Abp.Domain.Entities.Auditing;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Vapps.Orders;
+using Vapps.ECommerce.Orders;
 
 namespace Vapps.ECommerce.Stores
 {
@@ -54,7 +54,7 @@ namespace Vapps.ECommerce.Stores
         /// <summary>
         /// 订单来源
         /// </summary>
-        public virtual OrderSource OrderSourceType { get; set; }
+        public virtual OrderSource OrderSource { get; set; }
 
         /// <summary>
         /// 订单同步

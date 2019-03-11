@@ -11,11 +11,6 @@
         Pending = 10,
 
         /// <summary>
-        /// 授权(信用卡)
-        /// </summary>
-        Authorized = 20,
-
-        /// <summary>
         /// 已支付
         /// </summary>
         Paid = 30,

@@ -1,6 +1,6 @@
 ﻿using Abp.Runtime.Validation;
 using Vapps.Dto;
-using Vapps.Orders;
+using Vapps.ECommerce.Orders;
 
 namespace Vapps.ECommerce.Stores.Dto
 {

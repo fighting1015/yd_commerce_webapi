@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Uow;
+﻿using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,10 +12,11 @@ namespace Vapps.ECommerce.Products.Dto
         /// </summary>
         /// <param name="attributeMappings"></param>
         /// <param name="product"></param>
+        /// <param name="productAttributeManager"></param>
         /// <returns></returns>
         [UnitOfWork]
         public static List<JsonProductAttribute> GetAttributesJson(this List<ProductAttributeDto> attributeMappings,
-            Product product)
+            Product product, IProductAttributeManager productAttributeManager, bool createOrUpdateProduct = false)
         {
             var jsonAttributes = new List<JsonProductAttribute>();
 
@@ -27,11 +29,19 @@ namespace Vapps.ECommerce.Products.Dto
 
                 foreach (var value in attributeDto.Values)
                 {
-                    var attributeValue = FindAttributValue(product, value);
+                    long attributeValueId = 0;
+
+                    if (createOrUpdateProduct)
+                    {
+                        var attributeValue = FindAttributValue(product, value, productAttributeManager, createOrUpdateProduct);
+                        attributeValueId = attributeValue.Id;
+                    }
+                    else
+                        attributeValueId = value.Id;
 
                     jsonAttributeItem.AttributeValues.Add(new JsonProductAttributeValue()
                     {
-                        AttributeValueId = attributeValue.Id,
+                        AttributeValueId = attributeValueId,
                     });
                 }
 
@@ -41,13 +51,19 @@ namespace Vapps.ECommerce.Products.Dto
             return jsonAttributes;
         }
 
-        private static ProductAttributeValue FindAttributValue(Product product, ProductAttributeValueDto value)
+        private static ProductAttributeValue FindAttributValue(Product product, ProductAttributeValueDto value,
+            IProductAttributeManager productAttributeManager, bool createOrUpdateProduct = false)
         {
             ProductAttributeValue attributeValue = null;
 
             foreach (var attribute in product.Attributes)
             {
-                attributeValue = attribute.Values.FirstOrDefault(v => v.PredefinedProductAttributeValueId == value.Id);
+                productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoaded(attribute, t => t.Values);
+
+                if (createOrUpdateProduct)
+                    attributeValue = attribute.Values.FirstOrDefault(v => v.PredefinedProductAttributeValueId == value.Id);
+                else
+                    attributeValue = attribute.Values.FirstOrDefault(v => v.Id == value.Id);
 
                 if (attributeValue != null)
                     return attributeValue;

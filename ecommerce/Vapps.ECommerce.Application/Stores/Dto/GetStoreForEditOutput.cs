@@ -1,7 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
-using Abp.AutoMapper;
 using System;
-using Vapps.Orders;
+using Vapps.ECommerce.Orders;
 
 namespace Vapps.ECommerce.Stores.Dto
 {

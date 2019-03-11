@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Abp;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,37 +12,40 @@ namespace Vapps.ECommerce.Products
     public static class ProductExtensions
     {
         /// <summary>
-        /// Get product picture (for shopping cart and order details pages)
+        /// 获取产品图片
         /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="attributesJson">Atributes (in XML format)</param>
-        /// <param name="pictureManager">Picture service</param>
-        /// <param name="productAttributeParser">Product attribute service</param>
+        /// <param name="product">产品</param>
+        /// <param name="attributesJson">属性json字符串</param>
+        /// <param name="pictureManager"></param>
+        /// <param name="productAttributeParser"></param>
         /// <returns>Picture</returns>
         public static async Task<string> GetProductDefaultPictureUrl(this Product product, string attributesJson,
             IPictureManager pictureManager,
             IProductAttributeParser productAttributeParser)
         {
             if (product == null)
-                throw new Exception("product");
+                throw new AbpException("product");
             if (pictureManager == null)
-                throw new Exception("pictureManager");
+                throw new AbpException("pictureManager");
             if (productAttributeParser == null)
-                throw new Exception("productAttributeParser");
+                throw new AbpException("productAttributeParser");
 
-            var pvaValues = await productAttributeParser.ParseProductAttributeValuesAsync(product.Id, attributesJson);
-            foreach (var pvaValue in pvaValues)
+            if (!attributesJson.IsNullOrEmpty())
             {
-                var pvavPictureUrl = await pictureManager.GetPictureUrlAsync(pvaValue.PictureId);
-                return pvavPictureUrl;
+                var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(attributesJson);
+
+                var pvaValues = await productAttributeParser.ParseProductAttributeValuesAsync(product.Id, jsonAttributeList);
+                if (pvaValues != null && pvaValues.Any())
+                {
+                    var pvavPictureUrl = await pictureManager.GetPictureUrlAsync(pvaValues.First().PictureId);
+                    return pvavPictureUrl;
+                }
             }
 
-            if (pvaValues == null || !pvaValues.Any())
-            {
-                var pPicture = product.Pictures.FirstOrDefault();
+            var pPicture = product.Pictures.FirstOrDefault();
 
+            if (pPicture != null)
                 return await pictureManager.GetPictureUrlAsync(pPicture.PictureId);
-            }
 
             return string.Empty;
         }

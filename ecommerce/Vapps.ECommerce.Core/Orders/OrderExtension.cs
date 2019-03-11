@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Abp.Extensions;
+using System;
+using System.Linq;
 using Vapps.Extensions;
 using Vapps.Helpers;
 
@@ -27,6 +29,24 @@ namespace Vapps.ECommerce.Orders
             var randomNum = CommonHelper.GenerateRandomDigitCode(2);
 
             order.OrderNumber = string.Concat(sarNum, randomNum);
+        }
+
+        /// <summary>
+        /// 生成订单号子
+        /// </summary>
+        /// <param name="order"></param>
+        public static void GenerateOrderItemNumber(this OrderItem orderItem)
+        {
+            var order = orderItem.Order;
+            if (order == null)
+                return;
+
+            if (order.OrderNumber.IsNullOrWhiteSpace())
+                order.GenerateOrderNumber();
+
+            var index = orderItem.Order.Items.ToList().IndexOf(orderItem);
+
+            orderItem.OrderItemNumber = string.Concat(orderItem.Order.OrderNumber, index);
         }
     }
 }

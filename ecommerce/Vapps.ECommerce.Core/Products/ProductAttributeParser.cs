@@ -45,16 +45,17 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Json 查找商品属性
         /// </summary>
-        /// <param name="attributesXml">Attributes in Json format</param>
-        /// <returns>Selected product attribute mappings</returns>
-        public virtual async Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(long productId, string attributesJson)
+        /// <param name="productId">商品id</param>
+        /// <param name="attributesJson">属性json对象</param>
+        /// <returns></returns>
+        public virtual async Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(long productId,
+            List<JsonProductAttribute> attributesJson)
         {
             var result = new List<ProductAttributeMapping>();
-            if (String.IsNullOrEmpty(attributesJson))
+            if (attributesJson == null && attributesJson.Any())
                 return result;
 
-            var attributes = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(attributesJson);
-            foreach (var attribute in attributes)
+            foreach (var attribute in attributesJson)
             {
                 var mapping = await _productAttributeManager.FindMappingAsync(productId, attribute.AttributeId);
                 result.Add(mapping);
@@ -70,28 +71,34 @@ namespace Vapps.ECommerce.Products
         /// <param name="productAttributeId">属性Id,0为加载所有属性值</param>
         /// <param name="productAttributeMappingId">属性关联Id,0为加载所有属性值</param>
         /// <returns>商品属性值</returns>
-        public virtual async Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(long productId, string attributesJson, long productAttributeId = 0, long productAttributeMappingId = 0)
+        public virtual async Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(long productId,
+            List<JsonProductAttribute> attributesJson,
+            long productAttributeId = 0,
+            long productAttributeMappingId = 0)
         {
             var values = new List<ProductAttributeValue>();
-            if (string.IsNullOrEmpty(attributesJson))
+            if (attributesJson == null && attributesJson.Any())
                 return values;
 
-            var attributes = await ParseProductAttributeMappingsAsync(productId, attributesJson);
+            // 获取商品属性
+            var attributemappings = await ParseProductAttributeMappingsAsync(productId, attributesJson);
 
-            //to load values only for the passed product attribute
+            // 根据属性Id过滤属性
+            if (productAttributeId > 0)
+                attributemappings = attributemappings.Where(attribute => attribute.ProductAttributeId == productAttributeId).ToList();
+
+            // 根据map Id过滤属性
             if (productAttributeMappingId > 0)
-                attributes = attributes.Where(attribute => attribute.ProductAttributeId == productAttributeId).ToList();
+                attributemappings = attributemappings.Where(attribute => attribute.Id == productAttributeMappingId).ToList();
 
-            //to load values only for the passed product attribute mapping
-            if (productAttributeMappingId > 0)
-                attributes = attributes.Where(attribute => attribute.Id == productAttributeMappingId).ToList();
-
-            foreach (var attribute in attributes)
+            foreach (var mapping in attributemappings)
             {
-                if (!attribute.ShouldHaveValues())
+                await _productAttributeManager.ProductAttributeMappingRepository.EnsureCollectionLoadedAsync(mapping, a => a.Values);
+
+                if (!mapping.ShouldHaveValues())
                     continue;
 
-                foreach (var attributeValue in await ParseValuesWithMappingIdAsync(productId, attributesJson, attribute.Id))
+                foreach (var attributeValue in await ParseValuesWithMappingIdAsync(productId, attributesJson, mapping.ProductAttributeId))
                 {
                     values.Add(attributeValue);
                 }
@@ -106,16 +113,16 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="attributesJson">Attributes in XML format</param>
         /// <returns>Selected product attribute mapping identifiers</returns>
-        protected virtual async Task<IList<long>> ParseProductAttributeMappingIds(long productId, string attributesJson)
+        protected virtual async Task<IList<long>> ParseProductAttributeMappingIds(long productId,
+            List<JsonProductAttribute> attributesJson)
         {
             var ids = new List<long>();
-            if (String.IsNullOrEmpty(attributesJson))
+            if (attributesJson == null && attributesJson.Any())
                 return ids;
 
             try
             {
-                var attributes = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(attributesJson);
-                foreach (var attribute in attributes)
+                foreach (var attribute in attributesJson)
                 {
                     var mapping = await _productAttributeManager.FindMappingAsync(productId, attribute.AttributeId);
                     ids.Add(mapping.Id);
@@ -129,36 +136,46 @@ namespace Vapps.ECommerce.Products
         }
 
         /// <summary>
-        /// Gets selected product attribute values with the quantity entered by the customer
+        /// 根据json属性，获取商品属性
         /// </summary>
-        /// <param name="attributesXml">Attributes in Json format</param>
-        /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
-        /// <returns>Collections of pairs of product attribute values and their quantity</returns>
-        protected async Task<IList<ProductAttributeValue>> ParseValuesWithMappingIdAsync(long productId, string attributesJson, long productAttributeMappingId)
+        /// <param name="productId">商品Id</param>
+        /// <param name="attributesJson">属性json对象</param>
+        /// <param name="productAttributeId">属性id</param>
+        /// <param name="productAttributeMappingId">属性关联id</param>
+        /// <returns></returns>
+        protected async Task<IList<ProductAttributeValue>> ParseValuesWithMappingIdAsync(long productId,
+            List<JsonProductAttribute> attributesJson,
+            long productAttributeId,
+            long productAttributeMappingId = 0)
         {
             var values = new List<ProductAttributeValue>();
-            if (string.IsNullOrEmpty(attributesJson))
+            if (attributesJson == null && attributesJson.Any())
                 return values;
 
             try
             {
-                var attributes = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(attributesJson);
-                foreach (var attribute in attributes)
+                foreach (var attribute in attributesJson)
                 {
-                    var mapping = await _productAttributeManager.FindMappingAsync(productId, attribute.AttributeId);
-                    if (attribute.AttributeValues == null || attribute.AttributeValues.Any())
+                    if (attribute.AttributeValues == null || !attribute.AttributeValues.Any())
                     {
                         continue;
                     }
 
-                    if (productAttributeMappingId != 0 && mapping.Id != productAttributeMappingId)
+                    if (productAttributeId != 0 && attribute.AttributeId != productAttributeId)
                     {
                         continue;
+                    }
+
+                    if (productAttributeMappingId != 0)
+                    {
+                        var mapping = await _productAttributeManager.FindMappingAsync(productId, attribute.AttributeId);
+                        if (mapping.Id != productAttributeMappingId)
+                            continue;
                     }
 
                     foreach (var jsonValue in attribute.AttributeValues)
                     {
-                        var value = await _productAttributeManager.FindValueByPredefinedValueIdAsync(productId, jsonValue.AttributeValueId);
+                        var value = await _productAttributeManager.GetValueByIdAsync(jsonValue.AttributeValueId);
 
                         values.Add(value);
                     }
@@ -166,8 +183,10 @@ namespace Vapps.ECommerce.Products
 
                 return values;
             }
-            catch { }
+            catch
+            {
 
+            }
             return values;
         }
 

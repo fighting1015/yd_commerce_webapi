@@ -1,28 +1,26 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vapps.ECommerce.Orders.Dto;
-using System.Linq.Dynamic.Core;
 using Abp.Localization;
 using Abp.Runtime.Caching;
-using Vapps.ECommerce.Stores;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
+using Vapps.Dto;
+using Vapps.ECommerce.Orders.Dto;
+using Vapps.ECommerce.Payments;
 using Vapps.ECommerce.Products;
+using Vapps.ECommerce.Products.Dto;
+using Vapps.ECommerce.Shippings;
+using Vapps.ECommerce.Stores;
 using Vapps.Media;
 using Vapps.States;
-using Newtonsoft.Json;
-using Vapps.ECommerce.Products.Dto;
-using System.Collections.ObjectModel;
-using Vapps.ECommerce.Shippings;
-using Abp.Domain.Repositories;
-using Vapps.Dto;
-using Vapps.ECommerce.Payments;
-using Abp.Domain.Uow;
 
 namespace Vapps.ECommerce.Orders
 {
@@ -31,16 +29,19 @@ namespace Vapps.ECommerce.Orders
 
         private readonly IOrderManager _orderManager;
         private readonly IProductManager _productManager;
+        private readonly IProductAttributeManager _productAttributeManager;
         private readonly IStoreManager _storeManager;
         private readonly ILocalizationManager _localizationManager;
         private readonly IPictureManager _pictureManager;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IStateManager _stateManager;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+
         private readonly ICacheManager _cacheManager; // TODO: 待实现
 
         public OrderAppService(IOrderManager orderAppService,
             IProductManager productManager,
+            IProductAttributeManager productAttributeManager,
             IStoreManager storeManager,
             ILocalizationManager localizationManager,
             IPictureManager pictureManager,
@@ -58,6 +59,7 @@ namespace Vapps.ECommerce.Orders
             this._stateManager = stateManager;
             this._productAttributeFormatter = productAttributeFormatter;
             this._productManager = productManager;
+            this._productAttributeManager = productAttributeManager;
         }
 
         #region Method
@@ -68,8 +70,8 @@ namespace Vapps.ECommerce.Orders
         /// <returns></returns>
         public async Task<PagedResultDto<OrderListDto>> GetOrders(GetOrdersInput input)
         {
-            string proviceName = input.ProviceId.HasValue ?
-                (await _stateManager.GetProvinceByIdAsync(input.ProviceId.Value)).Name : null;
+            string provinceName = input.ProvinceId.HasValue ?
+                (await _stateManager.GetProvinceByIdAsync(input.ProvinceId.Value)).Name : null;
             string cityName = input.CityId.HasValue ?
                 (await _stateManager.GetCityByIdAsync(input.CityId.Value)).Name : null;
             string districtName = input.DistrictId.HasValue ?
@@ -79,19 +81,19 @@ namespace Vapps.ECommerce.Orders
                .Orderes
                .Include(o => o.Items)
                .Include(o => o.Shipments)
-               .WhereIf(input.OrderTypes.IsNullOrEmpty(), r => input.OrderTypes.Contains(r.OrderType))
-               .WhereIf(input.OrderSource.IsNullOrEmpty(), r => input.OrderSource.Contains(r.OrderSource))
-               .WhereIf(input.OrderStatuses.IsNullOrEmpty(), r => input.OrderStatuses.Contains(r.OrderStatus))
-               .WhereIf(input.ShippingStatuses.IsNullOrEmpty(), r => input.ShippingStatuses.Contains(r.ShippingStatus))
-               .WhereIf(input.PaymentStatuses.IsNullOrEmpty(), r => input.PaymentStatuses.Contains(r.PaymentStatus))
+               .WhereIf(!input.OrderTypes.IsNullOrEmpty(), r => input.OrderTypes.Contains(r.OrderType))
+               .WhereIf(!input.OrderSource.IsNullOrEmpty(), r => input.OrderSource.Contains(r.OrderSource))
+               .WhereIf(!input.OrderStatuses.IsNullOrEmpty(), r => input.OrderStatuses.Contains(r.OrderStatus))
+               .WhereIf(!input.ShippingStatuses.IsNullOrEmpty(), r => input.ShippingStatuses.Contains(r.ShippingStatus))
+               .WhereIf(!input.PaymentStatuses.IsNullOrEmpty(), r => input.PaymentStatuses.Contains(r.PaymentStatus))
                .WhereIf(!input.OrderNumber.IsNullOrWhiteSpace(), r => r.OrderNumber.Contains(input.OrderNumber))
                .WhereIf(input.ProductIds != null && input.ProductIds.Any(), r => r.Items.Any(i => input.ProductIds.Contains(i.ProductId)))
-               .WhereIf(input.LogisticsNumber.IsNullOrWhiteSpace(), r => r.Shipments.Any(s => s.LogisticsNumber.Contains(input.LogisticsNumber)))
-               .WhereIf(input.ShippingName.IsNullOrWhiteSpace(), r => r.ShippingName.Contains(input.ShippingName))
-               .WhereIf(input.PhoneNumber.IsNullOrWhiteSpace(), r => r.ShippingPhoneNumber.Contains(input.PhoneNumber))
-               .WhereIf(proviceName.IsNullOrWhiteSpace(), r => r.ShippingProvice.Contains(proviceName))
-               .WhereIf(cityName.IsNullOrWhiteSpace(), r => r.ShippingCity.Contains(cityName))
-               .WhereIf(districtName.IsNullOrWhiteSpace(), r => r.ShippingDistrict.Contains(districtName));
+               .WhereIf(!input.LogisticsNumber.IsNullOrWhiteSpace(), r => r.Shipments.Any(s => s.LogisticsNumber.Contains(input.LogisticsNumber)))
+               .WhereIf(!input.ShippingName.IsNullOrWhiteSpace(), r => r.ShippingName.Contains(input.ShippingName))
+               .WhereIf(!input.PhoneNumber.IsNullOrWhiteSpace(), r => r.ShippingPhoneNumber.Contains(input.PhoneNumber))
+               .WhereIf(!provinceName.IsNullOrWhiteSpace(), r => r.ShippingProvince.Contains(provinceName))
+               .WhereIf(!cityName.IsNullOrWhiteSpace(), r => r.ShippingCity.Contains(cityName))
+               .WhereIf(!districtName.IsNullOrWhiteSpace(), r => r.ShippingDistrict.Contains(districtName));
 
             var orderCount = await query.CountAsync();
 
@@ -239,13 +241,69 @@ namespace Vapps.ECommerce.Orders
 
             order.GenerateOrderNumber();
 
+            InitOrderAmount(input, order);
+
+            await InitOrderEnumField(input, order);
+
             await UpdateAddressInfo(input, order);
 
             await CreateOrUpdateOrderItem(input, order);
 
             await _orderManager.CreateAsync(order);
 
+            await CurrentUnitOfWork.SaveChangesAsync();
+
             return new EntityDto<long>(order.Id);
+        }
+
+        /// <summary>
+        /// 初始化枚举字段
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="order"></param>
+        private async Task InitOrderEnumField(CreateOrUpdateOrderInput input, Order order)
+        {
+            order.OrderType = input.OrderType.HasValue ? input.OrderType.Value : OrderType.PayOnDelivery;
+            order.OrderSource = input.OrderSource.HasValue ? input.OrderSource.Value : OrderSource.Self;
+            order.OrderStatus = input.OrderStatus.HasValue ? input.OrderStatus.Value : OrderStatus.WaitConfirm;
+            order.PaymentStatus = input.PaymentStatus.HasValue ? input.PaymentStatus.Value : PaymentStatus.Pending;
+            order.ShippingStatus = input.ShippingStatus.HasValue ? input.ShippingStatus.Value : ShippingStatus.NotYetShipped;
+            order.PaymentType = order.OrderType == OrderType.PayOnDelivery ? PaymentType.PayOnDelivery : PaymentType.PayOnline;
+
+            if (input.OrderSource.HasValue)
+            {
+                order.OrderSource = input.OrderSource.Value;
+            }
+            else
+            {
+                var store = await _storeManager.GetByIdAsync(input.StoreId);
+
+                if (store != null)
+                {
+                    order.OrderSource = store.OrderSource;
+                }
+                else
+                {
+                    order.OrderSource = OrderSource.Self;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 初始订单金额
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="order"></param>
+        private void InitOrderAmount(CreateOrUpdateOrderInput input, Order order)
+        {
+            order.DiscountAmount = input.DiscountAmount ?? 0;
+            order.RefundedAmount = input.RefundedAmount ?? 0;
+            order.RewardAmount = input.RewardAmount ?? 0;
+            order.ShippingAmount = input.ShippingAmount ?? 0; ;
+            order.SubtotalAmount = input.SubtotalAmount ?? 0;
+            order.SubTotalDiscountAmount = input.SubTotalDiscountAmount ?? 0;
+            order.TotalAmount = input.TotalAmount ?? 0;
+            order.PaymentMethodAdditionalFee = input.PaymentMethodAdditionalFee ?? 0;
         }
 
         private async Task<EntityDto<long>> UpdateOrderAsync(CreateOrUpdateOrderInput input)
@@ -260,6 +318,10 @@ namespace Vapps.ECommerce.Orders
             {
                 order.GenerateOrderNumber();
             }
+
+            InitOrderAmount(input, order);
+
+            await InitOrderEnumField(input, order);
 
             await UpdateAddressInfo(input, order);
 
@@ -297,7 +359,7 @@ namespace Vapps.ECommerce.Orders
 
             foreach (var oderItemDto in input.Items)
             {
-                var orderItem = ObjectMapper.Map<OrderItem>(oderItemDto);
+                OrderItem orderItem = null;
 
                 if (oderItemDto.Id > 0)
                 {
@@ -310,30 +372,42 @@ namespace Vapps.ECommerce.Orders
                 }
 
                 var product = await _productManager.GetByIdAsync(oderItemDto.ProductId);
-                var attributesJson = JsonConvert.SerializeObject(oderItemDto.Attributes.GetAttributesJson(product));
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.Attributes);
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, t => t.AttributeCombinations);
+
+                var jsonAttributeList = oderItemDto.Attributes.GetAttributesJson(product, _productAttributeManager);
+                var jsonAttributesString = JsonConvert.SerializeObject(jsonAttributeList);
 
                 if (!oderItemDto.Attributes.IsNullOrEmpty())
                 {
-                    var combin = product.AttributeCombinations.FirstOrDefault(c => c.AttributesJson == attributesJson);
+                    var combin = product.AttributeCombinations.FirstOrDefault(c => c.AttributesJson == jsonAttributesString);
+
                     if (combin != null)
                     {
-                        orderItem.AttributesJson = attributesJson;
-                        orderItem.AttributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesJson);
+                        orderItem.AttributesJson = jsonAttributesString;
+                        orderItem.AttributeDescription = await _productAttributeFormatter.FormatAttributes(product, jsonAttributeList);
                     }
                 }
 
+                if (orderItem.OrderItemNumber.IsNullOrWhiteSpace())
+                {
+                    orderItem.GenerateOrderItemNumber();
+                }
                 if (orderItem.Id <= 0)
                     order.Items.Add(orderItem);
+
+                order.TotalAmount += product.Price;
+                order.SubtotalAmount += product.Price;
             }
         }
 
         private async Task UpdateAddressInfo(CreateOrUpdateOrderInput input, Order order)
         {
-            var province = await _stateManager.GetProvinceByIdAsync(input.ShippingProviceId);
+            var province = await _stateManager.GetProvinceByIdAsync(input.ShippingProvinceId);
             var city = await _stateManager.GetCityByIdAsync(input.ShippingCityId);
             var district = await _stateManager.GetDistrictByIdAsync(input.ShippingDistrictId);
 
-            order.ShippingProvice = province?.Name ?? string.Empty;
+            order.ShippingProvince = province?.Name ?? string.Empty;
             order.ShippingCity = city?.Name ?? string.Empty;
             order.ShippingDistrict = district?.Name ?? string.Empty;
         }
@@ -365,13 +439,18 @@ namespace Vapps.ECommerce.Orders
             foreach (var item in order.Items)
             {
                 var product = await _productManager.GetByIdAsync(item.ProductId);
+
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, p => p.Pictures);
+
                 var itemDto = new OrderListItemDto()
                 {
                     Id = item.Id,
                     UnitPrice = item.UnitPrice,
                     Price = item.Price,
                     PictureUrl = await product.GetProductDefaultPictureUrl(item.AttributesJson, _pictureManager, _productAttributeParser),
-                    ProductName = GetOrderProductDescription(item)
+                    ProductName = product.Name,
+                    Quantity = item.Quantity,
+                    AttributeDesciption = GetOrderProductDescription(item)
                 };
 
                 dto.Items.Add(itemDto);
@@ -392,11 +471,11 @@ namespace Vapps.ECommerce.Orders
             dto.OrderSourceString = order.OrderSource.GetLocalizedEnum(_localizationManager);
             dto.Store = store.Name;
 
-            var province = await _stateManager.FindProvinceByNameAsync(order.ShippingProvice);
+            var province = await _stateManager.FindProvinceByNameAsync(order.ShippingProvince);
             var city = await _stateManager.FindCityByNameAsync(order.ShippingCity);
             var district = await _stateManager.FindDistrictByNameAsync(order.ShippingDistrict);
 
-            dto.ShippingProviceId = province?.Id ?? 0;
+            dto.ShippingProvinceId = province?.Id ?? 0;
             dto.ShippingCityId = city?.Id ?? 0;
             dto.ShippingDistrictId = district?.Id ?? 0;
 
@@ -405,8 +484,8 @@ namespace Vapps.ECommerce.Orders
                 var product = await _productManager.GetByIdAsync(item.ProductId);
                 var itemDto = ObjectMapper.Map<OrderDetailItemDto>(item);
                 itemDto.PictureUrl = await product.GetProductDefaultPictureUrl(item.AttributesJson, _pictureManager, _productAttributeParser);
-                itemDto.ProductName = GetOrderProductDescription(item);
-
+                itemDto.AttributeDesciption = GetOrderProductDescription(item);
+                itemDto.ProductName = product.Name;
                 dto.Items.Add(itemDto);
             }
 
@@ -416,9 +495,9 @@ namespace Vapps.ECommerce.Orders
         private static string GetOrderProductDescription(OrderItem item)
         {
             if (item.AttributeDescription.IsNullOrEmpty())
-                return $"{item.ProductName}";
+                return string.Empty;
             else
-                return $"{item.ProductName} - {item.AttributeDescription}";
+                return item.AttributeDescription;
         }
 
         #endregion

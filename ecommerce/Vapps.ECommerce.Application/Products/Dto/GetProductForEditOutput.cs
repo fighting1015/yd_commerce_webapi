@@ -38,7 +38,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 低库存通知（暂不实现）
         /// </summary>
-        public int NotifyAdminForQuantityBelow { get; set; }
+        public int NotifyQuantityBelow { get; set; }
 
         /// <summary>
         /// 售价

@@ -17,7 +17,6 @@ namespace Vapps.ECommerce.Products.Dto
         /// <summary>
         /// 排序标志
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public int? DisplayOrder { get; set; }
     }
-
 }

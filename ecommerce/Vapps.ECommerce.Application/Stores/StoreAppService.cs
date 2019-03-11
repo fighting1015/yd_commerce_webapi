@@ -38,7 +38,7 @@ namespace Vapps.ECommerce.Stores
             var query = _storeManager
                 .Stores
                 .WhereIf(!input.Name.IsNullOrWhiteSpace(), r => r.Name.Contains(input.Name))
-                .WhereIf(input.Source != null, r => r.OrderSourceType == input.Source.Value);
+                .WhereIf(input.Source != null, r => r.OrderSource == input.Source.Value);
 
             var storeCount = await query.CountAsync();
 

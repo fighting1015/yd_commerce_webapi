@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Vapps.ECommerce.Products
 {
@@ -8,22 +9,22 @@ namespace Vapps.ECommerce.Products
     public partial interface IProductAttributeFormatter
     {
         /// <summary>
-        /// Formats attributes
+        /// 格式化属性描述
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesJson">Attributes</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(Product product, string attributesJson);
+        Task<string> FormatAttributes(Product product, List<JsonProductAttribute> attributesJson);
 
         /// <summary>
-        /// Formats attributesXml
+        /// 格式化属性描述
         /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="attributesJson">Attributes</param>
-        /// <param name="serapator">Serapator</param>
-        /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
-        /// <returns>Attributes</returns>
-        Task<string> FormatAttributes(Product product, string attributesJson,
+        /// <param name="product">商品</param>
+        /// <param name="attributesJson">属性json对象</param>
+        /// <param name="serapator">分隔符</param>
+        /// <param name="htmlEncode">是否需要Html编码</param>
+        /// <returns>格式化实行描述</returns>
+        Task<string> FormatAttributes(Product product, List<JsonProductAttribute> attributesJson,
             string serapator = "<br />", bool htmlEncode = true);
     }
 }

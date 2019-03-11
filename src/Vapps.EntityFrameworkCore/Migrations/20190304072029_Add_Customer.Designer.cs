@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vapps.EntityFrameworkCore;
 
 namespace Vapps.Migrations
 {
     [DbContext(typeof(VappsDbContext))]
-    partial class VappsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190304072029_Add_Customer")]
+    partial class Add_Customer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1273,7 +1275,7 @@ namespace Vapps.Migrations
 
                     b.Property<string>("ShippingPhoneNumber");
 
-                    b.Property<string>("ShippingProvince");
+                    b.Property<string>("ShippingProvice");
 
                     b.Property<int>("ShippingStatus");
 
@@ -1830,7 +1832,7 @@ namespace Vapps.Migrations
                         .IsRequired()
                         .HasMaxLength(12);
 
-                    b.Property<int>("OrderSource");
+                    b.Property<int>("OrderSourceType");
 
                     b.Property<bool>("OrderSync");
 
@@ -2611,7 +2613,7 @@ namespace Vapps.Migrations
 
             modelBuilder.Entity("Vapps.ECommerce.Orders.OrderItem", b =>
                 {
-                    b.HasOne("Vapps.ECommerce.Orders.Order", "Order")
+                    b.HasOne("Vapps.ECommerce.Orders.Order")
                         .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);

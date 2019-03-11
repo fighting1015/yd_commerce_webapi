@@ -9,39 +9,39 @@ namespace Vapps.ECommerce.Orders.Dto
     public class CreateOrUpdateOrderInput : EntityDto
     {
         /// <summary>
-        /// 订单号（为空则自动生成）
+        /// 订单号（缺省自动生成）
         /// </summary>
         public virtual string OrderNumber { get; set; }
 
         /// <summary>
         /// 店铺Id
         /// </summary>
-        public virtual string StoreId { get; set; }
+        public virtual int StoreId { get; set; }
 
         /// <summary>
-        /// 订单状态
+        /// 订单状态(缺省为待确认)
         /// </summary>
-        public virtual OrderStatus OrderStatus { get; set; }
+        public virtual OrderStatus? OrderStatus { get; set; }
 
         /// <summary>
-        /// 支付状态
+        /// 支付状态(缺省为未支付)
         /// </summary>
-        public virtual PaymentStatus PaymentStatus { get; set; }
+        public virtual PaymentStatus? PaymentStatus { get; set; }
 
         /// <summary>
-        /// 物流状态
+        /// 物流状态(缺省为未发货）
         /// </summary>
-        public virtual ShippingStatus ShippingStatus { get; set; }
+        public virtual ShippingStatus? ShippingStatus { get; set; }
 
         /// <summary>
-        /// 订单类型
+        /// 订单类型（缺省为货到付款）
         /// </summary>
-        public virtual OrderType OrderType { get; set; }
+        public virtual OrderType? OrderType { get; set; }
 
         /// <summary>
-        /// 订单来源
+        /// 订单来源（缺省优先店铺设置，店铺id为空则为后台自建）
         /// </summary>
-        public virtual OrderSource OrderSource { get; set; }
+        public virtual OrderSource? OrderSource { get; set; }
 
         /// <summary>
         /// 管理员备注
@@ -58,7 +58,7 @@ namespace Vapps.ECommerce.Orders.Dto
         /// <summary>
         /// 收货地址(省份id)
         /// </summary>
-        public int ShippingProviceId { get; set; }
+        public int ShippingProvinceId { get; set; }
 
         /// <summary>
         /// 收货地址(城市Id)
@@ -76,7 +76,7 @@ namespace Vapps.ECommerce.Orders.Dto
         public string ShippingAddress { get; set; }
 
         /// <summary>
-        /// 收货地址(电话)
+        /// 收货地址(电话,自动查找对应客户)
         /// </summary>
         public string ShippingPhoneNumber { get; set; }
 
@@ -90,44 +90,44 @@ namespace Vapps.ECommerce.Orders.Dto
         #region Order Amount
 
         /// <summary>
-        /// 订单小计
+        /// 订单小计(子订单小计)
         /// </summary>
-        public decimal SubtotalAmount { get; set; }
+        public decimal? SubtotalAmount { get; set; }
 
         /// <summary>
-        /// 订单总额
+        /// 订单总额(订单金额，折算所有后)
         /// </summary>
-        public decimal TotalAmount { get; set; }
+        public decimal? TotalAmount { get; set; }
 
         /// <summary>
         /// 货运费用
         /// </summary>
-        public decimal ShippingAmount { get; set; }
+        public decimal? ShippingAmount { get; set; }
 
         /// <summary>
         /// 订单提成/佣金
         /// </summary>
-        public decimal RewardAmount { get; set; }
+        public decimal? RewardAmount { get; set; }
 
         /// <summary>
         /// 支付方式附加费（货到付款手续费）
         /// </summary>
-        public decimal PaymentMethodAdditionalFee { get; set; }
+        public decimal? PaymentMethodAdditionalFee { get; set; }
 
         /// <summary>
         /// 订单折扣（适用于订单总额）
         /// </summary>
-        public decimal DiscountAmount { get; set; }
+        public decimal? DiscountAmount { get; set; }
 
         /// <summary>
         /// 订单折扣总额
         /// </summary>
-        public decimal SubTotalDiscountAmount { get; set; }
+        public decimal? SubTotalDiscountAmount { get; set; }
 
         /// <summary>
         /// 退款金额
         /// </summary>
-        public decimal RefundedAmount { get; set; }
+        public decimal? RefundedAmount { get; set; }
 
         #endregion
 
@@ -155,19 +155,19 @@ namespace Vapps.ECommerce.Orders.Dto
         public virtual int Quantity { get; set; }
 
         /// <summary>
-        /// 单价
+        /// 单价(缺省自动计算)
         /// </summary>
-        public virtual decimal UnitPrice { get; set; }
+        public virtual decimal? UnitPrice { get; set; }
 
         /// <summary>
-        /// 价格（小计）
+        /// 价格(小计，缺省自动计算)
         /// </summary>
-        public virtual decimal Price { get; set; }
+        public virtual decimal? Price { get; set; }
 
         /// <summary>
-        /// 折扣
+        /// 折扣(缺省自动计算)
         /// </summary>
-        public virtual decimal DiscountAmount { get; set; }
+        public virtual decimal? DiscountAmount { get; set; }
 
         /// <summary>
         /// 属性值（如果有）

@@ -7,6 +7,7 @@ using Vapps.Authorization.Roles;
 using Vapps.Authorization.Users;
 using Vapps.DataStatistics;
 using Vapps.ECommerce.Catalog;
+using Vapps.ECommerce.Customers;
 using Vapps.ECommerce.Orders;
 using Vapps.ECommerce.Payments;
 using Vapps.ECommerce.Products;
@@ -95,6 +96,8 @@ namespace Vapps.EntityFrameworkCore
         public virtual DbSet<ProductAttributeValue> ProductAttributeValues { get; set; }
 
         public virtual DbSet<PredefinedProductAttributeValue> PredefinedProductAttributeValues { get; set; }
+
+        public virtual DbSet<Customer> Customers { get; set; }
 
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderItem> OrderItems { get; set; }
@@ -269,6 +272,11 @@ namespace Vapps.EntityFrameworkCore
                 b.Property(e => e.OverriddenGoodCost).HasColumnType("decimal(18, 4)");
             });
 
+            modelBuilder.Entity<Customer>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
             modelBuilder.Entity<Order>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.UserId, e.IsDeleted });
@@ -293,6 +301,14 @@ namespace Vapps.EntityFrameworkCore
             {
                 b.HasIndex(e => new { e.TenantId, e.OrderId, e.IsDeleted });
                 b.HasIndex(e => new { e.TenantId, e.ProductId, e.IsDeleted });
+
+                b.Property(e => e.DiscountAmount).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.UnitPrice).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Price).HasColumnType("decimal(18, 4)");
+
+                b.HasOne(e => e.Order)
+                 .WithMany(o => o.Items)
+                 .HasForeignKey(c => c.OrderId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<OrderPayment>(b =>
