@@ -8,7 +8,7 @@
         /// <returns></returns>
         public static string GetImgBucketDomain()
         {
-            FileStorageConsts.BUCKET_DOMAIN.TryGetValue("vapps-img", out string domain);
+            FileStorageConsts.BUCKET_DOMAIN.TryGetValue("image", out string domain);
 
             return domain;
         }

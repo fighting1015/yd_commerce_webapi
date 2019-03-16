@@ -381,9 +381,12 @@ namespace Vapps.ECommerce.Products
         {
             if (value.Id == 0)
             {
-                var entity = await FindPredefinedValueByNameAsync(value.Name);
+                var entity = await FindPredefinedValueByNameAsync(value.ProductAttributeId, value.Name);
                 if (entity != null)
-                    value.Id = entity.Id;
+                {
+                    entity.DisplayOrder = value.DisplayOrder;
+                    await UpdatePredefinedValueAsync(entity);
+                }
             }
 
             if (value.Id > 0)

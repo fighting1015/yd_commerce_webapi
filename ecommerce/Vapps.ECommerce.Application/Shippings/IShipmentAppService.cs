@@ -31,5 +31,12 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <returns></returns>
         Task DeleteShipment(BatchInput<int> input);
+
+        /// <summary>
+        /// 快速发货
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task QuickDelivery(QuickDeliveryInput input);
     }
 }

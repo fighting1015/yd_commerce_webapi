@@ -21,7 +21,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有可用物流(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetLogisticsSelectList();
+        Task<List<SelectListItemDto<long>>> GetLogisticsSelectList();
 
         /// <summary>
         /// 获取物流详情
@@ -58,7 +58,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有可用物流(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetTenantLogisticsSelectList();
+        Task<List<SelectListItemDto<long>>> GetTenantLogisticsSelectList();
 
         /// <summary>
         /// 获取物流详情

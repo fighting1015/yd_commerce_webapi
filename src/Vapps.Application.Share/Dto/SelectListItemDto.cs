@@ -2,8 +2,8 @@
 
 namespace Vapps.Dto
 {
-    [AutoMapFrom(typeof(SelectListItem))]
-    public class SelectListItemDto
+    //[AutoMapFrom(typeof(SelectListItem<T>))]
+    public class SelectListItemDto<T>
     {
         /// <summary>
         /// 文本
@@ -13,6 +13,6 @@ namespace Vapps.Dto
         /// <summary>
         /// 值
         /// </summary>
-        public string Value { get; set; }
+        public T Value { get; set; }
     }
 }

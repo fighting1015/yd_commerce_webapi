@@ -47,62 +47,62 @@ namespace Vapps.Caching
 
         public void HandleEvent(EntityCreatedEventData<SMSTemplate> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(ApplicationCacheNames.AvailableSmsTemplate);
+            _cacheManager.GetSelectListItemCache<long>().RemoveAsync(ApplicationCacheNames.AvailableSmsTemplate);
         }
 
         public void HandleEvent(EntityUpdatedEventData<SMSTemplate> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(ApplicationCacheNames.AvailableSmsTemplate);
+            _cacheManager.GetSelectListItemCache<long>().RemoveAsync(ApplicationCacheNames.AvailableSmsTemplate);
         }
 
         public void HandleEvent(EntityDeletedEventData<SMSTemplate> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(ApplicationCacheNames.AvailableSmsTemplate);
+            _cacheManager.GetSelectListItemCache<long>().RemoveAsync(ApplicationCacheNames.AvailableSmsTemplate);
         }
 
         public void HandleEvent(EntityCreatedEventData<Province> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(ApplicationCacheNames.AvailableProvince);
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(ApplicationCacheNames.AvailableProvince);
         }
 
         public void HandleEvent(EntityDeletedEventData<Province> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(ApplicationCacheNames.AvailableProvince);
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(ApplicationCacheNames.AvailableProvince);
         }
 
         public void HandleEvent(EntityUpdatedEventData<Province> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(ApplicationCacheNames.AvailableProvince);
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(ApplicationCacheNames.AvailableProvince);
         }
 
         public void HandleEvent(EntityCreatedEventData<City> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.ProvinceId));
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.ProvinceId));
         }
 
         public void HandleEvent(EntityUpdatedEventData<City> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.ProvinceId));
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.ProvinceId));
         }
 
         public void HandleEvent(EntityDeletedEventData<City> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.ProvinceId));
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.ProvinceId));
         }
 
         public void HandleEvent(EntityCreatedEventData<District> eventData)
         {
-            _cacheManager.GetSelectListItemCache().Remove(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.CityId));
+            _cacheManager.GetSelectListItemCache<int>().Remove(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.CityId));
         }
 
         public void HandleEvent(EntityDeletedEventData<District> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.CityId));
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.CityId));
         }
 
         public void HandleEvent(EntityUpdatedEventData<District> eventData)
         {
-            _cacheManager.GetSelectListItemCache().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.CityId));
+            _cacheManager.GetSelectListItemCache<int>().RemoveAsync(string.Format(ApplicationCacheNames.AvailableCity, eventData.Entity.CityId));
         }
     }
 }

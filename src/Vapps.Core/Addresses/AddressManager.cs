@@ -1,9 +1,6 @@
 ﻿using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Vapps.Addresses
@@ -14,6 +11,11 @@ namespace Vapps.Addresses
 
         public IQueryable<Address> Addresss => AddressRepository.GetAll().AsNoTracking();
 
+        public AddressManager(IRepository<Address, long> addressRepository)
+        {
+            this.AddressRepository = addressRepository;
+        }
+
         /// <summary>
         /// 根据id 查找地址
         /// </summary>
@@ -23,6 +25,16 @@ namespace Vapps.Addresses
         {
             return await AddressRepository.FirstOrDefaultAsync(id);
 
+        }
+
+        /// <summary>
+        /// 根据 电话 查找地址
+        /// </summary>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        public async Task<Address> FindByPhoneNumerAsync(string phoneNumber)
+        {
+            return await AddressRepository.FirstOrDefaultAsync(a => a.PhoneNumber == phoneNumber);
         }
 
         /// <summary>

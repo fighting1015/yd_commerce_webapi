@@ -14,7 +14,7 @@ namespace Vapps.Addresses
         /// <summary>
         /// 电话
         /// </summary>
-        public string Tepephone { get; set; }
+        public string PhoneNumber { get; set; }
 
         /// <summary>
         /// 省份

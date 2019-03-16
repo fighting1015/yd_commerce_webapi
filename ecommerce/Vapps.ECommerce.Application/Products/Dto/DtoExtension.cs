@@ -13,6 +13,7 @@ namespace Vapps.ECommerce.Products.Dto
         /// <param name="attributeMappings"></param>
         /// <param name="product"></param>
         /// <param name="productAttributeManager"></param>
+        /// <param name="createOrUpdateProduct"></param>
         /// <returns></returns>
         [UnitOfWork]
         public static List<JsonProductAttribute> GetAttributesJson(this List<ProductAttributeDto> attributeMappings,

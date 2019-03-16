@@ -94,18 +94,35 @@ namespace Vapps.Common
         }
 
         /// <summary>
-        /// 根据枚举名称获取下拉框数据源
+        /// 根据枚举名称获取下拉框数据源(值类型)
         /// </summary>
         /// <param name="enumName">枚举类型名称</param>
         /// <returns></returns>
-        public List<SelectListItemDto> GetEnumSelectItemSource(string enumName)
+        public List<SelectListItemDto<int>> GetEnumSelectItem(string enumName)
         {
-            var result = EnumExtensions.EnumToSelectListItem(typeof(VappsCoreModule), enumName, VappsConsts.ServerSideLocalizationSourceName);
+            var result = EnumExtensions.EnumToSelectListItem<int>(typeof(VappsCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
 
             if (result == null)
-                result = EnumExtensions.EnumToSelectListItem(typeof(VappsECommerceCoreModule), enumName, VappsConsts.ServerSideLocalizationSourceName);
+                result = EnumExtensions.EnumToSelectListItem<int>(typeof(VappsECommerceCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
 
-            var resultDto = ObjectMapper.Map<List<SelectListItemDto>>(result);
+            var resultDto = ObjectMapper.Map<List<SelectListItemDto<int>>>(result);
+
+            return resultDto;
+        }
+
+        /// <summary>
+        /// 根据枚举名称获取下拉框数据源(字符串)
+        /// </summary>
+        /// <param name="enumName">枚举类型名称</param>
+        /// <returns></returns>
+        public List<SelectListItemDto<string>> GetEnumSelectItemString(string enumName)
+        {
+            var result = EnumExtensions.EnumToSelectListItem<string>(typeof(VappsCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
+
+            if (result == null)
+                result = EnumExtensions.EnumToSelectListItem<string>(typeof(VappsECommerceCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
+
+            var resultDto = ObjectMapper.Map<List<SelectListItemDto<string>>>(result);
 
             return resultDto;
         }

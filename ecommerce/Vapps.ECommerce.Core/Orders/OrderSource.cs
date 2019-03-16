@@ -13,7 +13,7 @@
         FxgAd = 20,
 
         /// <summary>
-        /// 放心购渠道
+        /// 放心购频道
         /// </summary>
         FxgPd = 30,
 

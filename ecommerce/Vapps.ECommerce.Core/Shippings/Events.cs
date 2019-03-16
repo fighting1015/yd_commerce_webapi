@@ -1,9 +1,11 @@
-﻿namespace Vapps.ECommerce.Shippings
+﻿using Abp.Events.Bus;
+
+namespace Vapps.ECommerce.Shippings
 {
     /// <summary>
     /// 发货事件
     /// </summary>
-    public class ShipmentSentEvent
+    public class ShipmentSentEvent: EventData
     {
         private readonly Shipment _shipment;
 
@@ -21,7 +23,7 @@
     /// <summary>
     /// 签收事件
     /// </summary>
-    public class ShipmentDeliveredEvent
+    public class ShipmentDeliveredEvent: EventData
     {
         private readonly Shipment _shipment;
 
@@ -39,7 +41,7 @@
     /// <summary>
     /// 拒签事件
     /// </summary>
-    public class ShipmentRejectedEvent
+    public class ShipmentRejectedEvent: EventData
     {
         private readonly Shipment _shipment;
 

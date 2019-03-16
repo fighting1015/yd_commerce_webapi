@@ -20,7 +20,7 @@ namespace Vapps.SMS
         /// 获取所有可用短信模板(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetAvailableSMSTemplates();
+        Task<List<SelectListItemDto<long>>> GetAvailableSMSTemplates();
 
         /// <summary>
         /// 获取短信模板详情

@@ -58,7 +58,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <returns></returns>
 
-        public async Task<List<SelectListItemDto>> GetStoreSelectList()
+        public async Task<List<SelectListItemDto<long>>> GetStoreSelectList()
         {
             var query = _storeManager.Stores;
 
@@ -69,10 +69,10 @@ namespace Vapps.ECommerce.Stores
 
             var storeSelectListItem = tempalates.Select(x =>
             {
-                return new SelectListItemDto
+                return new SelectListItemDto<long>
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString()
+                    Value = x.Id
                 };
             }).ToList();
             return storeSelectListItem;

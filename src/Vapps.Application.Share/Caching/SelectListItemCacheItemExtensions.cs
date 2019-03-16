@@ -6,9 +6,9 @@ namespace Vapps.Caching
 {
     public static class SelectListItemCacheItemExtensions
     {
-        public static ITypedCache<string, List<SelectListItemDto>> GetSelectListItemCache(this ICacheManager cacheManager)
+        public static ITypedCache<string, List<SelectListItemDto<T>>> GetSelectListItemCache<T>(this ICacheManager cacheManager)
         {
-            return cacheManager.GetCache<string, List<SelectListItemDto>>(ApplicationCacheNames.SelectItem);
+            return cacheManager.GetCache<string, List<SelectListItemDto<T>>>(ApplicationCacheNames.SelectItem);
         }
     }
 }

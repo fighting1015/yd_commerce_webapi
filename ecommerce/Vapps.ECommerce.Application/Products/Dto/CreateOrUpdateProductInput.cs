@@ -7,6 +7,14 @@ namespace Vapps.ECommerce.Products.Dto
     //[AutoMap(typeof(Product))]
     public class CreateOrUpdateProductInput
     {
+
+        public CreateOrUpdateProductInput() {
+            Pictures = new List<ProductPictureDto>();
+            Categories = new List<ProductCategoryDto>();
+            Attributes = new List<ProductAttributeDto>();
+            AttributeCombinations = new List<AttributeCombinationDto>();
+        }
+
         /// <summary>
         /// Id，空或者为0时创建商品
         /// </summary>
@@ -76,8 +84,6 @@ namespace Vapps.ECommerce.Products.Dto
         /// 高
         /// </summary>
         public decimal Height { get; set; }
-
-      
 
         /// <summary>
         /// 分类

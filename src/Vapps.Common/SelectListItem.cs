@@ -1,9 +1,9 @@
 ﻿namespace Vapps
 {
-    public class SelectListItem
+    public class SelectListItem<T>
     {
         public string Text { get; set; }
       
-        public string Value { get; set; }
+        public T Value { get; set; }
     }
 }

@@ -11,10 +11,10 @@ namespace Vapps
 {
     public static class EnumExtensions
     {
-        public static List<SelectListItem> EnumToSelectListItem<TEnum>(this TEnum enumObj, string sourceName,
+        public static List<SelectListItem<T>> EnumToSelectListItem<TEnum, T>(this TEnum enumObj, string sourceName,
            int[] valuesToExclude = null, bool includeDefault = false) where TEnum : struct
         {
-            return EnumToSelectListItem(typeof(TEnum), sourceName, valuesToExclude, includeDefault);
+            return EnumToSelectListItem<T>(typeof(TEnum), sourceName, valuesToExclude, includeDefault);
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Vapps
         /// <param name="valuesToExclude"></param>
         /// <param name="includeDefault"></param>
         /// <returns></returns>
-        public static List<SelectListItem> EnumToSelectListItem(Type moduleType, string enumName,
+        public static List<SelectListItem<T>> EnumToSelectListItem<T>(Type moduleType, string enumName,
             string sourceName, int[] valuesToExclude = null, bool includeDefault = false)
         {
             var enumType = GetEnumTypeInfo(moduleType, enumName);
@@ -32,7 +32,7 @@ namespace Vapps
             if (enumType == null)
                 return null;
 
-            return EnumToSelectListItem(enumType, sourceName, valuesToExclude, includeDefault);
+            return EnumToSelectListItem<T>(enumType, sourceName, valuesToExclude, includeDefault);
         }
 
         /// <summary>
@@ -42,23 +42,23 @@ namespace Vapps
         /// <param name="valuesToExclude"></param>
         /// <param name="includeDefault"></param>
         /// <returns></returns>
-        public static List<SelectListItem> EnumToSelectListItem(Type enumType, string sourceName,
+        public static List<SelectListItem<T>> EnumToSelectListItem<T>(Type enumType, string sourceName,
             int[] valuesToExclude = null, bool includeDefault = false)
         {
             if (!enumType.GetTypeInfo().IsEnum) throw new ArgumentException("An Enumeration type is required.", "enumObj");
             var localizationManager = IocManager.Instance.Resolve<ILocalizationManager>();
 
             var allEnumValues = Enum.GetValues(enumType);
-            List<SelectListItem> listItems = new List<SelectListItem>();
+            List<SelectListItem<T>> listItems = new List<SelectListItem<T>>();
 
             foreach (var enumValue in allEnumValues)
             {
                 if (valuesToExclude != null && valuesToExclude.Contains(Convert.ToInt32(enumValue)))
                     continue;
 
-                listItems.Add(new SelectListItem()
+                listItems.Add(new SelectListItem<T>()
                 {
-                    Value = Convert.ToInt32(enumValue).ToString(),
+                    Value = (T)Convert.ChangeType(enumValue, typeof(T)),
                     Text = enumValue.GetLocalizedEnum(enumType, localizationManager, sourceName)
                 });
             }
@@ -66,9 +66,9 @@ namespace Vapps
             // 添加默认值
             if (includeDefault)
             {
-                listItems.Add(new SelectListItem()
+                listItems.Add(new SelectListItem<T>()
                 {
-                    Value = 0.ToString(),
+                    Value = (T)Convert.ChangeType(0, typeof(T)),
                     Text = localizationManager.GetString(sourceName, "Please_Choose")
                 });
             }
@@ -140,7 +140,7 @@ namespace Vapps
         public static Type GetEnumTypeInfo(Type moduleType, string enumName)
         {
             var subTypeQuery = from t in moduleType.GetAssembly().GetTypes()
-                               where t.Name == enumName
+                               where t.Name.ToLower() == enumName.ToLower()
                                select t;
 
             return subTypeQuery.FirstOrDefault();

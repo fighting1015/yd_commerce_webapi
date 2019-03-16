@@ -15,6 +15,11 @@
         /// <summary>
         /// 头像
         /// </summary>
-        ProfilePicture = 1
+        ProfilePicture = 1,
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        ProductPicture = 2
     }
 }

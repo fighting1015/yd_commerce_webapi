@@ -21,6 +21,11 @@ namespace Vapps.ECommerce.Products.Dto
     //[AutoMap(typeof(ProductAttribute))]
     public class ProductAttributeDto : EntityDto<long>
     {
+        public ProductAttributeDto()
+        {
+            Values = new List<ProductAttributeValueDto>();
+        }
+
         /// <summary>
         /// 商品属性名
         /// </summary>

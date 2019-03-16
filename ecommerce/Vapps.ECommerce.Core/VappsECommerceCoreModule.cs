@@ -1,5 +1,7 @@
 ﻿using Abp.Modules;
 using Abp.Reflection.Extensions;
+using Castle.MicroKernel.Registration;
+using Vapps.ECommerce.Shippings.Tracking;
 
 namespace Vapps.ECommerce.Core
 {
@@ -9,6 +11,7 @@ namespace Vapps.ECommerce.Core
     {
         public override void PreInitialize()
         {
+            RegisterComponent();
         }
 
 
@@ -19,7 +22,14 @@ namespace Vapps.ECommerce.Core
 
         public override void PostInitialize()
         {
-           
+
+        }
+
+        private void RegisterComponent()
+        {
+            IocManager.IocContainer.Register(
+                  Component.For<IShipmentTracker>().ImplementedBy<ShipmentTracker>().LifestyleTransient()
+              );
         }
     }
 }

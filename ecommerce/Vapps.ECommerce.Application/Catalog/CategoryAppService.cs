@@ -58,7 +58,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <returns></returns>
 
-        public async Task<List<SelectListItemDto>> GetCategorySelectList()
+        public async Task<List<SelectListItemDto<long>>> GetCategorySelectList()
         {
             var query = _catalogyManager.Categorys;
 
@@ -69,10 +69,10 @@ namespace Vapps.ECommerce.Catalog
 
             var catalogySelectListItem = tempalates.Select(x =>
             {
-                return new SelectListItemDto
+                return new SelectListItemDto<long>
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString()
+                    Value = x.Id
                 };
             }).ToList();
             return catalogySelectListItem;

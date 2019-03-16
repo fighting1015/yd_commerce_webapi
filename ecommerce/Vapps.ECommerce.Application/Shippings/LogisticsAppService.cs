@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
 using Microsoft.EntityFrameworkCore;
@@ -8,12 +9,8 @@ using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Dto;
 using Vapps.ECommerce.Shippings.Dto;
-using Vapps.ECommerce.Shippings;
-using System.IO;
-using OfficeOpenXml;
-using Vapps.Helpers;
-using Abp.Extensions;
 using Vapps.ECommerce.Shippings.Dto.Logisticses;
+using Vapps.Helpers;
 
 namespace Vapps.ECommerce.Shippings
 {
@@ -57,7 +54,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有可用物流(下拉框)
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetLogisticsSelectList()
+        public async Task<List<SelectListItemDto<long>>> GetLogisticsSelectList()
         {
             var query = _logisticsManager.Logisticses;
 
@@ -68,10 +65,10 @@ namespace Vapps.ECommerce.Shippings
 
             var storeSelectListItem = _logisticses.Select(x =>
             {
-                return new SelectListItemDto
+                return new SelectListItemDto<long>
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString()
+                    Value = x.Id
                 };
             }).ToList();
             return storeSelectListItem;
@@ -141,7 +138,6 @@ namespace Vapps.ECommerce.Shippings
 
         #endregion
 
-
         #region Tenant Logistics
 
         /// <summary>
@@ -170,7 +166,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有可用自选物流(下拉框)
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetTenantLogisticsSelectList()
+        public async Task<List<SelectListItemDto<long>>> GetTenantLogisticsSelectList()
         {
             var query = _logisticsManager.TenantLogisticses;
 
@@ -181,10 +177,10 @@ namespace Vapps.ECommerce.Shippings
 
             var storeSelectListItem = _logisticses.Select(x =>
             {
-                return new SelectListItemDto
+                return new SelectListItemDto<long>
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString()
+                    Value = x.Id
                 };
             }).ToList();
             return storeSelectListItem;
@@ -258,7 +254,6 @@ namespace Vapps.ECommerce.Shippings
 
 
         #endregion
-
 
         #region Utilities
 

@@ -244,10 +244,6 @@ namespace Vapps.EntityFrameworkCore
                 b.HasOne(o => o.ProductAttributeMapping)
                   .WithMany(m => m.Values)
                   .HasForeignKey(c => c.ProductAttributeMappingId).OnDelete(DeleteBehavior.Cascade);
-
-                b.HasOne(o => o.Product)
-                 .WithMany()
-                 .HasForeignKey(c => c.ProductId).OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ProductAttributeMapping>(b =>
@@ -305,6 +301,9 @@ namespace Vapps.EntityFrameworkCore
                 b.Property(e => e.DiscountAmount).HasColumnType("decimal(18, 4)");
                 b.Property(e => e.UnitPrice).HasColumnType("decimal(18, 4)");
                 b.Property(e => e.Price).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.OriginalProductCost).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Weight).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.Volume).HasColumnType("decimal(18, 4)");
 
                 b.HasOne(e => e.Order)
                  .WithMany(o => o.Items)
@@ -323,6 +322,7 @@ namespace Vapps.EntityFrameworkCore
                 b.HasIndex(e => new { e.TenantId, e.IsDeleted });
 
                 b.Property(e => e.TotalWeight).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.TotalVolume).HasColumnType("decimal(18, 4)");
 
                 b.HasOne(e => e.Order)
                  .WithMany(o => o.Shipments)

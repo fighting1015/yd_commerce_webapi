@@ -19,7 +19,7 @@ namespace Vapps.ECommerce.Stores
         /// 获取所有可用店铺(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetStoreSelectList();
+        Task<List<SelectListItemDto<long>>> GetStoreSelectList();
 
         /// <summary>
         /// 获取店铺详情

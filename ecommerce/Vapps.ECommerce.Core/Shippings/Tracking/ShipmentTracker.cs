@@ -28,13 +28,13 @@ namespace Vapps.ECommerce.Shippings.Tracking
             IShipmentManager shipmentManager,
             ILogisticsManager logisticsManager,
             IDateTimeHelper dateTimeHelper,
-            IConfigurationRoot appConfiguration)
+            IAppConfigurationAccessor configurationAccessor)
         {
             this._orderManager = orderManager;
             this._shipmentManager = shipmentManager;
             this._dateTimeHelper = dateTimeHelper;
             this._logisticsManager = logisticsManager;
-            this._appConfiguration = appConfiguration;
+            this._appConfiguration = configurationAccessor.Configuration;
         }
 
 

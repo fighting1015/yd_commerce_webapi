@@ -32,6 +32,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [UnitOfWork]
         public virtual async Task<Product> FindBySkuAsync(string sku)
         {
             if (String.IsNullOrEmpty(sku))

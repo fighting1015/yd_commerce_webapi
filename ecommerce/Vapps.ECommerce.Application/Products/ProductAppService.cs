@@ -7,15 +7,18 @@ using Abp.Runtime.Caching;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Vapps.Dto;
 using Vapps.ECommerce.Catalog;
 using Vapps.ECommerce.Products.Dto;
+using Vapps.Extensions;
 using Vapps.Media;
 
 namespace Vapps.ECommerce.Products
@@ -39,6 +42,282 @@ namespace Vapps.ECommerce.Products
             this._cacheManager = cacheManager;
             this._pictureManager = pictureManager;
             this._productAttributeManager = productAttributeManager;
+        }
+
+
+        /// <summary>
+        /// 测试
+        /// </summary>
+        /// <returns></returns>
+        public async Task ProductSync2()
+        {
+            var pictures = await _pictureManager.PictureRepository.GetAll().ToListAsync();
+
+            foreach (var picture in pictures)
+            {
+                if (picture.OriginalUrl.StartsWith("http"))
+                    continue;
+
+                picture.OriginalUrl = "http://img.yd.vapps.com.cn" + picture.OriginalUrl;
+
+                await _pictureManager.UpdateAsync(picture);
+
+            }
+        }
+
+
+        /// <summary>
+        /// 商品信息同步
+        /// </summary>
+        /// <returns></returns>
+        public async Task ProductSync()
+        {
+            string reqURL = "http://commerce.vapps.com.cn/catalog/CategoryProductJsons?categoryId=0&PageSize=1000";
+            //var requestJson = JsonConvert.SerializeObject(requestData);
+
+
+            //paramList.Add(new KeyValuePair<string, string>("RequestData", HttpUtility.UrlEncode(requestJson, Encoding.UTF8)));
+
+
+            var httpClient = new HttpClient();
+
+            try
+            {
+                var response = await httpClient.GetAsync(new Uri(reqURL));
+                var jsonResultString = await response.Content.ReadAsStringAsync();
+                JObject products = ((JObject)JToken.Parse(jsonResultString)["data"]);
+                //return value;
+
+                var productList = products["Data"].ToList().OrderBy(p => p["Id"]);
+
+                foreach (JObject productJson in productList)
+                {
+                    var productDetailResponse = await httpClient.GetAsync(new Uri($"http://commerce.vapps.com.cn/product/ProductDetailJson?productId={productJson["Id"]}"));
+                    var productDetailJsonResultString = await productDetailResponse.Content.ReadAsStringAsync();
+                    JObject productsDetail = (JObject)JToken.Parse(productDetailJsonResultString)["data"];
+
+                    var sku = productsDetail["Sku"].ToString();
+                    var product = await _productManager.FindBySkuAsync(sku);
+                    if (product != null)
+                        continue;
+
+                    var productDto = new CreateOrUpdateProductInput()
+                    {
+                        Name = productsDetail["Name"].ToString(),
+                        Price = Decimal.Parse(productsDetail["ProductPrice"]["PriceValue"].ToString()),
+                        GoodCost = Decimal.Parse(productsDetail["ProductPrice"]["Cost"].ToString()),
+
+                        Height = Decimal.Parse(productsDetail["Height"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Height"].ToString()),
+                        Weight = Decimal.Parse(productsDetail["Weight"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Weight"].ToString()),
+                        Width = Decimal.Parse(productsDetail["Width"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Width"].ToString()),
+                        Length = Decimal.Parse(productsDetail["Length"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Length"].ToString()),
+                        Sku = sku,
+                        StockQuantity = 0,
+                        ShortDescription = productsDetail["ShortDescription"].ToString(),
+                    };
+
+                    // 同步分类
+                    var categoryJsons = productsDetail["Breadcrumb"]["CategoryBreadcrumb"];
+                    if (!categoryJsons.IsNullOrEmpty())
+                    {
+                        foreach (JObject categoryJson in categoryJsons.ToList())
+                        {
+                            var categoryName = categoryJson["Name"].ToString();
+                            var category = await _categoryManager.FindByNameAsync(categoryName);
+
+                            if (category == null)
+                                category = new Category()
+                                {
+                                    Name = categoryName,
+                                };
+
+                            if (category.Id == 0)
+                            {
+                                await _categoryManager.CreateAsync(category);
+
+                                await CurrentUnitOfWork.SaveChangesAsync();
+                            }
+
+                            productDto.Categories.Add(new ProductCategoryDto()
+                            {
+                                Id = category.Id
+                            });
+                        }
+                    }
+
+                    // 图片
+                    var defaultPictureUrl = ((JObject)productsDetail["DefaultPictureModel"])["FullSizeImageUrl"].ToString();
+                    if (!defaultPictureUrl.IsNullOrWhiteSpace())
+                    {
+                        var picture = await _pictureManager.FetchPictureAsync(defaultPictureUrl, (long)DefaultGroups.ProductPicture);
+
+                        productDto.Pictures.Add(new ProductPictureDto()
+                        {
+                            Id = picture.Id,
+                        });
+                    }
+
+                    //商品属性
+                    var attributeJsons = productsDetail["ProductAttributes"];
+                    if (!attributeJsons.IsNullOrEmpty())
+                    {
+                        foreach (JObject attributeJson in attributeJsons.ToList())
+                        {
+                            var attributeName = attributeJson["Name"].ToString();
+
+                            // 属性值
+                            var attributeValueJsons = attributeJson["Values"];
+                            if (attributeValueJsons.IsNullOrEmpty())
+                            {
+                                continue;
+                            }
+
+                            var attribute = await _productAttributeManager.FindByNameAsync(attributeName);
+                            if (attribute == null)
+                            {
+                                attribute = new ProductAttribute()
+                                {
+                                    Name = attributeName,
+                                };
+
+                                await _productAttributeManager.CreateAsync(attribute);
+                                await CurrentUnitOfWork.SaveChangesAsync();
+                            }
+
+                            var attributeDto = new ProductAttributeDto()
+                            {
+                                Id = attribute.Id,
+                                Name = attributeJson["Id"].ToString()
+                            };
+
+                            // 属性值
+                            foreach (JObject attributeValueJson in attributeValueJsons.ToList())
+                            {
+                                var attributeValueName = attributeValueJson["Name"].ToString();
+
+                                var pAttributeValue = await _productAttributeManager.FindPredefinedValueByNameAsync(attribute.Id, attributeValueName);
+                                if (pAttributeValue == null)
+                                {
+                                    pAttributeValue = new PredefinedProductAttributeValue()
+                                    {
+                                        Name = attributeValueName,
+                                        ProductAttributeId = attribute.Id,
+                                    };
+
+                                    await _productAttributeManager.CreateOrUpdatePredefinedValueAsync(pAttributeValue);
+                                    await CurrentUnitOfWork.SaveChangesAsync();
+                                }
+
+                                attributeDto.Values.Add(new ProductAttributeValueDto()
+                                {
+                                    Id = pAttributeValue.Id,
+                                    Name = attributeValueJson["Id"].ToString(),
+                                    PictureUrl = attributeValueJson["CostAdjustment"].ToString(),
+                                });
+                            }
+
+                            productDto.Attributes.Add(attributeDto);
+
+                        }
+                    }
+
+                    // 属性组合
+                    if (!productDto.Attributes.IsNullOrEmpty())
+                    {
+                        for (int index = 0; index < productDto.Attributes[0].Values.Count; index++)
+                        {
+                            var deserializeSettings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
+                            var attribute = JsonConvert.DeserializeObject<ProductAttributeDto>(JsonConvert.SerializeObject(productDto.Attributes[0]), deserializeSettings);
+
+                            attribute.Values = new List<ProductAttributeValueDto>();
+                            attribute.Values.Add(productDto.Attributes[0].Values[index]);
+
+                            //var combin = new AttributeCombinationDto();
+                            //combin.Attributes.Add(attribute);
+
+                            if (productDto.Attributes.Count() >= 2)
+                            {
+                                for (int i = 0; i < productDto.Attributes[1].Values.Count; i++)
+                                {
+                                    var attribute1 = JsonConvert.DeserializeObject<ProductAttributeDto>(JsonConvert.SerializeObject(productDto.Attributes[1]), deserializeSettings);
+
+                                    attribute1.Values = new List<ProductAttributeValueDto>();
+                                    attribute1.Values.Add(productDto.Attributes[1].Values[i]);
+
+                                    if (productDto.Attributes.Count() >= 3)
+                                    {
+                                        for (int j = 0; j < productDto.Attributes[2].Values.Count; j++)
+                                        {
+                                            var attribute2 = JsonConvert.DeserializeObject<ProductAttributeDto>(JsonConvert.SerializeObject(productDto.Attributes[2]), deserializeSettings);
+
+                                            attribute2.Values = new List<ProductAttributeValueDto>();
+                                            attribute2.Values.Add(productDto.Attributes[2].Values[j]);
+
+                                            var combin = new AttributeCombinationDto();
+                                            combin.Attributes.Add(attribute);
+                                            combin.Attributes.Add(attribute1);
+                                            combin.Attributes.Add(attribute2);
+
+                                            productDto.AttributeCombinations.Add(combin);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var combin = new AttributeCombinationDto();
+                                        combin.Attributes.Add(attribute);
+                                        combin.Attributes.Add(attribute1);
+
+                                        productDto.AttributeCombinations.Add(combin);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var combin = new AttributeCombinationDto();
+                                combin.Attributes.Add(attribute);
+
+                                productDto.AttributeCombinations.Add(combin);
+                            }
+                        }
+                    }
+
+                    string combinURL = "http://commerce.vapps.com.cn/product/GetStockByDropAndDropJson";
+                    foreach (var combin in productDto.AttributeCombinations)
+                    {
+                        List<KeyValuePair<String, String>> paramList = new List<KeyValuePair<String, String>>();
+
+                        paramList.Add(new KeyValuePair<string, string>("productId", productsDetail["Id"].ToString()));
+
+                        var para = JsonConvert.SerializeObject(combin.Attributes.Select(c =>
+                        {
+                            return new { ProductAttrbuteId = c.Name, ProductAttrbuteValueId = c.Values[0].Name };
+                        }).ToList());
+
+                        paramList.Add(new KeyValuePair<string, string>("paramDictionary", para));
+
+                        var combinResponse = await httpClient.PostAsync(new Uri(combinURL), new FormUrlEncodedContent(paramList));
+                        var combinJsonResultString = await combinResponse.Content.ReadAsStringAsync();
+
+                        if (combinJsonResultString.IsNullOrWhiteSpace())
+                            continue;
+
+                        JObject combinDetail = ((JObject)JToken.Parse(combinJsonResultString));
+
+                        combin.Sku = combinDetail["Sku"].ToString();
+                        if (!combin.Attributes[0].Values[0].PictureUrl.IsNullOrWhiteSpace())
+                            combin.OverriddenGoodCost = decimal.Parse(combin.Attributes[0].Values[0].PictureUrl);
+                    }
+
+                    await CreateOrUpdateProduct(productDto);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                httpClient.Dispose();
+            }
         }
 
         /// <summary>
@@ -80,7 +359,7 @@ namespace Vapps.ECommerce.Products
         /// 获取所有可用商品(下拉框)
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetProductSelectList()
+        public async Task<List<SelectListItemDto<long>>> GetProductSelectList()
         {
             var query = _productManager.Products.AsNoTracking();
 
@@ -91,10 +370,10 @@ namespace Vapps.ECommerce.Products
 
             var productSelectListItem = tempalates.Select(x =>
             {
-                return new SelectListItemDto
+                return new SelectListItemDto<long>
                 {
                     Text = x.Name,
-                    Value = x.Id.ToString()
+                    Value = x.Id
                 };
             }).ToList();
             return productSelectListItem;
@@ -343,7 +622,7 @@ namespace Vapps.ECommerce.Products
         /// <returns></returns>
         private async Task CreateOrUpdateAttributeCombination(CreateOrUpdateProductInput input, Product product)
         {
-            if (input.Id == 0)
+            if (input.Id == null || input.Id == 0)
             {
                 product.AttributeCombinations = new Collection<ProductAttributeCombination>();
             }

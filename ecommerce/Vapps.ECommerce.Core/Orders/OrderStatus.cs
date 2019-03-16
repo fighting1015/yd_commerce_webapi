@@ -18,11 +18,11 @@
         /// <summary>
         /// 已完成
         /// </summary>
-        Complete = 30,
+        Completed = 30,
 
         /// <summary>
         /// 已取消
         /// </summary>
-        Cancelled = 40
+        Canceled = 40
     }
 }

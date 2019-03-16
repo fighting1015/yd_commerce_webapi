@@ -21,6 +21,13 @@ namespace Vapps.Addresses
         Task<Address> FindByIdAsync(long id);
 
         /// <summary>
+        /// 根据 电话 查找地址
+        /// </summary>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        Task<Address> FindByPhoneNumerAsync(string phoneNumber);
+
+        /// <summary>
         /// 根据id 获取地址
         /// </summary>
         /// <param name="id"></param>

@@ -923,11 +923,11 @@ namespace Vapps.Migrations
 
                     b.Property<string>("FullName");
 
+                    b.Property<string>("PhoneNumber");
+
                     b.Property<string>("Province");
 
                     b.Property<int>("ProvinceId");
-
-                    b.Property<string>("Tepephone");
 
                     b.Property<string>("ZipPostalCode");
 
@@ -1322,7 +1322,8 @@ namespace Vapps.Migrations
 
                     b.Property<DateTime?>("DeletionTime");
 
-                    b.Property<decimal>("DiscountAmount");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18, 4)");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1334,9 +1335,11 @@ namespace Vapps.Migrations
 
                     b.Property<string>("OrderItemNumber");
 
-                    b.Property<decimal>("OriginalProductCost");
+                    b.Property<decimal>("OriginalProductCost")
+                        .HasColumnType("decimal(18, 4)");
 
-                    b.Property<decimal>("Price");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18, 4)");
 
                     b.Property<long>("ProductId");
 
@@ -1346,7 +1349,14 @@ namespace Vapps.Migrations
 
                     b.Property<int>("TenantId");
 
-                    b.Property<decimal>("UnitPrice");
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<decimal>("Volume")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18, 4)");
 
                     b.HasKey("Id");
 
@@ -1607,8 +1617,6 @@ namespace Vapps.Migrations
 
                     b.HasIndex("ProductAttributeMappingId");
 
-                    b.HasIndex("ProductId");
-
                     b.HasIndex("TenantId", "ProductId", "ProductAttributeMappingId", "IsDeleted");
 
                     b.ToTable("ProductAttributeValues");
@@ -1721,13 +1729,16 @@ namespace Vapps.Migrations
 
                     b.Property<DateTime?>("ReceivedOn");
 
+                    b.Property<DateTime?>("RejectedOn");
+
                     b.Property<string>("ShipmentDetail");
 
                     b.Property<int>("Status");
 
                     b.Property<int>("TenantId");
 
-                    b.Property<decimal>("TotalVolume");
+                    b.Property<decimal>("TotalVolume")
+                        .HasColumnType("decimal(18, 4)");
 
                     b.Property<decimal>("TotalWeight")
                         .HasColumnType("decimal(18, 4)");
@@ -2643,11 +2654,6 @@ namespace Vapps.Migrations
                     b.HasOne("Vapps.ECommerce.Products.ProductAttributeMapping", "ProductAttributeMapping")
                         .WithMany("Values")
                         .HasForeignKey("ProductAttributeMappingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Vapps.ECommerce.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

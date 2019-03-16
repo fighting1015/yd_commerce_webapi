@@ -9,6 +9,12 @@ namespace Vapps.ECommerce.Products
     public interface IProductAppService
     {
         /// <summary>
+        /// 获取商品的属性及值
+        /// </summary>
+        /// <returns></returns>
+        Task ProductSync();
+
+        /// <summary>
         /// 获取所有商品
         /// </summary>
         /// <returns></returns>
@@ -18,7 +24,7 @@ namespace Vapps.ECommerce.Products
         /// 获取所有可用商品(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetProductSelectList();
+        Task<List<SelectListItemDto<long>>> GetProductSelectList();
 
         /// <summary>
         /// 获取商品的属性及值

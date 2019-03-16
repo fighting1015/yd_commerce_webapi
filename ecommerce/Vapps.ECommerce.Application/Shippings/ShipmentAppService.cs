@@ -1,22 +1,20 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Vapps.Configuration;
 using Vapps.Dto;
 using Vapps.ECommerce.Orders;
 using Vapps.ECommerce.Shippings.Dto.Shipments;
-using Vapps.ECommerce.Shippings.Dto.Tracking;
-using Vapps.ECommerce.Shippings;
 using Vapps.ECommerce.Shippings.Tracking;
-using Abp.Domain.Repositories;
-using System.Collections.ObjectModel;
 
 namespace Vapps.ECommerce.Shippings
 {
@@ -28,6 +26,7 @@ namespace Vapps.ECommerce.Shippings
         private readonly ICacheManager _cacheManager; // TODO: 待实现
         private readonly IShipmentTracker _shipmentTracker;
         private readonly ILogisticsManager _logisticsManager;
+        private readonly IOrderProcessingManager _orderProcessingManager;
 
 
         public ShipmentAppService(IShipmentManager shipmentManager,
@@ -35,7 +34,8 @@ namespace Vapps.ECommerce.Shippings
             ILocalizationManager localizationManager,
             ICacheManager cacheManager,
             IShipmentTracker shipmentTracker,
-            ILogisticsManager logisticsManager)
+            ILogisticsManager logisticsManager,
+            IOrderProcessingManager orderProcessingManager)
         {
             this._shipmentManager = shipmentManager;
             this._orderManager = orderManager;
@@ -43,6 +43,7 @@ namespace Vapps.ECommerce.Shippings
             this._localizationManager = localizationManager;
             this._shipmentTracker = shipmentTracker;
             this._logisticsManager = logisticsManager;
+            this._orderProcessingManager = orderProcessingManager;
         }
 
         #region Shipment
@@ -56,7 +57,7 @@ namespace Vapps.ECommerce.Shippings
             var query = _shipmentManager.Shipments
                 .Include(p => p.Items)
                 .WhereIf(input.Status != null, r => r.Status == input.Status)
-                .WhereIf(input.TrackingNumber.IsNullOrWhiteSpace(), r => r.LogisticsNumber == input.TrackingNumber)
+                .WhereIf(!input.TrackingNumber.IsNullOrWhiteSpace(), r => r.LogisticsNumber == input.TrackingNumber)
                 .WhereIf(input.DeliveryFrom != null, r => r.CreationTime >= input.DeliveryFrom)
                 .WhereIf(input.DeliveryTo != null, r => r.CreationTime <= input.DeliveryTo)
                 .WhereIf(input.ReceivedFrom != null, r => r.ReceivedOn >= input.ReceivedFrom)
@@ -69,14 +70,14 @@ namespace Vapps.ECommerce.Shippings
                 .PageBy(input)
                 .ToListAsync();
 
-            var shipmentListDtos = ObjectMapper.Map<List<ShipmentListDto>>(shipmentes);
+            var shipmentListDtos = await PrepareShipmentListDto(shipmentes);
             return new PagedResultDto<ShipmentListDto>(
                 shipmentCount,
                 shipmentListDtos);
         }
 
         /// <summary>
-        /// 获取订单发货记录详情
+        /// 获取订单的发货记录
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
@@ -91,11 +92,26 @@ namespace Vapps.ECommerce.Shippings
             foreach (var shipment in shipments)
             {
                 var shipmentDto = ObjectMapper.Map<ShipmentDto>(shipment);
+                shipmentDto.Items = new List<ShipmentItemDto>();
+
+                var order = await _orderManager.GetByIdAsync(shipment.OrderId);
+
+                shipmentDto.DeliveryOn = shipment.CreationTime;
+                shipmentDto.ShippingName = order.ShippingName;
+                shipmentDto.ShippingPhoneNumber = order.ShippingPhoneNumber;
+                shipmentDto.ShippingAddress = order.GetFullShippingAddress();
+                shipmentDto.StatusString = shipment.Status.GetLocalizedEnum(_localizationManager);
                 if (shipment.LogisticsId.HasValue)
                 {
                     shipmentDto.LogisticsId = (await _logisticsManager.FindTenantLogisticsByLogisticsIdAsync(shipment.LogisticsId.Value)).Id;
                 }
 
+                foreach (var item in shipment.Items)
+                {
+                    shipmentDto.Items.Add(await PrepareShipmentItemDto(item));
+                }
+
+                shipmentDtoList.Add(shipmentDto);
             }
 
             return shipmentDtoList;
@@ -165,7 +181,124 @@ namespace Vapps.ECommerce.Shippings
 
         #endregion
 
+        #region Method
+
+        /// <summary>
+        /// 快速发货
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task QuickDelivery(QuickDeliveryInput input)
+        {
+            var order = await _orderManager.GetByIdAsync(input.OrderId);
+            if (order == null)
+                throw new UserFriendlyException("无效的订单");
+
+            await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Items);
+            await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Shipments);
+
+            Shipment shipment = null;
+            decimal totalWeight = 0;
+            decimal totalVolume = 0;
+            foreach (var orderItem in order.Items.ToList())
+            {
+                //是否还有订单项需要发货
+                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                if (maxQtyToAdd <= 0)
+                    continue;
+
+                int qtyToAdd = orderItem.Quantity; //默认
+
+                //validate quantity
+                if (qtyToAdd <= 0)
+                    continue;
+                if (qtyToAdd > maxQtyToAdd)
+                    qtyToAdd = maxQtyToAdd;
+
+                var orderItemTotalWeight = orderItem.Weight > 0 ? orderItem.Weight * qtyToAdd : 0;
+                totalWeight += orderItemTotalWeight;
+
+                var orderItemTotalVolume = orderItem.Volume > 0 ? orderItem.Volume * qtyToAdd : 0;
+                totalVolume += orderItemTotalVolume;
+
+                if (shipment == null)
+                {
+                    var logistics = await _logisticsManager.FindTenantLogisticsByIdAsync(input.LogisticsId);
+                    shipment = new Shipment()
+                    {
+                        OrderId = order.Id,
+                        OrderNumber = order.OrderNumber,
+
+                        LogisticsName = logistics.Name,
+
+                        LogisticsId = logistics.LogisticsId,
+                        LogisticsNumber = input.LogisticsNumber,
+
+                        TotalWeight = orderItemTotalWeight,
+                        TotalVolume = orderItemTotalVolume,
+                        Status = ShippingStatus.NoTrace,
+                        AdminComment = input.AdminComment,
+                        Items = new Collection<ShipmentItem>()
+                    };
+                }
+                //create a shipment item
+                var shipmentItem = new ShipmentItem()
+                {
+                    OrderItemId = orderItem.Id,
+                    Quantity = qtyToAdd,
+                };
+                shipment.Items.Add(shipmentItem);
+            }
+
+            //if we have at least one item in the shipment, then save it
+            if (shipment != null && shipment.Items.Count > 0)
+            {
+                shipment.TotalWeight = totalWeight;
+                shipment.TotalVolume = totalVolume;
+                await _shipmentManager.CreateAsync(shipment);
+
+                //修改状态为已发货
+                await _orderProcessingManager.Ship(shipment, true);
+            }
+        }
+
+        #endregion
+
         #region Utilities
+
+        private async Task<List<ShipmentListDto>> PrepareShipmentListDto(List<Shipment> shipments)
+        {
+            var shipmentDtos = new List<ShipmentListDto>();
+
+            foreach (var shipment in shipments)
+            {
+                var shipmentDto = ObjectMapper.Map<ShipmentListDto>(shipment);
+
+                var order = await _orderManager.GetByIdAsync(shipment.OrderId);
+
+                shipmentDto.DeliveryOn = shipment.CreationTime;
+                shipmentDto.ShippingName = order.ShippingName;
+                shipmentDto.ShippingPhoneNumber = order.ShippingPhoneNumber;
+                shipmentDto.ShippingAddress = order.GetFullShippingAddress();
+                shipmentDto.StatusString = shipment.Status.GetLocalizedEnum(_localizationManager);
+
+                shipmentDtos.Add(shipmentDto);
+            }
+
+            return shipmentDtos;
+        }
+
+        private async Task<ShipmentItemDto> PrepareShipmentItemDto(ShipmentItem item)
+        {
+            var orderItem = await _orderManager.GetOrderItemByIdAsync(item.OrderItemId);
+
+            var shipmentDto = ObjectMapper.Map<ShipmentItemDto>(item);
+
+            shipmentDto.ProductName = orderItem.ProductName;
+            shipmentDto.AttributeInfo = orderItem.AttributeDescription;
+
+            return shipmentDto;
+        }
 
         /// <summary>
         /// 创建物流

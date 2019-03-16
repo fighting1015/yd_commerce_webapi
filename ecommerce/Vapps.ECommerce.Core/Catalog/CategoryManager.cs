@@ -23,6 +23,16 @@ namespace Vapps.ECommerce.Catalog
         #region Method
 
         /// <summary>
+        /// 根据name查找分类
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public virtual async Task<Category> FindByNameAsync(string name)
+        {
+            return await CategoryRepository.FirstOrDefaultAsync(c => c.Name.Contains(name));
+        }
+
+        /// <summary>
         /// 根据id查找分类
         /// </summary>
         /// <param name="id"></param>

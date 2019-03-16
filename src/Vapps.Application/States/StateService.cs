@@ -138,9 +138,9 @@ namespace Vapps.States
         /// 获取所有可用省份(下拉框)
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetProvinceSelectList()
+        public async Task<List<SelectListItemDto<int>>> GetProvinceSelectList()
         {
-            return await _cacheManager.GetSelectListItemCache().GetAsync(ApplicationCacheNames.AvailableProvince, async () =>
+            return await _cacheManager.GetSelectListItemCache<int>().GetAsync(ApplicationCacheNames.AvailableProvince, async () =>
             {
                 var query = _stateManager.Provinces.Where(st => st.IsActive);
 
@@ -150,10 +150,10 @@ namespace Vapps.States
 
                 var selectListItemDto = provinces.Select(x =>
                 {
-                    return new SelectListItemDto
+                    return new SelectListItemDto<int>
                     {
                         Text = x.Name,
-                        Value = x.Id.ToString()
+                        Value = x.Id
                     };
                 }).ToList();
                 return selectListItemDto;
@@ -217,10 +217,10 @@ namespace Vapps.States
         /// </summary>
         /// <param name="provinceId">省份id</param>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetCitySelectList(int provinceId)
+        public async Task<List<SelectListItemDto<int>>> GetCitySelectList(int provinceId)
         {
             string cacheKey = string.Format(ApplicationCacheNames.AvailableCity, provinceId);
-            return await _cacheManager.GetSelectListItemCache().GetAsync(cacheKey, async () =>
+            return await _cacheManager.GetSelectListItemCache<int>().GetAsync(cacheKey, async () =>
             {
                 var query = _stateManager.Cities.Where(c => c.ProvinceId == provinceId && c.IsActive);
 
@@ -230,10 +230,10 @@ namespace Vapps.States
 
                 var selectListItemDto = cities.Select(x =>
                 {
-                    return new SelectListItemDto
+                    return new SelectListItemDto<int>
                     {
                         Text = x.Name,
-                        Value = x.Id.ToString()
+                        Value = x.Id
                     };
                 }).ToList();
                 return selectListItemDto;
@@ -297,10 +297,10 @@ namespace Vapps.States
         /// </summary>
         /// <param name="cityId">城市id</param>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetDistrictSelectList(int cityId)
+        public async Task<List<SelectListItemDto<int>>> GetDistrictSelectList(int cityId)
         {
             string cacheKey = string.Format(ApplicationCacheNames.AvailableDistrict, cityId);
-            return await _cacheManager.GetSelectListItemCache().GetAsync(cacheKey, async () =>
+            return await _cacheManager.GetSelectListItemCache<int>().GetAsync(cacheKey, async () =>
             {
                 var query = _stateManager.Districts.Where(d => d.CityId == cityId && d.IsActive);
 
@@ -310,10 +310,10 @@ namespace Vapps.States
 
                 var selectListItemDto = districts.Select(x =>
                 {
-                    return new SelectListItemDto
+                    return new SelectListItemDto<int>
                     {
                         Text = x.Name,
-                        Value = x.Id.ToString()
+                        Value = x.Id
                     };
                 }).ToList();
                 return selectListItemDto;

@@ -8,12 +8,12 @@ namespace Vapps.EntityFrameworkCore
     {
         public static void Configure(DbContextOptionsBuilder<VappsDbContext> builder, string connectionString)
         {
-            builder.UseMySql(connectionString);
+            builder.UseSqlServer(connectionString);
         }
 
         public static void Configure(DbContextOptionsBuilder<VappsDbContext> builder, DbConnection connection)
         {
-            builder.UseMySql(connection);
+            builder.UseSqlServer(connection);
         }
     }
 }

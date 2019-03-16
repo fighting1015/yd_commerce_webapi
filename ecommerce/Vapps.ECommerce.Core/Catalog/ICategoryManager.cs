@@ -13,6 +13,13 @@ namespace Vapps.ECommerce.Catalog
         #region Category
 
         /// <summary>
+        /// 根据name查找分类
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        Task<Category> FindByNameAsync(string name);
+
+        /// <summary>
         /// 根据id查找商品分类
         /// </summary>
         /// <param name="id"></param>

@@ -81,7 +81,7 @@ namespace Vapps.ECommerce.Orders.Dto
         /// <summary>
         /// 订单来源
         /// </summary>
-        public virtual OrderSource[] OrderSource { get; set; }
+        public virtual OrderSource[] OrderSources { get; set; }
 
         public void Normalize()
         {

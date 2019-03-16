@@ -67,9 +67,9 @@ namespace Vapps.SMS
         /// 获取所有可用短信模板(下拉框)
         /// </summary>
         /// <returns></returns>
-        public async Task<List<SelectListItemDto>> GetAvailableSMSTemplates()
+        public async Task<List<SelectListItemDto<long>>> GetAvailableSMSTemplates()
         {
-            return await _cacheManager.GetSelectListItemCache().GetAsync(ApplicationCacheNames.AvailableSmsTemplate, async () =>
+            return await _cacheManager.GetSelectListItemCache<long>().GetAsync(ApplicationCacheNames.AvailableSmsTemplate, async () =>
             {
                 var query = _smsTemplateManager.SMSTemplates.Where(st => st.IsActive);
 
@@ -80,10 +80,10 @@ namespace Vapps.SMS
 
                 var tempalteSelectListItem = tempalates.Select(x =>
                 {
-                    return new SelectListItemDto
+                    return new SelectListItemDto<long>
                     {
                         Text = x.Name,
-                        Value = x.Id.ToString()
+                        Value = x.Id
                     };
                 }).ToList();
                 return tempalteSelectListItem;

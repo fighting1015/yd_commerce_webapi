@@ -18,7 +18,7 @@ namespace Vapps.ECommerce.Catalog
         /// 获取所有可用分类(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetCategorySelectList();
+        Task<List<SelectListItemDto<long>>> GetCategorySelectList();
 
         /// <summary>
         /// 获取分类详情

@@ -220,8 +220,8 @@ namespace Vapps.Media
         /// <returns></returns>
         public virtual async Task<PictureGroup> GetGroupByIdAsync(long id)
         {
-            var defaultGroup = EnumExtensions.EnumToSelectListItem(DefaultGroups.All, VappsConsts.ServerSideLocalizationSourceName);
-            var result = defaultGroup.FirstOrDefault(g => g.Value == id.ToString());
+            var defaultGroup = EnumExtensions.EnumToSelectListItem<DefaultGroups, int>(DefaultGroups.All, VappsConsts.ServerSideLocalizationSourceName);
+            var result = defaultGroup.FirstOrDefault(g => g.Value == id);
             if (result != null)
             {
                 return new PictureGroup()
@@ -242,7 +242,7 @@ namespace Vapps.Media
         /// <returns></returns>
         public virtual async Task<PictureGroup> GetGroupByNameAsync(string name)
         {
-            var defaultGroup = EnumExtensions.EnumToSelectListItem(DefaultGroups.All, VappsConsts.ServerSideLocalizationSourceName);
+            var defaultGroup = EnumExtensions.EnumToSelectListItem<DefaultGroups, int>(DefaultGroups.All, VappsConsts.ServerSideLocalizationSourceName);
             var result = defaultGroup.FirstOrDefault(g => g.Text == name);
             if (result != null)
             {

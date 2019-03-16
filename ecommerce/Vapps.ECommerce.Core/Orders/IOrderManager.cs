@@ -18,6 +18,13 @@ namespace Vapps.ECommerce.Orders
         #region Order
 
         /// <summary>
+        /// 根据 订单号 查找订单
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<Order> FindByOrderNumberAsync(string orderNumber);
+
+        /// <summary>
         /// 根据id查找订单
         /// </summary>
         /// <param name="id"></param>

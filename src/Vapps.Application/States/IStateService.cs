@@ -21,7 +21,7 @@ namespace Vapps.States
         /// 获取所有可用省份(下拉框)
         /// </summary>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetProvinceSelectList();
+        Task<List<SelectListItemDto<int>>> GetProvinceSelectList();
 
         /// <summary>
         /// 创建或更新省份
@@ -52,7 +52,7 @@ namespace Vapps.States
         /// </summary>
         /// <param name="provinceId">省份id</param>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetCitySelectList(int provinceId);
+        Task<List<SelectListItemDto<int>>> GetCitySelectList(int provinceId);
 
         /// <summary>
         /// 创建或更新城市
@@ -83,7 +83,7 @@ namespace Vapps.States
         /// </summary>
         /// <param name="cityId">城市id</param>
         /// <returns></returns>
-        Task<List<SelectListItemDto>> GetDistrictSelectList(int cityId);
+        Task<List<SelectListItemDto<int>>> GetDistrictSelectList(int cityId);
 
         /// <summary>
         /// 创建或更新区域

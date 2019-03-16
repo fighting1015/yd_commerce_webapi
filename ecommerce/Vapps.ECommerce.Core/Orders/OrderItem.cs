@@ -61,6 +61,16 @@ namespace Vapps.ECommerce.Orders
         public virtual decimal OriginalProductCost { get; set; }
 
         /// <summary>
+        /// 重量
+        /// </summary>
+        public virtual decimal Weight { get; set; }
+
+        /// <summary>
+        /// 体积
+        /// </summary>
+        public virtual decimal Volume { get; set; }
+
+        /// <summary>
         /// 商品名称
         /// </summary>
         public virtual string ProductName { get; set; }

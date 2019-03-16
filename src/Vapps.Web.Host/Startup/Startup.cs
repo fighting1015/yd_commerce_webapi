@@ -21,6 +21,7 @@ using System.Linq;
 using Vapps.Alipay.Infrastructure;
 using Vapps.Common;
 using Vapps.Debugging;
+using Vapps.ECommerce.Orders.Jobs;
 using Vapps.EntityFrameworkCore;
 using Vapps.Extensions;
 using Vapps.Identity;
@@ -101,7 +102,8 @@ namespace Vapps.Web.Startup
             //Hangfire (Enable to use Hangfire instead of default job manager)
             services.AddHangfire(config =>
             {
-                config.UseStorage(new MySqlStorage(_appConfiguration.GetConnectionString("Hangfire")));
+                //config.UseStorage(new MySqlStorage(_appConfiguration.GetConnectionString("Hangfire")));
+                config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Hangfire"));
 
                 //var options = new RedisStorageOptions();
                 //options.Db = _appConfiguration.GetValue<int>("Hangfire:DatabaseId");
@@ -156,6 +158,18 @@ namespace Vapps.Web.Startup
             {
                 //Authorization = new[] { new AbpHangfireAuthorizationFilter(AdminPermissions.UserManage.Users.Create) }
             });
+
+            var jobOptions = new BackgroundJobServerOptions
+            {
+                Queues = _appConfiguration["Hangfire:Queues"]
+                                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                .Select(o => o.RemovePostFix("/"))
+                                .ToArray(),
+                WorkerCount = _appConfiguration.GetValue<int>("Hangfire:WorkerCount"), // 并发任务数
+                ServerName = _appConfiguration["Hangfire:ServerName"],// 服务器名称
+            };
+            app.UseHangfireServer(jobOptions);
+
             app.UseHangfireServer();
             StratHangfireMission();
 
@@ -211,6 +225,8 @@ namespace Vapps.Web.Startup
         {
             if (!bool.Parse(_appConfiguration["Hangfire:IsEnabled"]))
                 return;
+
+            HangfireBackgroundJobManagerExtension.MinutelyRecurring<OrderSyncJob, int>(5, "order");
 
             if (!DebugHelper.IsDebug)
             {

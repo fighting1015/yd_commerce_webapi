@@ -12,7 +12,6 @@ namespace Vapps.ECommerce.Orders.Dto
         public OrderDetailDto()
         {
             this.Items = new List<OrderDetailItemDto>();
-            this.Shipments = new List<ShipmentDto>();
         }
 
         /// <summary>
@@ -40,41 +39,40 @@ namespace Vapps.ECommerce.Orders.Dto
         /// </summary>
         public virtual OrderStatus OrderStatus { get; set; }
 
-        /// <summary>
-        /// 支付状态
-        /// </summary>
-        public virtual string PaymentStatusString { get; set; }
 
         /// <summary>
         /// 支付状态
         /// </summary>
+        public virtual string PaymentStatusString { get; set; }        /// <summary>
+                                                                       /// 支付状态
+                                                                       /// </summary>
         public virtual PaymentStatus PaymentStatus { get; set; }
+
 
         /// <summary>
         /// 物流状态
         /// </summary>
         public virtual string ShippingStatusString { get; set; }
-
         /// <summary>
         /// 物流状态
         /// </summary>
         public virtual ShippingStatus ShippingStatus { get; set; }
 
+
         /// <summary>
         /// 订单类型
         /// </summary>
         public virtual string OrderTypeString { get; set; }
-
         /// <summary>
         /// 订单类型Id
         /// </summary>
         public virtual OrderType OrderType { get; set; }
 
+
         /// <summary>
         /// 订单来源
         /// </summary>
         public virtual string OrderSourceString { get; set; }
-
         /// <summary>
         /// 订单来源Id
         /// </summary>
@@ -203,11 +201,6 @@ namespace Vapps.ECommerce.Orders.Dto
         /// 子订单
         /// </summary>
         public virtual List<OrderDetailItemDto> Items { get; set; }
-
-        /// <summary>
-        /// 发货记录
-        /// </summary>
-        public virtual List<ShipmentDto> Shipments { get; set; }
     }
 
     public class OrderDetailItemDto : EntityDto<long>

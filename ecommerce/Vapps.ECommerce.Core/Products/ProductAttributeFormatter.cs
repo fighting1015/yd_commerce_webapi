@@ -33,10 +33,10 @@ namespace Vapps.ECommerce.Products
         /// <param name="product">Product</param>
         /// <param name="attributesJson">Attributes</param>
         /// <returns>Attributes</returns>
-        public async Task<string> FormatAttributes(Product product,
+        public async Task<string> FormatAttributesAsync(Product product,
             List<JsonProductAttribute> attributesJson)
         {
-            return await FormatAttributes(product, attributesJson, "<br />", true);
+            return await FormatAttributesAsync(product, attributesJson, "<br />", true);
         }
 
         /// <summary>
@@ -47,13 +47,14 @@ namespace Vapps.ECommerce.Products
         /// <param name="serapator">分隔符</param>
         /// <param name="htmlEncode">是否需要Html编码</param>
         /// <returns>格式化实行描述</returns>
-        public async Task<string> FormatAttributes(Product product,
+        public async Task<string> FormatAttributesAsync(Product product,
             List<JsonProductAttribute> attributesJson,
             string serapator = "<br />", bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
             var attributeMappings = await _productAttributeParser.ParseProductAttributeMappingsAsync(product.Id, attributesJson);
+
             foreach (var attributeMapping in attributeMappings)
             {
                 await _productAttributeManager.ProductAttributeMappingRepository.EnsurePropertyLoadedAsync(attributeMapping, a => a.ProductAttribute);

@@ -22,6 +22,8 @@ namespace Vapps.Migrations.Seed.Host
         public void Create()
         {
             CreateEditions();
+            CreatePictureIfNotExist((int)DefaultGroups.ProfilePicture, "头像");
+            CreatePictureIfNotExist((int)DefaultGroups.ProductPicture, "商品");
         }
 
         private void CreateEditions()

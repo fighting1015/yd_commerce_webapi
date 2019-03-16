@@ -50,6 +50,11 @@ namespace Vapps.ECommerce.Shippings
         public virtual decimal TotalVolume { get; set; }
 
         /// <summary>
+        /// 拒签时间
+        /// </summary>
+        public virtual DateTime? RejectedOn { get; set; }
+
+        /// <summary>
         /// 签收时间
         /// </summary>
         public virtual DateTime? ReceivedOn { get; set; }
@@ -84,5 +89,16 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         [ForeignKey("ShipmentId")]
         public virtual ICollection<ShipmentItem> Items { get; set; }
+
+
+        public bool IsShiped()
+        {
+            if (Status == ShippingStatus.NotYetShipped)
+                return false;
+            else if (Status == ShippingStatus.NotRequired)
+                return false;
+
+            return true;
+        }
     }
 }

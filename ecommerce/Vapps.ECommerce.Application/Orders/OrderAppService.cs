@@ -8,6 +8,7 @@ using Abp.Runtime.Caching;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -82,7 +83,7 @@ namespace Vapps.ECommerce.Orders
                .Include(o => o.Items)
                .Include(o => o.Shipments)
                .WhereIf(!input.OrderTypes.IsNullOrEmpty(), r => input.OrderTypes.Contains(r.OrderType))
-               .WhereIf(!input.OrderSource.IsNullOrEmpty(), r => input.OrderSource.Contains(r.OrderSource))
+               .WhereIf(!input.OrderSources.IsNullOrEmpty(), r => input.OrderSources.Contains(r.OrderSource))
                .WhereIf(!input.OrderStatuses.IsNullOrEmpty(), r => input.OrderStatuses.Contains(r.OrderStatus))
                .WhereIf(!input.ShippingStatuses.IsNullOrEmpty(), r => input.ShippingStatuses.Contains(r.ShippingStatus))
                .WhereIf(!input.PaymentStatuses.IsNullOrEmpty(), r => input.PaymentStatuses.Contains(r.PaymentStatus))
@@ -125,6 +126,20 @@ namespace Vapps.ECommerce.Orders
             await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Items);
 
             return await PrepareOrderDetailDto(order);
+        }
+
+        /// <summary>
+        /// 获取订单详情(包含商品属性)
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public async Task<GetOrderForEditOutput> GetOrderForEdit(long orderId)
+        {
+            var order = await _orderManager.GetByIdAsync(orderId);
+
+            await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Items);
+
+            return await PrepareOrderForEditOutput(order);
         }
 
         /// <summary>
@@ -235,6 +250,11 @@ namespace Vapps.ECommerce.Orders
 
         #region Utility
 
+        /// <summary>
+        /// 创建订单
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         private async Task<EntityDto<long>> CreateOrderAsync(CreateOrUpdateOrderInput input)
         {
             var order = ObjectMapper.Map<Order>(input);
@@ -257,55 +277,10 @@ namespace Vapps.ECommerce.Orders
         }
 
         /// <summary>
-        /// 初始化枚举字段
+        /// 更新订单
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="order"></param>
-        private async Task InitOrderEnumField(CreateOrUpdateOrderInput input, Order order)
-        {
-            order.OrderType = input.OrderType.HasValue ? input.OrderType.Value : OrderType.PayOnDelivery;
-            order.OrderSource = input.OrderSource.HasValue ? input.OrderSource.Value : OrderSource.Self;
-            order.OrderStatus = input.OrderStatus.HasValue ? input.OrderStatus.Value : OrderStatus.WaitConfirm;
-            order.PaymentStatus = input.PaymentStatus.HasValue ? input.PaymentStatus.Value : PaymentStatus.Pending;
-            order.ShippingStatus = input.ShippingStatus.HasValue ? input.ShippingStatus.Value : ShippingStatus.NotYetShipped;
-            order.PaymentType = order.OrderType == OrderType.PayOnDelivery ? PaymentType.PayOnDelivery : PaymentType.PayOnline;
-
-            if (input.OrderSource.HasValue)
-            {
-                order.OrderSource = input.OrderSource.Value;
-            }
-            else
-            {
-                var store = await _storeManager.GetByIdAsync(input.StoreId);
-
-                if (store != null)
-                {
-                    order.OrderSource = store.OrderSource;
-                }
-                else
-                {
-                    order.OrderSource = OrderSource.Self;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 初始订单金额
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="order"></param>
-        private void InitOrderAmount(CreateOrUpdateOrderInput input, Order order)
-        {
-            order.DiscountAmount = input.DiscountAmount ?? 0;
-            order.RefundedAmount = input.RefundedAmount ?? 0;
-            order.RewardAmount = input.RewardAmount ?? 0;
-            order.ShippingAmount = input.ShippingAmount ?? 0; ;
-            order.SubtotalAmount = input.SubtotalAmount ?? 0;
-            order.SubTotalDiscountAmount = input.SubTotalDiscountAmount ?? 0;
-            order.TotalAmount = input.TotalAmount ?? 0;
-            order.PaymentMethodAdditionalFee = input.PaymentMethodAdditionalFee ?? 0;
-        }
-
+        /// <returns></returns>
         private async Task<EntityDto<long>> UpdateOrderAsync(CreateOrUpdateOrderInput input)
         {
             var order = await _orderManager.GetByIdAsync(input.Id);
@@ -378,6 +353,9 @@ namespace Vapps.ECommerce.Orders
                 var jsonAttributeList = oderItemDto.Attributes.GetAttributesJson(product, _productAttributeManager);
                 var jsonAttributesString = JsonConvert.SerializeObject(jsonAttributeList);
 
+                orderItem.ProductName = product.Name;
+                orderItem.Weight = product.Weight;
+                orderItem.Volume = product.GetVolume();
                 if (!oderItemDto.Attributes.IsNullOrEmpty())
                 {
                     var combin = product.AttributeCombinations.FirstOrDefault(c => c.AttributesJson == jsonAttributesString);
@@ -385,7 +363,7 @@ namespace Vapps.ECommerce.Orders
                     if (combin != null)
                     {
                         orderItem.AttributesJson = jsonAttributesString;
-                        orderItem.AttributeDescription = await _productAttributeFormatter.FormatAttributes(product, jsonAttributeList);
+                        orderItem.AttributeDescription = await _productAttributeFormatter.FormatAttributesAsync(product, jsonAttributeList);
                     }
                 }
 
@@ -401,6 +379,62 @@ namespace Vapps.ECommerce.Orders
             }
         }
 
+        /// <summary>
+        /// 初始化枚举字段
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="order"></param>
+        private async Task InitOrderEnumField(CreateOrUpdateOrderInput input, Order order)
+        {
+            order.OrderType = input.OrderType.HasValue ? input.OrderType.Value : OrderType.PayOnDelivery;
+            order.OrderSource = input.OrderSource.HasValue ? input.OrderSource.Value : OrderSource.Self;
+            order.OrderStatus = input.OrderStatus.HasValue ? input.OrderStatus.Value : OrderStatus.WaitConfirm;
+            order.PaymentStatus = input.PaymentStatus.HasValue ? input.PaymentStatus.Value : PaymentStatus.Pending;
+            order.ShippingStatus = input.ShippingStatus.HasValue ? input.ShippingStatus.Value : ShippingStatus.NotYetShipped;
+            order.PaymentType = order.OrderType == OrderType.PayOnDelivery ? PaymentType.PayOnDelivery : PaymentType.PayOnline;
+
+            if (input.OrderSource.HasValue)
+            {
+                order.OrderSource = input.OrderSource.Value;
+            }
+            else
+            {
+                var store = await _storeManager.GetByIdAsync(input.StoreId);
+
+                if (store != null)
+                {
+                    order.OrderSource = store.OrderSource;
+                }
+                else
+                {
+                    order.OrderSource = OrderSource.Self;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 初始订单金额
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="order"></param>
+        private void InitOrderAmount(CreateOrUpdateOrderInput input, Order order)
+        {
+            order.DiscountAmount = input.DiscountAmount ?? 0;
+            order.RefundedAmount = input.RefundedAmount ?? 0;
+            order.RewardAmount = input.RewardAmount ?? 0;
+            order.ShippingAmount = input.ShippingAmount ?? 0; ;
+            order.SubtotalAmount = input.SubtotalAmount ?? 0;
+            order.SubTotalDiscountAmount = input.SubTotalDiscountAmount ?? 0;
+            order.TotalAmount = input.TotalAmount ?? 0;
+            order.PaymentMethodAdditionalFee = input.PaymentMethodAdditionalFee ?? 0;
+        }
+
+        /// <summary>
+        /// 更新地址信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
         private async Task UpdateAddressInfo(CreateOrUpdateOrderInput input, Order order)
         {
             var province = await _stateManager.GetProvinceByIdAsync(input.ShippingProvinceId);
@@ -412,6 +446,11 @@ namespace Vapps.ECommerce.Orders
             order.ShippingDistrict = district?.Name ?? string.Empty;
         }
 
+        /// <summary>
+        /// 初始化订单列表Dto
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         private async Task<OrderListDto> PrepareOrderListDto(Order order)
         {
             var store = await _storeManager.GetByIdAsync(order.StoreId);
@@ -434,6 +473,10 @@ namespace Vapps.ECommerce.Orders
                 Store = store?.Name ?? string.Empty,
                 TotalAmount = order.TotalAmount,
                 CreateOn = order.CreationTime,
+
+                ShippingName = order.ShippingName,
+                ShippingPhoneNumber = order.ShippingPhoneNumber,
+                ShippingAddress = $"{order.ShippingProvince}{order.ShippingCity}{order.ShippingDistrict}{order.ShippingAddress}"
             };
 
             foreach (var item in order.Items)
@@ -459,6 +502,11 @@ namespace Vapps.ECommerce.Orders
             return dto;
         }
 
+        /// <summary>
+        /// 初始化订单详情Dto
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         private async Task<OrderDetailDto> PrepareOrderDetailDto(Order order)
         {
             var store = await _storeManager.GetByIdAsync(order.StoreId);
@@ -482,7 +530,11 @@ namespace Vapps.ECommerce.Orders
             foreach (var item in order.Items)
             {
                 var product = await _productManager.GetByIdAsync(item.ProductId);
+
+                await _productManager.ProductRepository.EnsureCollectionLoadedAsync(product, p => p.Pictures);
+
                 var itemDto = ObjectMapper.Map<OrderDetailItemDto>(item);
+
                 itemDto.PictureUrl = await product.GetProductDefaultPictureUrl(item.AttributesJson, _pictureManager, _productAttributeParser);
                 itemDto.AttributeDesciption = GetOrderProductDescription(item);
                 itemDto.ProductName = product.Name;
@@ -492,6 +544,83 @@ namespace Vapps.ECommerce.Orders
             return dto;
         }
 
+        /// <summary>
+        /// 初始化订单编辑Dto
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        private async Task<GetOrderForEditOutput> PrepareOrderForEditOutput(Order order)
+        {
+            var dto = ObjectMapper.Map<GetOrderForEditOutput>(order);
+
+            var province = await _stateManager.FindProvinceByNameAsync(order.ShippingProvince);
+            var city = await _stateManager.FindCityByNameAsync(order.ShippingCity);
+            var district = await _stateManager.FindDistrictByNameAsync(order.ShippingDistrict);
+
+            dto.ShippingProvinceId = province?.Id ?? 0;
+            dto.ShippingCityId = city?.Id ?? 0;
+            dto.ShippingDistrictId = district?.Id ?? 0;
+
+            foreach (var item in order.Items)
+            {
+                var product = await _productManager.GetByIdAsync(item.ProductId);
+                var itemDto = ObjectMapper.Map<OrderItemDto>(item);
+
+                itemDto.Attributes = await PrepareOrderItemAttribute(item);
+
+                dto.Items.Add(itemDto);
+            }
+
+            return dto;
+        }
+
+        /// <summary>
+        /// 初始化子订单商品属性
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private async Task<List<ProductAttributeDto>> PrepareOrderItemAttribute(OrderItem item)
+        {
+            var attributes = new List<ProductAttributeDto>();
+
+            if (item.AttributesJson.IsNullOrWhiteSpace())
+                return attributes;
+
+            var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(item.AttributesJson);
+
+            foreach (var jsonAttribute in jsonAttributeList)
+            {
+                var atributeDto = new ProductAttributeDto();
+
+                var attribute = await _productAttributeManager.GetByIdAsync(jsonAttribute.AttributeId);
+
+                atributeDto.Id = jsonAttribute.AttributeId;
+                atributeDto.Name = attribute.Name;
+                atributeDto.Values = jsonAttribute.AttributeValues.Select(value =>
+                {
+                    var valueDto = new ProductAttributeValueDto();
+
+                    var attributeValue = _productAttributeManager.FindValueById(value.AttributeValueId);
+                    if (attributeValue == null)
+                        valueDto.Name = _productAttributeManager.GetPredefinedValueById(value.AttributeValueId).Name;
+                    else
+                        valueDto.Name = attributeValue.Name;
+
+                    valueDto.Id = attributeValue.Id;
+                    valueDto.PictureUrl = _pictureManager.GetPictureUrl(attributeValue.PictureId);
+                    return valueDto;
+                }).ToList();
+                attributes.Add(atributeDto);
+            }
+
+            return attributes;
+        }
+
+        /// <summary>
+        /// 获取商品描述
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private static string GetOrderProductDescription(OrderItem item)
         {
             if (item.AttributeDescription.IsNullOrEmpty())

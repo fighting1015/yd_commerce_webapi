@@ -10,11 +10,6 @@ namespace Vapps.ECommerce.Shippings.Dto.Shipments
         public string ProductName { get; set; }
 
         /// <summary>
-        /// Sku
-        /// </summary>
-        public string Sku { get; set; }
-
-        /// <summary>
         /// 属性
         /// </summary>
         public string AttributeInfo { get; set; }

@@ -94,7 +94,7 @@ namespace Vapps.Tests
 
             if (basePath.Contains("test"))
             {
-                basePath = basePath.Substring(0, basePath.IndexOf(@"\test\Vapps.Tests\bin\Debug\netcoreapp1.1"));
+                basePath = basePath.Substring(0, basePath.IndexOf(@"\test\Vapps.Tests\bin\Debug\netcoreapp2.2"));
             }
 
             env.Setup(m => m.ContentRootPath).Returns(basePath + "\\src\\Vapps.Web.Host");

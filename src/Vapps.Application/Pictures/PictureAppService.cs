@@ -190,10 +190,10 @@ namespace Vapps.Pictures
             int pictureCount = 0;
             List<PictureGroupListDto> groupListDtos = new List<PictureGroupListDto>();
 
-            var defaultGroups = EnumExtensions.EnumToSelectListItem(DefaultGroups.All, VappsConsts.ServerSideLocalizationSourceName);
+            var defaultGroups = EnumExtensions.EnumToSelectListItem<DefaultGroups, int>(DefaultGroups.All, VappsConsts.ServerSideLocalizationSourceName);
             foreach (var item in defaultGroups)
             {
-                int groupId = int.Parse(item.Value);
+                int groupId = item.Value;
                 var groupDto = new PictureGroupListDto()
                 {
                     Id = groupId,

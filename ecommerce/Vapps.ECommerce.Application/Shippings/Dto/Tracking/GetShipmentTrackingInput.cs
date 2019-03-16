@@ -13,7 +13,7 @@
         public long? ShipmentId { get; set; }
 
         /// <summary>
-        /// 是否刷新物流跟踪信息(请求第三方)
+        /// 强制刷新(请求第三方)
         /// </summary>
         public bool Refresh { get; set; }
     }

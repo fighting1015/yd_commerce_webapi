@@ -30,6 +30,7 @@ namespace Vapps.ECommerce.Products
             if (productAttributeParser == null)
                 throw new AbpException("productAttributeParser");
 
+            long pictureId = 0;
             if (!attributesJson.IsNullOrEmpty())
             {
                 var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(attributesJson);
@@ -37,17 +38,29 @@ namespace Vapps.ECommerce.Products
                 var pvaValues = await productAttributeParser.ParseProductAttributeValuesAsync(product.Id, jsonAttributeList);
                 if (pvaValues != null && pvaValues.Any())
                 {
-                    var pvavPictureUrl = await pictureManager.GetPictureUrlAsync(pvaValues.First().PictureId);
-                    return pvavPictureUrl;
+                    pictureId = pvaValues.First().PictureId;
                 }
             }
 
-            var pPicture = product.Pictures.FirstOrDefault();
+            if (pictureId == 0)
+            {
+                var pPicture = product.Pictures.FirstOrDefault();
 
-            if (pPicture != null)
-                return await pictureManager.GetPictureUrlAsync(pPicture.PictureId);
+                if (pPicture != null)
+                    pictureId = pPicture.PictureId;
+            }
 
-            return string.Empty;
+            return await pictureManager.GetPictureUrlAsync(pictureId); ;
+        }
+
+        /// <summary>
+        /// 获取商品体积
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        public static decimal GetVolume(this Product product)
+        {
+            return product.Length * product.Weight * product.Height;
         }
     }
 }

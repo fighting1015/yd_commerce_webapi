@@ -14,7 +14,7 @@ namespace Vapps.ECommerce.Products
         /// <param name="product">Product</param>
         /// <param name="attributesJson">Attributes</param>
         /// <returns>Attributes</returns>
-        Task<string> FormatAttributes(Product product, List<JsonProductAttribute> attributesJson);
+        Task<string> FormatAttributesAsync(Product product, List<JsonProductAttribute> attributesJson);
 
         /// <summary>
         /// 格式化属性描述
@@ -24,7 +24,7 @@ namespace Vapps.ECommerce.Products
         /// <param name="serapator">分隔符</param>
         /// <param name="htmlEncode">是否需要Html编码</param>
         /// <returns>格式化实行描述</returns>
-        Task<string> FormatAttributes(Product product, List<JsonProductAttribute> attributesJson,
+        Task<string> FormatAttributesAsync(Product product, List<JsonProductAttribute> attributesJson,
             string serapator = "<br />", bool htmlEncode = true);
     }
 }

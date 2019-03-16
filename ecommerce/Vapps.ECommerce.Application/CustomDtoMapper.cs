@@ -68,16 +68,22 @@ namespace Vapps.ECommerce
             configuration.CreateMap<ProductPicture, ProductPictureDto>();
 
             configuration.CreateMap<OrderListDto, Order>();
-            configuration.CreateMap<Order, OrderListDto>();
+            configuration.CreateMap<Order, OrderListDto>()
+                .ForMember(dto => dto.Items, options => options.Ignore());
             configuration.CreateMap<OrderDetailDto, Order>();
-            configuration.CreateMap<Order, OrderDetailDto>();
+            configuration.CreateMap<Order, OrderDetailDto>()
+                .ForMember(dto => dto.Items, options => options.Ignore());
             configuration.CreateMap<OrderItem, OrderDetailItemDto>()
                 .ForMember(dto => dto.PictureUrl, options => options.Ignore());
             configuration.CreateMap<OrderDetailItemDto, OrderItem>();
+            configuration.CreateMap<Order, GetOrderForEditOutput>()
+                 .ForMember(dto => dto.Items, options => options.Ignore());
 
             configuration.CreateMap<OrderListItemDto, OrderItem>();
             configuration.CreateMap<OrderItem, OrderListItemDto>();
             configuration.CreateMap<OrderItemDto, OrderItem>();
+            configuration.CreateMap<OrderItem, OrderItemDto>()
+                .ForMember(dto => dto.Attributes, options => options.Ignore());
 
             configuration.CreateMap<CreateOrUpdateOrderInput, Order>()
                 .ForMember(dto => dto.DiscountAmount, options => options.Ignore())
@@ -101,13 +107,17 @@ namespace Vapps.ECommerce
                .ForMember(dto => dto.UnitPrice, options => options.Ignore())
                .ForMember(dto => dto.DiscountAmount, options => options.Ignore());
 
-            configuration.CreateMap<ShipmentListDto, Shipment>();
-            configuration.CreateMap<Shipment, ShipmentListDto>();
+            configuration.CreateMap<ShipmentListDto, Shipment>()
+                .ForMember(dto => dto.Items, options => options.Ignore()); ;
+            configuration.CreateMap<Shipment, ShipmentListDto>()
+                ;
             configuration.CreateMap<ShipmentDto, Shipment>();
-            configuration.CreateMap<Shipment, ShipmentDto>();
+            configuration.CreateMap<Shipment, ShipmentDto>()
+                .ForMember(dto => dto.Items, options => options.Ignore());
             configuration.CreateMap<ShipmentItemDto, ShipmentItem>();
             configuration.CreateMap<ShipmentItem, ShipmentItemDto>();
-            configuration.CreateMap<Shipment, GetShipmentForEditOutput>();
+            configuration.CreateMap<Shipment, GetShipmentForEditOutput>()
+                .ForMember(dto => dto.Items, options => options.Ignore());
 
             configuration.CreateMap<LogisticsListDto, Logistics>();
             configuration.CreateMap<Logistics, LogisticsListDto>();

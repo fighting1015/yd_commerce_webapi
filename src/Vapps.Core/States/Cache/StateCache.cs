@@ -73,7 +73,7 @@ namespace Vapps.States.Cache
 
             return _cacheManager.GetProvinceByNameCache().Get(name, () =>
             {
-                var province = _provinceRepository.FirstOrDefault(p => p.Name == name);
+                var province = _provinceRepository.FirstOrDefault(p => p.Name.Contains(name));
                 if (province == null)
                 {
                     return null;
@@ -116,7 +116,7 @@ namespace Vapps.States.Cache
 
             return _cacheManager.GetCityByNameCache().Get(name, () =>
             {
-                var city = _cityRepository.FirstOrDefault(c => c.Name == name);
+                var city = _cityRepository.FirstOrDefault(c => c.Name.Contains(name));
                 if (city == null)
                 {
                     return null;
@@ -160,7 +160,7 @@ namespace Vapps.States.Cache
 
             return _cacheManager.GetDistrictByNameCache().Get(name, () =>
             {
-                var district = _districtRepository.FirstOrDefault(d => d.Name == name);
+                var district = _districtRepository.FirstOrDefault(d => d.Name.Contains(name));
                 if (district == null)
                 {
                     return null;

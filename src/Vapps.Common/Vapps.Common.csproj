@@ -27,6 +27,7 @@
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
+    <PackageReference Include="Hangfire.Core" Version="1.6.20" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />
