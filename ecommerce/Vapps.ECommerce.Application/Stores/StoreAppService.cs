@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Stores.Dto;
 using Vapps.Media;
@@ -33,6 +35,7 @@ namespace Vapps.ECommerce.Stores
         /// 获取所有店铺
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Store.Self)]
         public async Task<PagedResultDto<StoreListDto>> GetStores(GetStoresInput input)
         {
             var query = _storeManager
@@ -57,7 +60,6 @@ namespace Vapps.ECommerce.Stores
         /// 获取所有可用店铺(下拉框)
         /// </summary>
         /// <returns></returns>
-
         public async Task<List<SelectListItemDto<long>>> GetStoreSelectList()
         {
             var query = _storeManager.Stores;
@@ -83,6 +85,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Store.Self)]
         public async Task<GetStoreForEditOutput> GetStoreForEdit(NullableIdDto<int> input)
         {
             GetStoreForEditOutput storeDto;
@@ -107,6 +110,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Store.Self)]
         public async Task<EntityDto<long>> CreateOrUpdateStore(CreateOrUpdateStoreInput input)
         {
             Store store;
@@ -129,6 +133,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Store.Delete)]
         public async Task DeleteStore(BatchInput<int> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -148,6 +153,7 @@ namespace Vapps.ECommerce.Stores
         /// 创建店铺
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Store.Create)]
         protected virtual async Task<Store> CreateStoreAsync(CreateOrUpdateStoreInput input)
         {
             var store = ObjectMapper.Map<Store>(input);
@@ -161,6 +167,7 @@ namespace Vapps.ECommerce.Stores
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Store.Edit)]
         protected virtual async Task<Store> UpdateStoreAsync(CreateOrUpdateStoreInput input)
         {
             var store = ObjectMapper.Map<Store>(input);

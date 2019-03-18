@@ -9,6 +9,8 @@ using Vapps.ECommerce.Orders;
 using Vapps.ECommerce.Shippings.Dto.Tracking;
 using Vapps.ECommerce.Shippings;
 using Vapps.ECommerce.Shippings.Tracking;
+using Abp.Authorization;
+using Vapps.Authorization;
 
 namespace Vapps.ECommerce.Shippings
 {
@@ -38,6 +40,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
         public async Task<TrackingDto> GetShipmentTracking(GetShipmentTrackingInput input)
         {
             var resultDto = new TrackingDto()

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vapps.EntityFrameworkCore;
 
@@ -15,12 +16,14 @@ namespace Vapps.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Abp.Application.Editions.Edition", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -57,7 +60,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Application.Features.FeatureSetting", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -86,7 +90,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Auditing.AuditLog", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BrowserInfo")
                         .HasMaxLength(512);
@@ -138,7 +143,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.PermissionSetting", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -167,7 +173,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Roles.RoleClaim", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasMaxLength(256);
@@ -194,7 +201,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserAccount", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -247,7 +255,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserClaim", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ClaimType")
                         .HasMaxLength(256);
@@ -274,7 +283,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserLogin", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
@@ -307,7 +317,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserLoginAttempt", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BrowserInfo")
                         .IsRequired()
@@ -350,7 +361,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserOrganizationUnit", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -376,7 +388,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserRole", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -402,7 +415,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Authorization.Users.UserToken", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime?>("ExpireDate");
 
@@ -431,7 +445,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.BackgroundJobs.BackgroundJobInfo", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -465,7 +480,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Configuration.Setting", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -498,7 +514,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.EntityHistory.EntityChange", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("ChangeTime");
 
@@ -526,7 +543,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.EntityHistory.EntityChangeSet", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("BrowserInfo")
                         .HasMaxLength(512);
@@ -566,7 +584,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.EntityHistory.EntityPropertyChange", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("EntityChangeId");
 
@@ -625,7 +644,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Localization.ApplicationLanguage", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -666,7 +686,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Localization.ApplicationLanguageText", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -843,7 +864,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Abp.Organizations.OrganizationUnit", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -883,7 +905,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Addresses.AccountAddress", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("AccountId");
 
@@ -905,7 +928,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Addresses.Address", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("City");
 
@@ -939,7 +963,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Authorization.Roles.Role", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -993,7 +1018,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Authorization.Users.User", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AccessFailedCount");
 
@@ -1106,7 +1132,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.DataStatistics.UniversalDataStatistics", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1128,7 +1155,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Catalog.Category", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1168,7 +1196,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Customers.Customer", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("AvatarPictureId");
 
@@ -1208,7 +1237,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Orders.Order", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AdminComment");
 
@@ -1308,7 +1338,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Orders.OrderItem", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AttributeDescription");
 
@@ -1372,7 +1403,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Payments.OrderPayment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18, 4)");
@@ -1413,7 +1445,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.PredefinedProductAttributeValue", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1437,7 +1470,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.Product", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1501,7 +1535,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductAttribute", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1533,7 +1568,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductAttributeCombination", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AttributesJson");
 
@@ -1569,7 +1605,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductAttributeMapping", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("DisplayOrder");
 
@@ -1595,7 +1632,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductAttributeValue", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("DisplayOrder");
 
@@ -1625,7 +1663,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductCategory", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("CategoryId");
 
@@ -1645,7 +1684,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Products.ProductPicture", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("DisplayOrder");
 
@@ -1667,7 +1707,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Shippings.Logistics", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1699,7 +1740,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Shippings.Shipment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AdminComment");
 
@@ -1755,7 +1797,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Shippings.ShipmentItem", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1791,7 +1834,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Shippings.TenantLogistics", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1815,7 +1859,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Stores.Store", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("AppKey");
 
@@ -1861,7 +1906,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.ECommerce.Stores.StoreMapping", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1893,7 +1939,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Media.Picture", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1921,7 +1968,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Media.PictureGroup", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1943,7 +1991,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.MultiTenancy.Accounting.Invoice", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("InvoiceDate");
 
@@ -1963,7 +2012,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.MultiTenancy.Tenant", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<long>("BackgroundPictureId");
 
@@ -2031,7 +2081,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.Payments.SubscriptionPayment", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Amount");
 
@@ -2083,7 +2134,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.SMS.SMSTemplate", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -2125,7 +2177,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.SMS.SMSTemplateItem", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -2145,7 +2198,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.States.City", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -2181,7 +2235,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.States.District", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CityId");
 
@@ -2217,7 +2272,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.States.Province", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -2266,7 +2322,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.WeChat.Core.TemplateMessages.TemplateMessage", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreationTime");
 
@@ -2308,7 +2365,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.WeChat.Core.TemplateMessages.TemplateMessageItem", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Color");
 
@@ -2328,7 +2386,8 @@ namespace Vapps.Migrations
             modelBuilder.Entity("Vapps.WeChat.Core.Users.WeChatUser", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Authorization");
 

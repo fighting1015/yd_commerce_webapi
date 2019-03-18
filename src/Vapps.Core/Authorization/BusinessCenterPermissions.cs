@@ -1,4 +1,5 @@
-﻿using Vapps.Security;
+﻿using Abp.MultiTenancy;
+using Vapps.Security;
 
 namespace Vapps.Authorization
 {
@@ -14,84 +15,128 @@ namespace Vapps.Authorization
 
         public const string Dashboard = "BusiCenter.Dashboard";
 
-        [Permission(Self)]
-        public class Organization
+
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class Catelog
         {
-            public const string Self = "BusiCenter.Organization";
+            public const string Self = "BusiCenter.Catelog";
 
-            public const string BaseInfo = "BusiCenter.Organization.BaseInfo";
-
-            [Permission(Self)]
-            public class Outlets
-            {
-                public const string Self = "BusiCenter.Organization.Outlets";
-
-                public const string Create = "BusiCenter.Organization.Outlet.Create";
-                public const string Edit = "BusiCenter.Organization.Outlet.Edit";
-                public const string Delete = "BusiCenter.Organization.Outlet.Delete";
-            }
-
-            [Permission(Self)]
-            public class Contactors
-            {
-                public const string Self = "BusiCenter.Organization.Contactors";
-
-                public const string Create = "BusiCenter.Organization.Contactor.Create";
-                public const string Edit = "BusiCenter.Organization.Contactor.Edit";
-                public const string Delete = "BusiCenter.Organization.Contactor.Delete";
-            }
-        }
-
-        [Permission(Self)]
-        public class ECommerce
-        {
-            public const string Self = "BusiCenter.ECommerce";
-
-            [Permission(Self)]
             public class Category
             {
-                public const string Self = "BusiCenter.ECommerce.Category";
+                public const string Self = "BusiCenter.Catelog.Category";
 
-                public const string Create = "BusiCenter.ECommerce.Category.Create";
-                public const string Edit = "BusiCenter.ECommerce.Category.Edit";
-                public const string Delete = "BusiCenter.ECommerce.Category.Delete";
+                public const string Create = "BusiCenter.Catelog.Category.Create";
+                public const string Edit = "BusiCenter.Catelog.Category.Edit";
+                public const string Delete = "BusiCenter.Catelog.Category.Delete";
             }
 
-            [Permission(Self)]
             public class Product
             {
-                public const string Self = "BusiCenter.ECommerce.Product";
+                public const string Self = "BusiCenter.Catelog.Product";
 
-                public const string Create = "BusiCenter.ECommerce.Product.Create";
-                public const string Edit = "BusiCenter.ECommerce.Product.Edit";
-                public const string Delete = "BusiCenter.ECommerce.Product.Delete";
+                public const string Create = "BusiCenter.Catelog.Product.Create";
+                public const string Edit = "BusiCenter.Catelog.Product.Edit";
+                public const string Delete = "BusiCenter.Catelog.Product.Delete";
+            }
+
+            public class ProductAttribute
+            {
+                public const string Self = "BusiCenter.Catelog.ProductAttribute";
+
+                public const string Create = "BusiCenter.Catelog.ProductAttribute.Create";
+                public const string Edit = "BusiCenter.Catelog.ProductAttribute.Edit";
+                public const string Delete = "BusiCenter.Catelog.ProductAttribute.Delete";
             }
         }
 
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class Order
+        {
+            public const string Self = "BusiCenter.Order";
+
+            public const string Create = "BusiCenter.Order.Create";
+            public const string Edit = "BusiCenter.Order.Edit";
+            public const string Delete = "BusiCenter.Order.Delete";
+
+            public const string Import = "BusiCenter.Order.Import";
+            public const string Export = "BusiCenter.Order.Export";
+        }
+
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class Shipment
+        {
+            public const string Self = "BusiCenter.Shipment";
+
+            public const string Create = "BusiCenter.Shipment.Create";
+            public const string Edit = "BusiCenter.Shipment.Edit";
+            public const string Delete = "BusiCenter.Shipment.Delete";
+        }
+
+        [Permission(Self, MultiTenancySides.Host)]
+        public class Logistics
+        {
+            public const string Self = "BusiCenter.Logistics";
+
+            public const string Create = "BusiCenter.Logistics.Create";
+            public const string Edit = "BusiCenter.Logistics.Edit";
+            public const string Delete = "BusiCenter.Logistics.Delete";
+        }
+
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class TenantLogistics
+        {
+            public const string Self = "BusiCenter.TenantLogistics";
+
+            public const string Create = "BusiCenter.TenantLogistics.Create";
+            public const string Edit = "BusiCenter.TenantLogistics.Edit";
+            public const string Delete = "BusiCenter.TenantLogistics.Delete";
+        }
+
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class Customer
+        {
+            public const string Self = "BusiCenter.Customer";
+
+            public const string Create = "BusiCenter.Customer.Create";
+            public const string Edit = "BusiCenter.Customer.Edit";
+            public const string Delete = "BusiCenter.Customer.Delete";
+
+            public const string Export = "BusiCenter.Customer.Export";
+        }
+
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class Store
+        {
+            public const string Self = "BusiCenter.Store";
+
+            public const string Create = "BusiCenter.Store.Create";
+            public const string Edit = "BusiCenter.Store.Edit";
+            public const string Delete = "BusiCenter.Store.Delete";
+        }
 
         [Permission(Self)]
-        public class ContentManage
+        public class Content
         {
-            public const string Self = "BusiCenter.ContentManage";
+            public const string Self = "BusiCenter.Content";
 
-            [Permission(Self)]
-            public class PictureGallery
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class PictureGroup
             {
-                public const string Self = "BusiCenter.ContentManage.PictureGallery";
+                public const string Self = "BusiCenter.Content.PictureGroup";
 
-                public const string GroupCreate = "BusiCenter.ContentManage.PictureGallery.Group.Create";
-                public const string GroupEdit = "BusiCenter.ContentManage.PictureGallery.Group.Edit";
-                public const string GroupDelete = "BusiCenter.ContentManage.PictureGallery.Group.Delete";
+                public const string Create = "BusiCenter.Content.PictureGallery.Group.Create";
+                public const string Edit = "BusiCenter.Content.PictureGallery.Group.Edit";
+                public const string Delete = "BusiCenter.Content.PictureGallery.Group.Delete";
             }
 
-            [Permission(Self)]
-            public class Pictures
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class Picture
             {
-                public const string Self = "BusiCenter.ContentManage.Pictures";
+                public const string Self = "BusiCenter.Content.Picture";
 
-                public const string Create = "BusiCenter.ContentManage.Picture.Create";
-                public const string Edit = "BusiCenter.ContentManage.Picture.Edit";
-                public const string Delete = "BusiCenter.ContentManage.Picture.Delete";
+                public const string Create = "BusiCenter.Content.Picture.Create";
+                public const string Edit = "BusiCenter.Content.Picture.Edit";
+                public const string Delete = "BusiCenter.Content.Picture.Delete";
             }
         }
     }

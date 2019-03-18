@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Shippings.Dto;
 using Vapps.ECommerce.Shippings.Dto.Logisticses;
@@ -32,6 +34,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有物流（平台）
         /// </summary>
         /// <returns></returns>
+        
         public async Task<PagedResultDto<LogisticsListDto>> GetLogisticses(GetLogisticsesInput input)
         {
             var query = _logisticsManager
@@ -79,6 +82,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Logistics.Self)]
         public async Task<GetLogisticsForEditOutput> GetLogisticsForEdit(NullableIdDto<int> input)
         {
             GetLogisticsForEditOutput logisticsDto;
@@ -101,6 +105,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Logistics.Self)]
         public async Task<EntityDto<long>> CreateOrUpdateLogistics(CreateOrUpdateLogisticsInput input)
         {
             Logistics logistics = null;
@@ -144,6 +149,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有租户自选物流
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.TenantLogistics.Self)]
         public async Task<PagedResultDto<TenantLogisticsDto>> GetTenantLogisticses(GetLogisticsesInput input)
         {
             var query = _logisticsManager
@@ -191,6 +197,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.TenantLogistics.Self)]
         public async Task<GetLogisticsForEditOutput> GetTenantLogisticsForEdit(NullableIdDto<int> input)
         {
             GetLogisticsForEditOutput logisticsDto;
@@ -217,6 +224,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.TenantLogistics.Self)]
         public async Task<EntityDto<long>> CreateOrUpdateTenantLogistics(CreateOrUpdateTenantLogisticsInput input)
         {
             TenantLogistics tenantLogistics = null;
@@ -273,6 +281,7 @@ namespace Vapps.ECommerce.Shippings
         /// 添加物流
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Logistics.Create)]
         protected virtual async Task<Logistics> CreateLogisticsAsync(CreateOrUpdateLogisticsInput input)
         {
             var logistics = await _logisticsManager.FindByNameAsync(input.Name);
@@ -295,6 +304,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Logistics.Edit)]
         protected virtual async Task<Logistics> UpdateLogisticsAsync(CreateOrUpdateLogisticsInput input)
         {
             var logistics = await _logisticsManager.FindByIdAsync(input.Id.Value);
@@ -310,6 +320,7 @@ namespace Vapps.ECommerce.Shippings
         /// 添加租户物流
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.TenantLogistics.Create)]
         protected virtual async Task<TenantLogistics> CreateTenantLogisticsAsync(CreateOrUpdateTenantLogisticsInput input)
         {
             TenantLogistics tenantLogistic = await _logisticsManager.FindTenantLogisticsByLogisticsIdAsync(input.LogisticsId);
@@ -339,6 +350,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.TenantLogistics.Edit)]
         protected virtual async Task<TenantLogistics> UpdateTenantLogisticsAsync(CreateOrUpdateTenantLogisticsInput input)
         {
             var tenantLogistic = await _logisticsManager.FindTenantLogisticsByIdAsync(input.Id);

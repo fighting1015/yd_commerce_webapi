@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Catalog.Dto;
 using Vapps.Media;
@@ -33,6 +35,7 @@ namespace Vapps.ECommerce.Catalog
         /// 获取所有分类
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Category.Self)]
         public async Task<PagedResultDto<CategoryListDto>> GetCategorys(GetCategoriesInput input)
         {
             var query = _catalogyManager
@@ -57,7 +60,6 @@ namespace Vapps.ECommerce.Catalog
         /// 获取所有可用分类(下拉框)
         /// </summary>
         /// <returns></returns>
-
         public async Task<List<SelectListItemDto<long>>> GetCategorySelectList()
         {
             var query = _catalogyManager.Categorys;
@@ -83,6 +85,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Category.Self)]
         public async Task<GetCategoryForEditOutput> GetCategoryForEdit(NullableIdDto<int> input)
         {
             GetCategoryForEditOutput catalogyDto;
@@ -107,6 +110,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Category.Self)]
         public async Task CreateOrUpdateCategory(CreateOrUpdateCategoryInput input)
         {
             if (input.Id.HasValue && input.Id.Value > 0)
@@ -126,6 +130,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Category.Delete)]
         public async Task DeleteCategory(BatchInput<int> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -145,6 +150,7 @@ namespace Vapps.ECommerce.Catalog
         /// 创建分类
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Category.Create)]
         protected virtual async Task CreateCategoryAsync(CreateOrUpdateCategoryInput input)
         {
             var catalogy = ObjectMapper.Map<Category>(input);
@@ -156,6 +162,7 @@ namespace Vapps.ECommerce.Catalog
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Category.Edit)]
         protected virtual async Task UpdateCategoryAsync(CreateOrUpdateCategoryInput input)
         {
             var catalogy = ObjectMapper.Map<Category>(input);

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
 using Abp.Extensions;
@@ -13,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Orders.Dto;
 using Vapps.ECommerce.Payments;
@@ -25,6 +27,7 @@ using Vapps.States;
 
 namespace Vapps.ECommerce.Orders
 {
+    [AbpAuthorize(BusinessCenterPermissions.Order.Self)]
     public class OrderAppService : VappsAppServiceBase, IOrderAppService
     {
 
@@ -166,6 +169,8 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [UnitOfWork(isTransactional: false)]
+        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
         public async Task ChangeOrderStatus(ChangeOrderStatusInput<OrderStatus> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -188,6 +193,8 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [UnitOfWork(isTransactional: false)]
+        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
         public async Task ChangeShippingStatus(ChangeOrderStatusInput<ShippingStatus> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -211,6 +218,7 @@ namespace Vapps.ECommerce.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         [UnitOfWork(isTransactional: false)]
+        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
         public async Task ChangePaymentStatus(ChangeOrderStatusInput<PaymentStatus> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -233,6 +241,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Order.Delete)]
         public async Task DeleteOrder(BatchInput<long> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -255,6 +264,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Order.Create)]
         private async Task<EntityDto<long>> CreateOrderAsync(CreateOrUpdateOrderInput input)
         {
             var order = ObjectMapper.Map<Order>(input);
@@ -281,6 +291,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
         private async Task<EntityDto<long>> UpdateOrderAsync(CreateOrUpdateOrderInput input)
         {
             var order = await _orderManager.GetByIdAsync(input.Id);

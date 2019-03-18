@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
@@ -11,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Orders;
 using Vapps.ECommerce.Shippings.Dto.Shipments;
@@ -18,6 +20,7 @@ using Vapps.ECommerce.Shippings.Tracking;
 
 namespace Vapps.ECommerce.Shippings
 {
+    [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
     public class ShipmentAppService : VappsAppServiceBase, IShipmentAppService
     {
         private readonly IShipmentManager _shipmentManager;
@@ -52,6 +55,7 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有发货记录
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
         public async Task<PagedResultDto<ShipmentListDto>> GetShipments(GetShipmentsInput input)
         {
             var query = _shipmentManager.Shipments
@@ -81,6 +85,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Order.Self)]
         public async Task<List<ShipmentDto>> GetOrderShipments(long orderId)
         {
             List<ShipmentDto> shipmentDtoList = new List<ShipmentDto>();
@@ -122,6 +127,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
         public async Task<GetShipmentForEditOutput> GetShipmentForEdit(NullableIdDto<int> input)
         {
             GetShipmentForEditOutput ShipmentDto;
@@ -144,6 +150,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
         public async Task<EntityDto<long>> CreateOrUpdateShipment(CreateOrUpdateShipmentInput input)
         {
             Shipment shipment = null;
@@ -188,6 +195,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Order.Self)]
         public async Task QuickDelivery(QuickDeliveryInput input)
         {
             var order = await _orderManager.GetByIdAsync(input.OrderId);
@@ -304,6 +312,7 @@ namespace Vapps.ECommerce.Shippings
         /// 创建物流
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Shipment.Create)]
         protected virtual async Task<Shipment> CreateShipmentAsync(CreateOrUpdateShipmentInput input)
         {
             var shipment = ObjectMapper.Map<Shipment>(input);
@@ -320,6 +329,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Shipment.Edit)]
         protected virtual async Task<Shipment> UpdateShipmentAsync(CreateOrUpdateShipmentInput input)
         {
             var shipment = await _shipmentManager.GetByIdAsync(input.Id);

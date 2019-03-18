@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Catalog;
 using Vapps.ECommerce.Products.Dto;
@@ -43,28 +45,6 @@ namespace Vapps.ECommerce.Products
             this._pictureManager = pictureManager;
             this._productAttributeManager = productAttributeManager;
         }
-
-
-        /// <summary>
-        /// 测试
-        /// </summary>
-        /// <returns></returns>
-        public async Task ProductSync2()
-        {
-            var pictures = await _pictureManager.PictureRepository.GetAll().ToListAsync();
-
-            foreach (var picture in pictures)
-            {
-                if (picture.OriginalUrl.StartsWith("http"))
-                    continue;
-
-                picture.OriginalUrl = "http://img.yd.vapps.com.cn" + picture.OriginalUrl;
-
-                await _pictureManager.UpdateAsync(picture);
-
-            }
-        }
-
 
         /// <summary>
         /// 商品信息同步
@@ -324,6 +304,7 @@ namespace Vapps.ECommerce.Products
         /// 获取所有商品
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Self)]
         public async Task<PagedResultDto<ProductListDto>> GetProducts(GetProductsInput input)
         {
             var query = _productManager
@@ -404,6 +385,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Self)]
         public async Task<GetProductForEditOutput> GetProductForEdit(NullableIdDto<int> input)
         {
             GetProductForEditOutput productDto;
@@ -457,6 +439,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Self)]
         public async Task<EntityDto<long>> CreateOrUpdateProduct(CreateOrUpdateProductInput input)
         {
             if (input.Id.HasValue && input.Id.Value > 0)
@@ -476,6 +459,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Delete)]
         public async Task DeleteProduct(BatchInput<long> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -530,6 +514,7 @@ namespace Vapps.ECommerce.Products
         /// 创建商品
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Create)]
         protected virtual async Task<EntityDto<long>> CreateProductAsync(CreateOrUpdateProductInput input)
         {
             var product = ObjectMapper.Map<Product>(input);
@@ -577,6 +562,7 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Edit)]
         protected virtual async Task UpdateProductAsync(CreateOrUpdateProductInput input)
         {
             var product = await _productManager.FindByIdAsync(input.Id.Value);

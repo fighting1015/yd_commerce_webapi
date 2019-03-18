@@ -129,7 +129,7 @@
     "Enums.Vapps.ECommerce.Orders.PaymentMethod.WeChat": "微信",
     "Enums.Vapps.ECommerce.Orders.PaymentMethod.PayOnDelivery": "货到付款",
 
-    "Enums.Vapps.ECommerce.Shippings.ShippingStatus.ShippingNotRequired": "不需要发货",
+    "Enums.Vapps.ECommerce.Shippings.ShippingStatus.NotRequired": "不需要发货",
     "Enums.Vapps.ECommerce.Shippings.ShippingStatus.NotYetShipped": "未发货",
     "Enums.Vapps.ECommerce.Shippings.ShippingStatus.PartiallyShipped": "部分发货",
     "Enums.Vapps.ECommerce.Shippings.ShippingStatus.NoTrace": "待取件",
@@ -177,7 +177,7 @@
     "ValidationNarrativeTitle": "在验证过程中检测到以下错误",
     "DefaultError": "发生了错误",
     "DefaultErrorDetail": "服务器没有发送错误信息",
-    "DefaultError401": "您没有认证",
+    "DefaultError401": "您没有登陆",
     "DefaultErrorDetail401": "您需要通过身份验证(登录)来执行此操作",
     "DefaultError403": "您没有权限",
     "DefaultErrorDetail403": "您没有权限执行此操作",
@@ -256,7 +256,7 @@
     "Features.ConverRatesData": "转化率数据",
     "Features.ConverRatesData.Description": "转化率数据统计图表",
 
-    "Edition.Purchase": "小预约服务购买",
+    "Edition.Purchase": "服务购买",
     "Edition.UpgradedTo": "升级到 {0} ",
     "Edition.Extended": "续费 {0} ",
     "Edition.Trialed.CannotTrialed": "此版本无法试用",

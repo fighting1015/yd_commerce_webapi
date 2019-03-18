@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.Helpers;
 using Vapps.Media;
@@ -20,7 +21,7 @@ using Vapps.Pictures.Dto;
 
 namespace Vapps.Pictures
 {
-    [AbpAuthorize]
+    [AbpAuthorize(BusinessCenterPermissions.Content.Self)]
     public class PictureAppService : BusinessCenterAppServiceBase, IPictureAppService
     {
         private readonly IPictureManager _pictureManager;
@@ -49,6 +50,7 @@ namespace Vapps.Pictures
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Self)]
         public async Task<PagedResultDto<PictureListDto>> GetPictureAsync(GetPictureInput input)
         {
             var query = _pictureManager.Pictures
@@ -71,6 +73,7 @@ namespace Vapps.Pictures
         /// 获取当前用户上传图片凭证
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Picture.Create)]
         public async Task<UploadTokenOutput> GetPictureUploadToken()
         {
             var token = await _storageProvider.GetUploadImageTokenAsync();
@@ -86,6 +89,7 @@ namespace Vapps.Pictures
         /// 上传图片
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Picture.Create)]
         public async Task UploadAsync(long groupId)
         {
             var profilePictureFile = _contextAccessor.HttpContext.Request.Form.Files.First();
@@ -120,6 +124,7 @@ namespace Vapps.Pictures
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Picture.Edit)]
         public async Task UpdatePicture(UpdatePictureInput input)
         {
             await UpdateAsync(input);
@@ -129,6 +134,7 @@ namespace Vapps.Pictures
         /// 批量删除图片
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Picture.Delete)]
         public async Task DeleteAsync(BatchInput<long> input)
         {
             foreach (var id in input.Ids)
@@ -147,6 +153,7 @@ namespace Vapps.Pictures
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Picture.Edit)]
         public async Task BatchMove2Group(BatchMove2GroupInput input)
         {
             var group = await _pictureManager.GetGroupByIdAsync(input.GroupId);
@@ -163,6 +170,7 @@ namespace Vapps.Pictures
         /// 根据Url批量删除图片
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.Picture.Delete)]
         public async Task DeleteByUrlAsync(PictureDeleteInput input)
         {
             var pictures2Delete = await _pictureManager.Pictures
@@ -185,6 +193,7 @@ namespace Vapps.Pictures
         /// 获取所有的图片分组
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.PictureGroup.Self)]
         public async Task<List<PictureGroupListDto>> GetPictureGroupAsync()
         {
             int pictureCount = 0;
@@ -235,6 +244,7 @@ namespace Vapps.Pictures
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.PictureGroup.Self)]
         public async Task CreateOrUpdatePictureGroup(CreateOrUpdatePictureGroupInput input)
         {
             if (input.Id.HasValue && input.Id.Value > 0)
@@ -251,6 +261,7 @@ namespace Vapps.Pictures
         /// 删除图片分组
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.PictureGroup.Delete)]
         public async Task DeleteGroupAsync(EntityDto<long> input)
         {
             var isSystemGroup = Enum.IsDefined(typeof(DefaultGroups), (int)input.Id);
@@ -315,6 +326,7 @@ namespace Vapps.Pictures
         /// 创建图片分组
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.PictureGroup.Create)]
         protected async Task CreateGroupAsync(CreateOrUpdatePictureGroupInput input)
         {
             var existedGroup = await _pictureManager.GetGroupByNameAsync(input.Name);
@@ -334,6 +346,7 @@ namespace Vapps.Pictures
         /// 更新图片分组
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Content.PictureGroup.Edit)]
         protected async Task UpdateGroupAsync(CreateOrUpdatePictureGroupInput input)
         {
             var pictureGroup = await _pictureManager.GetGroupByIdAsync(input.Id.Value);

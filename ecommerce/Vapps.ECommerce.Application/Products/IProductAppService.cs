@@ -9,12 +9,6 @@ namespace Vapps.ECommerce.Products
     public interface IProductAppService
     {
         /// <summary>
-        /// 获取商品的属性及值
-        /// </summary>
-        /// <returns></returns>
-        Task ProductSync();
-
-        /// <summary>
         /// 获取所有商品
         /// </summary>
         /// <returns></returns>

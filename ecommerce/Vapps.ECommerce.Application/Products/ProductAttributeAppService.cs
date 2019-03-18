@@ -1,14 +1,17 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Runtime.Caching;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.ECommerce.Products.Dto;
 
 namespace Vapps.ECommerce.Products
 {
+    [AbpAuthorize(BusinessCenterPermissions.Catelog.Product.Self)]
     public class ProductAttributeAppService : VappsAppServiceBase, IProductAttributeAppService
     {
         private readonly ICacheManager _cacheManager;
@@ -28,36 +31,18 @@ namespace Vapps.ECommerce.Products
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        
         public async Task<EntityDto<long>> CreateOrUpdateAttribute(CreateOrUpdateAttributeInput input)
         {
             var output = new EntityDto<long>();
             if (input.Id > 0)
             {
-                var attribute = await _productAttributeManager.GetByIdAsync(input.Id.Value);
-
-                attribute.Name = input.Name;
-                attribute.DisplayOrder = attribute.DisplayOrder;
-                await _productAttributeManager.UpdateAsync(attribute);
-                output.Id = attribute.Id;
+                await UpdateAttribute(input, output);
 
             }
             else
             {
-                var attribute = await _productAttributeManager.FindByNameAsync(input.Name);
-                if (attribute != null)
-                {
-                    throw new UserFriendlyException("属性已存在");
-                }
-
-                attribute = new ProductAttribute()
-                {
-                    Name = input.Name,
-                    DisplayOrder = input.DisplayOrder,
-                };
-
-                await _productAttributeManager.CreateAsync(attribute);
-                await CurrentUnitOfWork.SaveChangesAsync();
-                output.Id = attribute.Id;
+                await CreateAttribute(input, output);
             }
 
             return output;
@@ -157,5 +142,40 @@ namespace Vapps.ECommerce.Products
         }
 
         #endregion
+
+        #region Utilies
+
+
+        private async Task CreateAttribute(CreateOrUpdateAttributeInput input, EntityDto<long> output)
+        {
+            var attribute = await _productAttributeManager.FindByNameAsync(input.Name);
+            if (attribute != null)
+            {
+                throw new UserFriendlyException("属性已存在");
+            }
+
+            attribute = new ProductAttribute()
+            {
+                Name = input.Name,
+                DisplayOrder = input.DisplayOrder,
+            };
+
+            await _productAttributeManager.CreateAsync(attribute);
+            await CurrentUnitOfWork.SaveChangesAsync();
+            output.Id = attribute.Id;
+        }
+
+        private async Task UpdateAttribute(CreateOrUpdateAttributeInput input, EntityDto<long> output)
+        {
+            var attribute = await _productAttributeManager.GetByIdAsync(input.Id.Value);
+
+            attribute.Name = input.Name;
+            attribute.DisplayOrder = attribute.DisplayOrder;
+            await _productAttributeManager.UpdateAsync(attribute);
+            output.Id = attribute.Id;
+        }
+
+        #endregion
+
     }
 }

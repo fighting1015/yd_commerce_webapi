@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vapps.Migrations
 {
-    public partial class Abp_MoveTo_Mysql : Migration
+    public partial class DBInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,11 +30,11 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     FullName = table.Column<string>(nullable: true),
-                    Tepephone = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
                     ProvinceId = table.Column<int>(nullable: false),
                     Province = table.Column<string>(nullable: true),
                     CityId = table.Column<int>(nullable: false),
@@ -54,7 +54,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     InvoiceNo = table.Column<string>(nullable: true),
                     InvoiceDate = table.Column<DateTime>(nullable: false),
                     TenantLegalName = table.Column<string>(nullable: true),
@@ -71,7 +71,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TenantId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: true),
                     ServiceName = table.Column<string>(maxLength: 256, nullable: true),
@@ -97,7 +97,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     JobType = table.Column<string>(maxLength: 512, nullable: false),
@@ -127,11 +127,63 @@ namespace Vapps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    ParentCategoryId = table.Column<int>(nullable: false),
+                    PictureId = table.Column<int>(nullable: false),
+                    IsActive = table.Column<bool>(nullable: false),
+                    DisplayOrder = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    AvatarPictureId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    TotalConsumes = table.Column<decimal>(nullable: false),
+                    TotalOrderNum = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Editions",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -160,7 +212,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     BrowserInfo = table.Column<string>(maxLength: 512, nullable: true),
                     ClientIpAddress = table.Column<string>(maxLength: 64, nullable: true),
                     ClientName = table.Column<string>(maxLength: 128, nullable: true),
@@ -182,7 +234,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -206,7 +258,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -220,6 +272,28 @@ namespace Vapps.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LanguageTexts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Logisticses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Key = table.Column<string>(nullable: true),
+                    Memo = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logisticses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,11 +339,86 @@ namespace Vapps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrderPayments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    OrderId = table.Column<long>(nullable: false),
+                    ExternalOrderNumber = table.Column<string>(nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    PaymentMethod = table.Column<int>(nullable: false),
+                    PaymentBankSystemName = table.Column<string>(nullable: true),
+                    Payer = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderPayments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    OrderNumber = table.Column<string>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    StoreId = table.Column<int>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    ShippingProvince = table.Column<string>(nullable: true),
+                    ShippingCity = table.Column<string>(nullable: true),
+                    ShippingDistrict = table.Column<string>(nullable: true),
+                    ShippingAddress = table.Column<string>(nullable: true),
+                    ShippingPhoneNumber = table.Column<string>(nullable: true),
+                    ShippingName = table.Column<string>(nullable: true),
+                    SubtotalAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    ShippingAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    RewardAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    PaymentMethodAdditionalFee = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    SubTotalDiscountAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    RefundedAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    IpAddress = table.Column<string>(nullable: true),
+                    PaidOn = table.Column<DateTime>(nullable: true),
+                    ReceivedOn = table.Column<DateTime>(nullable: true),
+                    ShippingMethod = table.Column<string>(nullable: true),
+                    AdminComment = table.Column<string>(nullable: true),
+                    CustomerComment = table.Column<string>(nullable: true),
+                    OrderType = table.Column<int>(nullable: false),
+                    OrderStatus = table.Column<int>(nullable: false),
+                    PaymentStatus = table.Column<int>(nullable: false),
+                    ShippingStatus = table.Column<int>(nullable: false),
+                    OrderSource = table.Column<int>(nullable: false),
+                    PaymentType = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrganizationUnits",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -298,7 +447,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TenantId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     CreatorUserId = table.Column<long>(nullable: true),
@@ -315,7 +464,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TenantId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     OriginalUrl = table.Column<string>(nullable: true),
@@ -331,11 +480,86 @@ namespace Vapps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PredefinedProductAttributeValues",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    ProductAttributeId = table.Column<long>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DisplayOrder = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PredefinedProductAttributeValues", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributes",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DisplayOrder = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductAttributes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    ShortDescription = table.Column<string>(nullable: true),
+                    FullDescription = table.Column<string>(nullable: true),
+                    Sku = table.Column<string>(nullable: true),
+                    ThirdPartySku = table.Column<string>(nullable: true),
+                    StockQuantity = table.Column<int>(nullable: false),
+                    NotifyQuantityBelow = table.Column<int>(nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Length = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Width = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Height = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Published = table.Column<bool>(nullable: false),
+                    GoodCost = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    GoodsUrl = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SMSTemplate",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -358,7 +582,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -381,7 +605,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -404,7 +628,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -419,6 +643,52 @@ namespace Vapps.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_StateProvinces", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Stores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 12, nullable: false),
+                    Url = table.Column<string>(nullable: true),
+                    DisplayOrder = table.Column<int>(nullable: false),
+                    PictureId = table.Column<int>(nullable: false),
+                    AppKey = table.Column<string>(nullable: true),
+                    AppSecret = table.Column<string>(nullable: true),
+                    OrderSource = table.Column<int>(nullable: false),
+                    OrderSync = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Stores", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TenantLogisticses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DisplayOrder = table.Column<int>(nullable: false),
+                    LogisticsId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TenantLogisticses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -447,7 +717,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TenantId = table.Column<int>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
                     DataStatistics = table.Column<string>(nullable: true),
@@ -464,7 +734,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -503,7 +773,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     BrowserInfo = table.Column<string>(maxLength: 512, nullable: false),
                     TenantId = table.Column<int>(nullable: true),
                     TenancyName = table.Column<string>(maxLength: 64, nullable: true),
@@ -541,7 +811,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
@@ -559,7 +829,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -622,7 +892,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -650,7 +920,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -675,7 +945,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
@@ -700,7 +970,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -736,7 +1006,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ChangeTime = table.Column<DateTime>(nullable: false),
                     ChangeType = table.Column<byte>(nullable: false),
                     EntityChangeSetId = table.Column<long>(nullable: false),
@@ -756,11 +1026,188 @@ namespace Vapps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    OrderItemNumber = table.Column<string>(nullable: true),
+                    OrderId = table.Column<long>(nullable: false),
+                    ProductId = table.Column<long>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    OriginalProductCost = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    Volume = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    ProductName = table.Column<string>(nullable: true),
+                    AttributeDescription = table.Column<string>(nullable: true),
+                    AttributesJson = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shipments",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    OrderId = table.Column<long>(nullable: false),
+                    OrderNumber = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    TotalWeight = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    TotalVolume = table.Column<decimal>(type: "decimal(18, 4)", nullable: false),
+                    RejectedOn = table.Column<DateTime>(nullable: true),
+                    ReceivedOn = table.Column<DateTime>(nullable: true),
+                    AdminComment = table.Column<string>(nullable: true),
+                    LogisticsId = table.Column<int>(nullable: true),
+                    LogisticsName = table.Column<string>(nullable: true),
+                    LogisticsNumber = table.Column<string>(nullable: true),
+                    ShipmentDetail = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shipments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Shipments_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributeCombinations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TenantId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<long>(nullable: false),
+                    AttributesJson = table.Column<string>(nullable: true),
+                    StockQuantity = table.Column<int>(nullable: false),
+                    Sku = table.Column<string>(nullable: true),
+                    OverriddenPrice = table.Column<decimal>(type: "decimal(18, 4)", nullable: true),
+                    OverriddenGoodCost = table.Column<decimal>(type: "decimal(18, 4)", nullable: true),
+                    ThirdPartySku = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DisplayOrder = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductAttributeCombinations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductAttributeCombinations_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributeMappings",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TenantId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<long>(nullable: false),
+                    ProductAttributeId = table.Column<long>(nullable: false),
+                    DisplayOrder = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductAttributeMappings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductAttributeMappings_ProductAttributes_ProductAttributeId",
+                        column: x => x.ProductAttributeId,
+                        principalTable: "ProductAttributes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductAttributeMappings_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductCategories",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TenantId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<long>(nullable: false),
+                    CategoryId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductCategories_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductPictures",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TenantId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<long>(nullable: false),
+                    PictureId = table.Column<long>(nullable: false),
+                    DisplayOrder = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductPictures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductPictures_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SMSTemplateItem",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DataItemName = table.Column<string>(nullable: true),
                     DataItemValue = table.Column<string>(nullable: true),
                     TemplateMessageId = table.Column<long>(nullable: false),
@@ -778,11 +1225,39 @@ namespace Vapps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StoreMappings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    EntityId = table.Column<int>(nullable: false),
+                    EntityName = table.Column<string>(nullable: true),
+                    StoreId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoreMappings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StoreMappings_Stores_StoreId",
+                        column: x => x.StoreId,
+                        principalTable: "Stores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AccountAddresses",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     AddressId = table.Column<long>(nullable: false),
@@ -810,7 +1285,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -854,7 +1329,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -880,7 +1355,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
@@ -935,7 +1410,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
@@ -959,7 +1434,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TenantId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
                     LoginProvider = table.Column<string>(maxLength: 128, nullable: false),
@@ -989,7 +1464,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
@@ -1012,7 +1487,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TenantId = table.Column<int>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
                     LoginProvider = table.Column<string>(maxLength: 128, nullable: true),
@@ -1036,7 +1511,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     DataName = table.Column<string>(nullable: true),
                     DataValue = table.Column<string>(nullable: true),
                     Color = table.Column<string>(nullable: true),
@@ -1046,7 +1521,7 @@ namespace Vapps.Migrations
                 {
                     table.PrimaryKey("PK_WeChatTemplateMessageItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WeChatTemplateMessageItems_WeChatTemplateMessages_TemplateMe~",
+                        name: "FK_WeChatTemplateMessageItems_WeChatTemplateMessages_TemplateMessageId",
                         column: x => x.TemplateMessageId,
                         principalTable: "WeChatTemplateMessages",
                         principalColumn: "Id",
@@ -1058,7 +1533,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EntityChangeId = table.Column<long>(nullable: false),
                     NewValue = table.Column<string>(maxLength: 512, nullable: true),
                     OriginalValue = table.Column<string>(maxLength: 512, nullable: true),
@@ -1078,11 +1553,66 @@ namespace Vapps.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ShipmentItems",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    TenantId = table.Column<int>(nullable: false),
+                    ShipmentId = table.Column<long>(nullable: false),
+                    OrderItemId = table.Column<long>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShipmentItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShipmentItems_Shipments_ShipmentId",
+                        column: x => x.ShipmentId,
+                        principalTable: "Shipments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductAttributeValues",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    TenantId = table.Column<int>(nullable: false),
+                    ProductAttributeMappingId = table.Column<long>(nullable: false),
+                    PredefinedProductAttributeValueId = table.Column<long>(nullable: false),
+                    ProductId = table.Column<long>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    DisplayOrder = table.Column<int>(nullable: false),
+                    PictureId = table.Column<long>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductAttributeValues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductAttributeValues_ProductAttributeMappings_ProductAttributeMappingId",
+                        column: x => x.ProductAttributeMappingId,
+                        principalTable: "ProductAttributeMappings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Permissions",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
@@ -1114,7 +1644,7 @@ namespace Vapps.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     TenantId = table.Column<int>(nullable: true),
@@ -1174,6 +1704,16 @@ namespace Vapps.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_TenantId_IsDeleted",
+                table: "Categories",
+                columns: new[] { "TenantId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_TenantId_IsDeleted",
+                table: "Customers",
+                columns: new[] { "TenantId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EntityChanges_EntityChangeSetId",
                 table: "EntityChanges",
                 column: "EntityChangeSetId");
@@ -1224,14 +1764,59 @@ namespace Vapps.Migrations
                 columns: new[] { "TenantId", "Source", "LanguageName", "Key" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotificationSubscriptions_NotificationName_EntityTypeName_En~",
+                name: "IX_Logisticses_IsDeleted",
+                table: "Logisticses",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationSubscriptions_NotificationName_EntityTypeName_EntityId_UserId",
                 table: "NotificationSubscriptions",
                 columns: new[] { "NotificationName", "EntityTypeName", "EntityId", "UserId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_NotificationSubscriptions_TenantId_NotificationName_EntityTy~",
+                name: "IX_NotificationSubscriptions_TenantId_NotificationName_EntityTypeName_EntityId_UserId",
                 table: "NotificationSubscriptions",
                 columns: new[] { "TenantId", "NotificationName", "EntityTypeName", "EntityId", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_TenantId_OrderId_IsDeleted",
+                table: "OrderItems",
+                columns: new[] { "TenantId", "OrderId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_TenantId_ProductId_IsDeleted",
+                table: "OrderItems",
+                columns: new[] { "TenantId", "ProductId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderPayments_TenantId_OrderId_IsDeleted",
+                table: "OrderPayments",
+                columns: new[] { "TenantId", "OrderId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_TenantId_OrderStatus",
+                table: "Orders",
+                columns: new[] { "TenantId", "OrderStatus" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_TenantId_PaymentStatus",
+                table: "Orders",
+                columns: new[] { "TenantId", "PaymentStatus" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_TenantId_ShippingStatus",
+                table: "Orders",
+                columns: new[] { "TenantId", "ShippingStatus" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_TenantId_UserId_IsDeleted",
+                table: "Orders",
+                columns: new[] { "TenantId", "UserId", "IsDeleted" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrganizationUnits_ParentId",
@@ -1267,6 +1852,76 @@ namespace Vapps.Migrations
                 name: "IX_Pictures_TenantId_GroupId",
                 table: "Pictures",
                 columns: new[] { "TenantId", "GroupId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PredefinedProductAttributeValues_TenantId_ProductAttributeId",
+                table: "PredefinedProductAttributeValues",
+                columns: new[] { "TenantId", "ProductAttributeId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeCombinations_ProductId",
+                table: "ProductAttributeCombinations",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeCombinations_TenantId_ProductId",
+                table: "ProductAttributeCombinations",
+                columns: new[] { "TenantId", "ProductId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeMappings_ProductAttributeId",
+                table: "ProductAttributeMappings",
+                column: "ProductAttributeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeMappings_ProductId",
+                table: "ProductAttributeMappings",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeMappings_TenantId_ProductId_IsDeleted",
+                table: "ProductAttributeMappings",
+                columns: new[] { "TenantId", "ProductId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributes_TenantId_IsDeleted",
+                table: "ProductAttributes",
+                columns: new[] { "TenantId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeValues_ProductAttributeMappingId",
+                table: "ProductAttributeValues",
+                column: "ProductAttributeMappingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductAttributeValues_TenantId_ProductId_ProductAttributeMappingId_IsDeleted",
+                table: "ProductAttributeValues",
+                columns: new[] { "TenantId", "ProductId", "ProductAttributeMappingId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_ProductId",
+                table: "ProductCategories",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCategories_TenantId_ProductId",
+                table: "ProductCategories",
+                columns: new[] { "TenantId", "ProductId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductPictures_ProductId",
+                table: "ProductPictures",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductPictures_TenantId_ProductId",
+                table: "ProductPictures",
+                columns: new[] { "TenantId", "ProductId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_TenantId_IsDeleted",
+                table: "Products",
+                columns: new[] { "TenantId", "IsDeleted" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -1309,6 +1964,26 @@ namespace Vapps.Migrations
                 columns: new[] { "TenantId", "Name" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_ShipmentItems_ShipmentId",
+                table: "ShipmentItems",
+                column: "ShipmentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShipmentItems_TenantId_IsDeleted",
+                table: "ShipmentItems",
+                columns: new[] { "TenantId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_OrderId",
+                table: "Shipments",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_TenantId_IsDeleted",
+                table: "Shipments",
+                columns: new[] { "TenantId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SMSTemplate_IsActive",
                 table: "SMSTemplate",
                 column: "IsActive");
@@ -1339,6 +2014,16 @@ namespace Vapps.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_StoreMappings_StoreId_EntityName",
+                table: "StoreMappings",
+                columns: new[] { "StoreId", "EntityName" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stores_TenantId_IsDeleted",
+                table: "Stores",
+                columns: new[] { "TenantId", "IsDeleted" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SubscriptionPayments_EditionId",
                 table: "SubscriptionPayments",
                 column: "EditionId");
@@ -1352,6 +2037,11 @@ namespace Vapps.Migrations
                 name: "IX_SubscriptionPayments_Status_CreationTime",
                 table: "SubscriptionPayments",
                 columns: new[] { "Status", "CreationTime" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TenantLogisticses_TenantId",
+                table: "TenantLogisticses",
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TenantNotifications_TenantId",
@@ -1570,6 +2260,12 @@ namespace Vapps.Migrations
                 name: "BinaryObjects");
 
             migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
                 name: "EntityPropertyChanges");
 
             migrationBuilder.DropTable(
@@ -1582,10 +2278,19 @@ namespace Vapps.Migrations
                 name: "LanguageTexts");
 
             migrationBuilder.DropTable(
+                name: "Logisticses");
+
+            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "NotificationSubscriptions");
+
+            migrationBuilder.DropTable(
+                name: "OrderItems");
+
+            migrationBuilder.DropTable(
+                name: "OrderPayments");
 
             migrationBuilder.DropTable(
                 name: "OrganizationUnits");
@@ -1600,10 +2305,28 @@ namespace Vapps.Migrations
                 name: "Pictures");
 
             migrationBuilder.DropTable(
+                name: "PredefinedProductAttributeValues");
+
+            migrationBuilder.DropTable(
+                name: "ProductAttributeCombinations");
+
+            migrationBuilder.DropTable(
+                name: "ProductAttributeValues");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
+
+            migrationBuilder.DropTable(
+                name: "ProductPictures");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
                 name: "Settings");
+
+            migrationBuilder.DropTable(
+                name: "ShipmentItems");
 
             migrationBuilder.DropTable(
                 name: "SMSTemplateItem");
@@ -1618,7 +2341,13 @@ namespace Vapps.Migrations
                 name: "StateProvinces");
 
             migrationBuilder.DropTable(
+                name: "StoreMappings");
+
+            migrationBuilder.DropTable(
                 name: "SubscriptionPayments");
+
+            migrationBuilder.DropTable(
+                name: "TenantLogisticses");
 
             migrationBuilder.DropTable(
                 name: "TenantNotifications");
@@ -1666,10 +2395,19 @@ namespace Vapps.Migrations
                 name: "EntityChanges");
 
             migrationBuilder.DropTable(
+                name: "ProductAttributeMappings");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
+                name: "Shipments");
+
+            migrationBuilder.DropTable(
                 name: "SMSTemplate");
+
+            migrationBuilder.DropTable(
+                name: "Stores");
 
             migrationBuilder.DropTable(
                 name: "Editions");
@@ -1681,7 +2419,16 @@ namespace Vapps.Migrations
                 name: "EntityChangeSets");
 
             migrationBuilder.DropTable(
+                name: "ProductAttributes");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
         }
     }
 }

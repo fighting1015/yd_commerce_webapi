@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Runtime.Caching;
@@ -7,12 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Customers.Dto;
 using Vapps.Media;
 
 namespace Vapps.ECommerce.Customers
 {
+    [AbpAuthorize(BusinessCenterPermissions.Customer.Self)]
+
     public class CustomerAppService : VappsAppServiceBase, ICustomerAppService
     {
         private readonly ICustomerManager _customerManager;
@@ -122,10 +126,11 @@ namespace Vapps.ECommerce.Customers
         }
 
         /// <summary>
-        /// 更新物流
+        /// 更新客户
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Customer.Edit)]
         protected virtual async Task<Customer> UpdateCustomerAsync(CreateOrUpdateCustomerInput input)
         {
             var logistics = await _customerManager.FindByIdAsync(input.Id);
@@ -141,6 +146,7 @@ namespace Vapps.ECommerce.Customers
         /// 添加客户
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.Customer.Create)]
         protected virtual async Task<Customer> CreateCustomerAsync(CreateOrUpdateCustomerInput input)
         {
             var customer = new Customer()

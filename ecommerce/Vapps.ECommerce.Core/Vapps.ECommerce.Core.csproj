@@ -22,4 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vapps.Core\Vapps.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Authorization\" />
+  </ItemGroup>
 </Project>

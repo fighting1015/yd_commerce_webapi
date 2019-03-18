@@ -146,10 +146,6 @@ namespace Vapps.Authorization
             [Permission(HangfireDashboard, MultiTenancySides.Host, true)]
             public const string HangfireDashboard = "Admin.System.HangfireDashboard";
 
-            [Permission(UiCustomization)]
-            public const string UiCustomization = "Admin.System.UiCustomization";
-
-
             [Permission(Self, MultiTenancySides.Host)]
             public class Editions
             {
