@@ -1,4 +1,5 @@
 ﻿using System;
+using Abp.Domain.Uow;
 using Abp.Runtime.Caching;
 
 namespace Vapps.Storage
@@ -14,9 +15,10 @@ namespace Vapps.Storage
             _cacheManager = cacheManager;
         }
 
+        [UnitOfWork]
         public void SetFile(string token, byte[] content)
         {
-            _cacheManager.GetCache(TempFileCacheName).Set(token, content, new TimeSpan(0, 0, 0, 30)); // expire time is 30 seconds by default
+            _cacheManager.GetCache(TempFileCacheName).Set(token, content, new TimeSpan(0, 0, 10, 0)); // expire time is 30 seconds by default
         }
 
         public byte[] GetFile(string token)

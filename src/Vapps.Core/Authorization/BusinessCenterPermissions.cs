@@ -124,9 +124,9 @@ namespace Vapps.Authorization
             {
                 public const string Self = "BusiCenter.Content.PictureGroup";
 
-                public const string Create = "BusiCenter.Content.PictureGallery.Group.Create";
-                public const string Edit = "BusiCenter.Content.PictureGallery.Group.Edit";
-                public const string Delete = "BusiCenter.Content.PictureGallery.Group.Delete";
+                public const string Create = "BusiCenter.Content.PictureGroup.Create";
+                public const string Edit = "BusiCenter.Content.PictureGroup.Edit";
+                public const string Delete = "BusiCenter.Content.PictureGroup.Delete";
             }
 
             [Permission(Self, MultiTenancySides.Tenant)]

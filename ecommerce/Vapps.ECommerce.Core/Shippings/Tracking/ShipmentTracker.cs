@@ -66,9 +66,7 @@ namespace Vapps.ECommerce.Shippings.Tracking
             if (!trace.UpdateTime.IsNullOrEmpty())
                 shipment.ReceivedOn = Convert.ToDateTime(trace.UpdateTime).LocalTimeConverUtcTime(_dateTimeHelper);
 
-            trace.State = GetTracesStatus(logistics, shipment.ShipmentDetail, trace.State);
-
-            shipment.Order.ShippingStatus = (ShippingStatus)trace.State;
+            shipment.Order.ShippingStatus = GetShippingStatus(logistics, shipment.ShipmentDetail, trace.State);
 
             await _orderManager.UpdateAsync(shipment.Order);
         }
@@ -105,7 +103,7 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 traces.Traces = traces.Traces.OrderByDescending(t => t.AcceptTime).ToList();
 
 
-                traces.State = GetTracesStatus(logistics, shipment.ShipmentDetail, traces.State);
+                traces.State = (int)GetShippingStatus(logistics, shipment.ShipmentDetail, traces.State);
             }
 
             traces.OrderId = shipment.OrderId;
@@ -156,7 +154,7 @@ namespace Vapps.ECommerce.Shippings.Tracking
                     result.Traces = result.Traces.OrderByDescending(t => t.AcceptTime).ToList();
                     result.UpdateTime = result.Traces.FirstOrDefault()?.AcceptTime ?? DateTime.Now.DateTimeString();
 
-                    result.State = GetTracesStatus(logistics, jsonResultString, result.State);
+                    result.State = (int)GetShippingStatus(logistics, jsonResultString, result.State);
                 }
                 catch
                 {
@@ -314,11 +312,11 @@ namespace Vapps.ECommerce.Shippings.Tracking
         /// <param name="shipmentKey"></param>
         /// <param name="trackingNumber"></param>
         /// <returns></returns>
-        private int GetTracesStatus(Logistics logistics, string traceString, int returnStatus)
+        private ShippingStatus GetShippingStatus(Logistics logistics, string traceString, int returnStatus)
         {
             var traceInfos = JsonConvert.DeserializeObject<TraceResult>(traceString);
 
-            var shipmentStatus = returnStatus;
+            var shipmentStatus = GetTracesStatus(returnStatus);
 
             if (traceInfos.Traces == null || !traceInfos.Traces.Any())
                 return shipmentStatus;
@@ -327,34 +325,34 @@ namespace Vapps.ECommerce.Shippings.Tracking
             {
                 if (traceString.Contains("已拒收") || traceString.Contains("换单打印"))
                 {
-                    shipmentStatus = (int)ShippingStatus.IssueWithReject;
+                    shipmentStatus = ShippingStatus.IssueWithReject;
 
                     return shipmentStatus;
                 }
                 else if (traceString.Contains("货物已完成配送"))
                 {
-                    shipmentStatus = (int)ShippingStatus.Received;
+                    shipmentStatus = ShippingStatus.Received;
 
                     return shipmentStatus;
                 }
                 else if (traceString.Contains("再投"))
                 {
-                    if (shipmentStatus == (int)ShippingStatus.OnPassag)
-                        shipmentStatus = (int)ShippingStatus.Issue;
+                    if (shipmentStatus == ShippingStatus.OnPassag)
+                        shipmentStatus = ShippingStatus.Issue;
 
                     return shipmentStatus;
                 }
                 else if (traceString.Contains("开始配送"))
                 {
-                    if (shipmentStatus == (int)ShippingStatus.OnPassag)
-                        shipmentStatus = (int)ShippingStatus.Delivering;
+                    if (shipmentStatus == ShippingStatus.OnPassag)
+                        shipmentStatus = ShippingStatus.Delivering;
 
                     return shipmentStatus;
                 }
                 else if (traceString.Contains("等待配送"))
                 {
-                    if (shipmentStatus == (int)ShippingStatus.OnPassag)
-                        shipmentStatus = (int)ShippingStatus.DestinationCity;
+                    if (shipmentStatus == ShippingStatus.OnPassag)
+                        shipmentStatus = ShippingStatus.DestinationCity;
 
                     return shipmentStatus;
                 }
@@ -366,13 +364,55 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 if (traceInfos.Traces.FirstOrDefault(p => p.AcceptStation.Contains("胡红宇")) != null ||
                     (lastStation.Contains("浙江义乌新光公司") && lastStation.Contains("签收")))
                 {
-                    shipmentStatus = (int)ShippingStatus.IssueWithReject;
+                    shipmentStatus = ShippingStatus.IssueWithReject;
 
                     return shipmentStatus;
                 }
             }
 
             return shipmentStatus;
+        }
+
+
+        /// <summary>
+        /// 解析物流状态
+        /// </summary>
+        /// <param name="shipmentKey"></param>
+        /// <param name="trackingNumber"></param>
+        /// <returns></returns>
+        private ShippingStatus GetTracesStatus(int returnStatus)
+        {
+            switch ((TraceStatus)returnStatus)
+            {
+                case TraceStatus.NoTrace:
+                    return ShippingStatus.NoTrace;
+                case TraceStatus.Taked:
+                    return ShippingStatus.Taked;
+                case TraceStatus.OnPassag:
+                    return ShippingStatus.OnPassag;
+                case TraceStatus.DestinationCity:
+                    return ShippingStatus.DestinationCity;
+                case TraceStatus.Delivering:
+                    return ShippingStatus.Delivering;
+                case TraceStatus.InBox:
+                    return ShippingStatus.Delivering;
+                case TraceStatus.Received:
+                    return ShippingStatus.Received;
+                case TraceStatus.TackedFormBox:
+                    return ShippingStatus.Received;
+                case TraceStatus.Issue:
+                    return ShippingStatus.Issue;
+                case TraceStatus.TimeOut2Update:
+                    return ShippingStatus.Issue;
+                case TraceStatus.RejectByTimeOut:
+                    return ShippingStatus.IssueWithReject;
+                case TraceStatus.IssueWithReject:
+                    return ShippingStatus.IssueWithReject;
+                case TraceStatus.TimeOutInBox:
+                    return ShippingStatus.Issue;
+                default:
+                    return ShippingStatus.NoTrace;
+            }
         }
 
     }

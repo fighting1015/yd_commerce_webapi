@@ -16,7 +16,6 @@ using Vapps.Editions.Dto;
 
 namespace Vapps.Editions
 {
-    [AbpAuthorize(AdminPermissions.System.Editions.Self)]
     public class EditionAppService : VappsAppServiceBase, IEditionAppService
     {
         private readonly EditionManager _editionManager;
@@ -36,6 +35,7 @@ namespace Vapps.Editions
         /// 获取全部版本信息
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(AdminPermissions.System.Editions.Self)]
         public async Task<ListResultDto<EditionListDto>> GetEditions()
         {
             var editions = (await _editionManager.Editions.Cast<SubscribableEdition>().ToListAsync())
@@ -59,7 +59,7 @@ namespace Vapps.Editions
             EditionEditDto editionEditDto;
             List<NameValue> featureValues;
 
-            if (input.Id.HasValue) //Editing existing edition?
+            if (input.Id.HasValue && input.Id != 0) //Editing existing edition?
             {
                 var edition = await _editionManager.FindByIdAsync(input.Id.Value);
                 featureValues = (await _editionManager.GetFeatureValuesAsync(input.Id.Value)).ToList();
@@ -112,7 +112,7 @@ namespace Vapps.Editions
         }
 
         /// <summary>
-        /// 获取版本信息(下拉框选项)
+        /// 获取版本信息(Combobox)
         /// </summary>
         /// <param name="selectedEditionId">选择版本Id</param>
         /// <param name="addAllItem">添加所有</param>
@@ -149,6 +149,28 @@ namespace Vapps.Editions
             {
                 editionItems[0].IsSelected = true;
             }
+
+            return editionItems;
+        }
+
+        /// <summary>
+        /// 获取版本信息(下拉框选项)
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<SelectListItem<int>>> GetEditionSelectList()
+        {
+            var editions = await _editionManager.Editions.ToListAsync();
+            var subscribableEditions = editions.Cast<SubscribableEdition>()
+                 .OrderBy(e => e.MonthlyPrice);
+
+            var editionItems = subscribableEditions.Select(e =>
+            {
+                return new SelectListItem<int>()
+                {
+                    Text = e.DisplayName,
+                    Value = e.Id
+                };
+            }).ToList();
 
             return editionItems;
         }

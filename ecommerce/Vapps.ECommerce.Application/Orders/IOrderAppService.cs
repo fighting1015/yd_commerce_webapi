@@ -56,5 +56,12 @@ namespace Vapps.ECommerce.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         Task DeleteOrder(BatchInput<long> input);
+
+        /// <summary>
+        /// 导出待发货订单到Excel
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<FileDto> GetWaitShippingToExcel(GetWaitShippingInput input);
     }
 }

@@ -6,6 +6,6 @@ namespace Vapps.ECommerce.Orders.Exporting
 {
     public interface IOrderExcelExporter
     {
-        FileDto ExportToFile(List<OrderListDto> orderListDtos);
+        FileDto ExportToFile(List<Order> orders);
     }
 }

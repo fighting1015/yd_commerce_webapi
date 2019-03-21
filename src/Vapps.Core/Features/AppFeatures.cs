@@ -13,6 +13,11 @@
         public const string MaxPictureCount = "App.MaxPictureCount";
 
         /// <summary>
+        /// 最大图片数量
+        /// </summary>
+        public const string MaxStoreCount = "App.MaxStoreCount";
+
+        /// <summary>
         /// 去除广告
         /// </summary>
         public const string RemoveAdvert = "App.RemoveAdvert";

@@ -12,7 +12,7 @@ namespace Vapps.ECommerce.Orders
     public static class OrderExtension
     {
         /// <summary>
-        /// 重置订单Guid和Number
+        /// 获取收件地址
         /// </summary>
         /// <param name="order"></param>
         public static string GetFullShippingAddress(this Order order)

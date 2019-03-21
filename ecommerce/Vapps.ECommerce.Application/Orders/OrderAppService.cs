@@ -7,6 +7,7 @@ using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Orders.Dto;
+using Vapps.ECommerce.Orders.Exporting;
 using Vapps.ECommerce.Payments;
 using Vapps.ECommerce.Products;
 using Vapps.ECommerce.Products.Dto;
@@ -40,7 +42,7 @@ namespace Vapps.ECommerce.Orders
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IStateManager _stateManager;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
-
+        private readonly IOrderExcelExporter _orderExcelExporter;
         private readonly ICacheManager _cacheManager; // TODO: 待实现
 
         public OrderAppService(IOrderManager orderAppService,
@@ -52,6 +54,7 @@ namespace Vapps.ECommerce.Orders
             IProductAttributeParser productAttributeParser,
             IStateManager stateManager,
             IProductAttributeFormatter productAttributeFormatter,
+            IOrderExcelExporter orderExcelExporter,
             ICacheManager cacheManager)
         {
             this._orderManager = orderAppService;
@@ -64,6 +67,7 @@ namespace Vapps.ECommerce.Orders
             this._productAttributeFormatter = productAttributeFormatter;
             this._productManager = productManager;
             this._productAttributeManager = productAttributeManager;
+            this._orderExcelExporter = orderExcelExporter;
         }
 
         #region Method
@@ -253,6 +257,34 @@ namespace Vapps.ECommerce.Orders
             {
                 await _orderManager.DeleteAsync(id);
             }
+        }
+
+        /// <summary>
+        /// 导出待发货订单到Excel
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<FileDto> GetWaitShippingToExcel(GetWaitShippingInput input)
+        {
+            var query = _orderManager
+                .Orderes
+                .Include(o => o.Items)
+                .Where(r => r.OrderStatus == OrderStatus.Processing)
+                .Where(r => r.ShippingStatus == ShippingStatus.NotYetShipped)
+                .WhereIf(!input.OrderNumber.IsNullOrWhiteSpace(), r => r.OrderNumber.Contains(input.OrderNumber))
+                .WhereIf(!input.ShippingName.IsNullOrWhiteSpace(), r => r.ShippingName.Contains(input.ShippingName))
+                .WhereIf(!input.PhoneNumber.IsNullOrWhiteSpace(), r => r.ShippingPhoneNumber.Contains(input.PhoneNumber))
+                .WhereIf(!input.OrderTypes.IsNullOrEmpty(), r => input.OrderTypes.Contains(r.OrderType))
+                .WhereIf(!input.OrderSources.IsNullOrEmpty(), r => input.OrderSources.Contains(r.OrderSource))
+                .WhereIf(input.StoreIds != null && input.StoreIds.Any(), r => input.StoreIds.Contains(r.StoreId))
+                .WhereIf(input.ProductIds != null && input.ProductIds.Any(), r => r.Items.Any(i => input.ProductIds.Contains(i.ProductId)));
+
+            var orders = await query
+                .OrderByDescending(o => o.CreationTime)
+                .ThenByDescending(o => o.Id)
+                .ToListAsync();
+
+            return _orderExcelExporter.ExportToFile(orders);
         }
 
         #endregion

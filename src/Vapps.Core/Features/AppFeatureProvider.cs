@@ -34,40 +34,22 @@ namespace Vapps.Features
            };
 
             context.Create(
-                AppFeatures.RemoveAdvert,
-                defaultValue: "false",
-                displayName: L("Features.RemoveAdvert"),
-                description: L("Features.RemoveAdvert.Description"),
-                inputType: new CheckboxInputType()
-            )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-            {
-                TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f",
-                IsVisibleOnPricingTable = true
-            };
+                 AppFeatures.MaxStoreCount,
+                 defaultValue: "A",
+                 displayName: L("Features.MaxStoreCount"),
+                 description: L("Features.MaxStoreCount.Description"),
+                 inputType: new ComboboxInputType(new StaticLocalizableComboboxItemSource(
+                    new LocalizableComboboxItem("A", L("Selection A")),
+                    new LocalizableComboboxItem("B", L("Selection B")),
+                    new LocalizableComboboxItem("C", L("Selection C"))
+                    )
+                )
+             )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
+             {
+                 ValueTextNormalizer = value => new FixedLocalizableString(value),
+                 IsVisibleOnPricingTable = true
+             };
 
-            context.Create(
-                AppFeatures.RemoveLogo,
-                defaultValue: "false",
-                displayName: L("Features.RemoveLogo"),
-                description: L("Features.RemoveLogo.Description"),
-                inputType: new CheckboxInputType()
-                )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-                {
-                    TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f",
-                    IsVisibleOnPricingTable = true
-                };
-
-            context.Create(
-               AppFeatures.AddressMap,
-               defaultValue: "false",
-               displayName: L("Features.AddressMap"),
-               description: L("Features.AddressMap.Description"),
-               inputType: new CheckboxInputType()
-               )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-               {
-                   TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f",
-                   IsVisibleOnPricingTable = true
-               };
 
             CreateNotificationFeature(context);
 
@@ -158,18 +140,6 @@ namespace Vapps.Features
                 defaultValue: "false",
                 displayName: L("Features.SmsNotification"),
                 description: L("Features.SmsNotification.Description"),
-               inputType: new CheckboxInputType()
-               )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
-               {
-                   TextHtmlColor = value => value == "true" ? "#5cb85c" : "#d9534f",
-                   IsVisibleOnPricingTable = true
-               };
-
-            notificationFeature.CreateChildFeature(
-               AppFeatures.EmailNotification,
-               defaultValue: "false",
-               displayName: L("Features.EmailNotification"),
-               description: L("Features.EmailNotification.Description"),
                inputType: new CheckboxInputType()
                )[FeatureMetadata.CustomFeatureKey] = new FeatureMetadata
                {

@@ -275,15 +275,10 @@
     "Admin.ContentManage.SmsTemplates.Edit": "编辑短信模板",
     "Admin.ContentManage.SmsTemplates.Delete": "删除短信模板",
     "Admin.ContentManage.MessageTemplate": "消息管理",
-    "Copyright": "广州有度科技有限公司",
-
+    "Admin.Configuration.Tenant.SubscriptionManagement": "付费订阅",
     "BusiCenter": "商户后台",
     "BusiCenter.Dashboard": "工作台",
     "BusiCenter.Catelog": "商品中心",
-    "BusiCenter.Catelog.Category": "分类管理",
-    "BusiCenter.Catelog.Category.Create": "创建",
-    "BusiCenter.Catelog.Category.Edit": "编辑",
-    "BusiCenter.Catelog.Category.Delete": "删除",
     "BusiCenter.Catelog.Category": "分类管理",
     "BusiCenter.Catelog.Category.Create": "创建",
     "BusiCenter.Catelog.Category.Edit": "编辑",
@@ -331,6 +326,8 @@
     "BusiCenter.TenantLogistics": "自选物流",
     "BusiCenter.TenantLogistics.Create": "创建",
     "BusiCenter.TenantLogistics.Edit": "编辑",
-    "BusiCenter.TenantLogistics.Delete": "删除"
+    "BusiCenter.TenantLogistics.Delete": "删除",
+    "Copyright": "广州有度科技有限公司"
+
   }
 }

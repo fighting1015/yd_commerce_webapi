@@ -47,7 +47,7 @@ namespace Vapps.Editions
         #region Methods
 
         /// <summary>
-        /// 获取版本销售信息
+        /// 获取版本展示信息
         /// </summary>
         /// <returns></returns>
         public async Task<EditionsSelectOutput> GetEditionsForSelect()

@@ -87,7 +87,7 @@ namespace Vapps.ECommerce.Orders.Dto
         {
             if (string.IsNullOrEmpty(Sorting))
             {
-                Sorting = "Id DESC";
+                Sorting = "CreationTime,Id DESC";
             }
         }
     }

@@ -112,23 +112,22 @@ namespace Vapps.ECommerce.Orders
 
             if (order != null)
             {
-                //await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Items);
-                //await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Shipments);
+                await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Items);
+                await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Shipments);
 
-                //if (order.Shipments.Count == 0 || order.ShippingStatus == ShippingStatus.NotYetShipped)
-                //{
-                //    await AddShipment(orderImport, order);
-                //    await _orderManager.UpdateAsync(order);
-                //}
-                //else
-                //{
-                //    order.Shipments.FirstOrDefault().LogisticsNumber = orderImport.TrackingNumber;
-                //}
+                if (order.Shipments.Count == 0 || order.ShippingStatus == ShippingStatus.NotYetShipped)
+                {
+                    await AddShipment(orderImport, order);
+                }
+                else
+                {
+                    order.Shipments.FirstOrDefault().LogisticsNumber = orderImport.TrackingNumber;
+                }
 
-                //order.RewardAmount = orderImport.Reward;
-                //order.CreationTime = orderImport.CreatedOnUtc;
+                order.RewardAmount = orderImport.Reward;
+                order.CreationTime = orderImport.CreatedOnUtc;
 
-                //await _orderManager.UpdateAsync(order);
+                await _orderManager.UpdateAsync(order);
 
                 return true;
             }
