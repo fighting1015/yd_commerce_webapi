@@ -9,8 +9,8 @@
     <RootNamespace>Vapps.ECommerce</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="4.0.2" />
-    <PackageReference Include="Abp.AutoMapper" Version="4.0.2" />
+    <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="4.4.0" />
+    <PackageReference Include="Abp.AutoMapper" Version="4.4.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
     <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="2.2.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
@@ -22,7 +22,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vapps.Core\Vapps.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Authorization\" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\net461\Vapps.ECommerce.Core.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\net461\Vapps.ECommerce.Core.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
 </Project>

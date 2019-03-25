@@ -15,7 +15,7 @@ using Vapps.Media;
 
 namespace Vapps.ECommerce.Customers
 {
-    [AbpAuthorize(BusinessCenterPermissions.Customer.Self)]
+    [AbpAuthorize(BusinessCenterPermissions.CustomerManage.Customer.Self)]
 
     public class CustomerAppService : VappsAppServiceBase, ICustomerAppService
     {
@@ -130,7 +130,7 @@ namespace Vapps.ECommerce.Customers
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Customer.Edit)]
+        [AbpAuthorize(BusinessCenterPermissions.CustomerManage.Customer.Edit)]
         protected virtual async Task<Customer> UpdateCustomerAsync(CreateOrUpdateCustomerInput input)
         {
             var logistics = await _customerManager.FindByIdAsync(input.Id);
@@ -146,7 +146,7 @@ namespace Vapps.ECommerce.Customers
         /// 添加客户
         /// </summary>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Customer.Create)]
+        [AbpAuthorize(BusinessCenterPermissions.CustomerManage.Customer.Create)]
         protected virtual async Task<Customer> CreateCustomerAsync(CreateOrUpdateCustomerInput input)
         {
             var customer = new Customer()

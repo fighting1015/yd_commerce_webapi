@@ -84,7 +84,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 根据 订单号 查找订单
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="orderNumber"></param>
         /// <returns></returns>
         public virtual async Task<Order> FindByOrderNumberAsync(string orderNumber)
         {
@@ -150,7 +150,7 @@ namespace Vapps.ECommerce.Orders
         {
             //跳过已取消订单
             if (orderImport.OrderStatus == OrderStatus.Canceled
-                && orderImport.ShipName.IsNullOrEmpty())
+                && orderImport.LogisticsName.IsNullOrEmpty())
             {
                 return false;
             }
@@ -306,7 +306,7 @@ namespace Vapps.ECommerce.Orders
                     orderItemList.Add(orderItem);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
                 return orderItemList;
@@ -322,7 +322,7 @@ namespace Vapps.ECommerce.Orders
         /// <param name="order"></param>
         private async Task<Shipment> AddShipment(OrderImport orderImport, Order order)
         {
-            if (orderImport.ShipName.IsNullOrEmpty())
+            if (orderImport.LogisticsName.IsNullOrEmpty())
                 return null;
 
             if (orderImport.TrackingNumber.IsNullOrEmpty())
@@ -331,7 +331,7 @@ namespace Vapps.ECommerce.Orders
             order.ShippingStatus = ShippingStatus.Taked;
             var trackingNumber = orderImport.TrackingNumber.Replace("'", "");
 
-            var logistics = await _logisticsManager.FindByNameAsync(orderImport.ShipName);
+            var logistics = await _logisticsManager.FindByNameAsync(orderImport.LogisticsName);
             if (logistics == null)
                 return null;
 
@@ -529,7 +529,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 根据订单id查找订单条目
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
         public virtual async Task<List<OrderItem>> FindOrderItemByOrderIdAsync(long orderId)
         {

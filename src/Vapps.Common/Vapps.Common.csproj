@@ -15,19 +15,19 @@
     <RootNamespace>Vapps</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Abp.Web.Common" Version="4.0.2" />
+    <PackageReference Include="Abp.Web.Common" Version="4.4.0" />
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
-    <PackageReference Include="Abp" Version="4.0.2" />
-    <PackageReference Include="Abp.ZeroCore" Version="4.0.2" />
+    <PackageReference Include="Abp" Version="4.4.0" />
+    <PackageReference Include="Abp.ZeroCore" Version="4.4.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
     <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
-    <PackageReference Include="Hangfire.Core" Version="1.6.20" />
+    <PackageReference Include="Hangfire.Core" Version="1.6.22" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <Reference Include="System" />

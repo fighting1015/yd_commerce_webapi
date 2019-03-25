@@ -50,68 +50,89 @@ namespace Vapps.Authorization
         }
 
         [Permission(Self, MultiTenancySides.Tenant)]
-        public class Order
+        public class SalesManage
         {
-            public const string Self = "BusiCenter.Order";
+            public const string Self = "BusiCenter.SalesManage";
 
-            public const string Create = "BusiCenter.Order.Create";
-            public const string Edit = "BusiCenter.Order.Edit";
-            public const string Delete = "BusiCenter.Order.Delete";
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class Order
+            {
+                public const string Self = "BusiCenter.SalesManage.Order";
 
-            public const string Import = "BusiCenter.Order.Import";
-            public const string Export = "BusiCenter.Order.Export";
+                public const string Create = "BusiCenter.SalesManage.Order.Create";
+                public const string Edit = "BusiCenter.SalesManage.Order.Edit";
+                public const string Delete = "BusiCenter.SalesManage.Order.Delete";
+
+                public const string Import = "BusiCenter.SalesManage.Order.Import";
+                public const string Export = "BusiCenter.SalesManage.Order.Export";
+            }
+
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class Shipment
+            {
+                public const string Self = "BusiCenter.SalesManage.Shipment";
+
+                public const string Create = "BusiCenter.SalesManage.Shipment.Create";
+                public const string Edit = "BusiCenter.SalesManage.Shipment.Edit";
+                public const string Delete = "BusiCenter.SalesManage.Shipment.Delete";
+
+                public const string Import = "BusiCenter.SalesManage.Shipment.Import";
+            }
         }
+
 
         [Permission(Self, MultiTenancySides.Tenant)]
-        public class Shipment
+        public class CustomerManage
         {
-            public const string Self = "BusiCenter.Shipment";
+            public const string Self = "BusiCenter.CustomerManage";
 
-            public const string Create = "BusiCenter.Shipment.Create";
-            public const string Edit = "BusiCenter.Shipment.Edit";
-            public const string Delete = "BusiCenter.Shipment.Delete";
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class Customer
+            {
+                public const string Self = "BusiCenter.CustomerManage.Customer";
+
+                public const string Create = "BusiCenter.CustomerManage.Customer.Create";
+                public const string Edit = "BusiCenter.CustomerManage.Customer.Edit";
+                public const string Delete = "BusiCenter.CustomerManage.Customer.Delete";
+
+                public const string Export = "BusiCenter.CustomerManage.Customer.Export";
+            }
         }
 
-        [Permission(Self, MultiTenancySides.Host)]
-        public class Logistics
+        [Permission(Self)]
+        public class StoreConfiguration
         {
-            public const string Self = "BusiCenter.Logistics";
+            public const string Self = "BusiCenter.StoreConfiguration";
 
-            public const string Create = "BusiCenter.Logistics.Create";
-            public const string Edit = "BusiCenter.Logistics.Edit";
-            public const string Delete = "BusiCenter.Logistics.Delete";
-        }
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class Store
+            {
+                public const string Self = "BusiCenter.StoreConfiguration.Store";
 
-        [Permission(Self, MultiTenancySides.Tenant)]
-        public class TenantLogistics
-        {
-            public const string Self = "BusiCenter.TenantLogistics";
+                public const string Create = "BusiCenter.StoreConfiguration.Store.Create";
+                public const string Edit = "BusiCenter.StoreConfiguration.Store.Edit";
+                public const string Delete = "BusiCenter.StoreConfiguration.Store.Delete";
+            }
 
-            public const string Create = "BusiCenter.TenantLogistics.Create";
-            public const string Edit = "BusiCenter.TenantLogistics.Edit";
-            public const string Delete = "BusiCenter.TenantLogistics.Delete";
-        }
+            [Permission(Self, MultiTenancySides.Host)]
+            public class Logistics
+            {
+                public const string Self = "BusiCenter.StoreConfiguration.Logistics";
 
-        [Permission(Self, MultiTenancySides.Tenant)]
-        public class Customer
-        {
-            public const string Self = "BusiCenter.Customer";
+                public const string Create = "BusiCenter.StoreConfiguration.Logistics.Create";
+                public const string Edit = "BusiCenter.StoreConfiguration.Logistics.Edit";
+                public const string Delete = "BusiCenter.StoreConfiguration.Logistics.Delete";
+            }
 
-            public const string Create = "BusiCenter.Customer.Create";
-            public const string Edit = "BusiCenter.Customer.Edit";
-            public const string Delete = "BusiCenter.Customer.Delete";
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class TenantLogistics
+            {
+                public const string Self = "BusiCenter.StoreConfiguration.TenantLogistics";
 
-            public const string Export = "BusiCenter.Customer.Export";
-        }
-
-        [Permission(Self, MultiTenancySides.Tenant)]
-        public class Store
-        {
-            public const string Self = "BusiCenter.Store";
-
-            public const string Create = "BusiCenter.Store.Create";
-            public const string Edit = "BusiCenter.Store.Edit";
-            public const string Delete = "BusiCenter.Store.Delete";
+                public const string Create = "BusiCenter.StoreConfiguration.TenantLogistics.Create";
+                public const string Edit = "BusiCenter.StoreConfiguration.TenantLogistics.Edit";
+                public const string Delete = "BusiCenter.StoreConfiguration.TenantLogistics.Delete";
+            }
         }
 
         [Permission(Self)]

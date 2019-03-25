@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vapps.Messages.Dto;
 
 namespace Vapps.Messages
 {
-    public interface IMessageService
+    public interface IMessageAppService
     {
         /// <summary>
         /// 获取可用指令

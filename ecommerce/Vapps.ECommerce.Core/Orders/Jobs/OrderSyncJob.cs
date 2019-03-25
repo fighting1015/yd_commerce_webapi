@@ -32,7 +32,7 @@ namespace Vapps.ECommerce.Orders.Jobs
         [UnitOfWork]
         public override void Execute(int arg)
         {
-            var tenants = _tenantManager.Tenants.AsNoTracking().Where(t => t.Id == 1).ToList();
+            var tenants = _tenantManager.Tenants.AsNoTracking().ToList();
             foreach (var tenant in tenants)
             {
                 _backgroundJobManager.Enqueue<OrderSyncSingleJob, int>(tenant.Id);

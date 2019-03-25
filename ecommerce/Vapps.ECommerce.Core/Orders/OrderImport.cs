@@ -48,7 +48,9 @@ namespace Vapps.ECommerce.Orders
 
         public string AdminComment { get; set; }
 
-        public string ShipName { get; set; }
+        public int LogisticsId { get; set; }
+
+        public string LogisticsName { get; set; }
 
         public string TrackingNumber { get; set; }
 

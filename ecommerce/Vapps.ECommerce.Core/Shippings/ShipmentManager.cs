@@ -32,7 +32,8 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据订单id查找物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="orderId"></param>
+        /// <param name="readOnly"></param>
         /// <returns></returns>
         public virtual IList<Shipment> FindByOrderId(long orderId, bool readOnly = false)
         {
@@ -55,7 +56,7 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据物流单号查找物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="logisticsNumber"></param>
         /// <returns></returns>
         public virtual async Task<Shipment> FindByLogisticsNumberAsync(string logisticsNumber)
         {
@@ -178,10 +179,10 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 删除租户物流
         /// </summary>
-        /// <param name="id"></param>
-        public virtual async Task DeleteShipmentItemByShipmentIdAsync(int ShipmentId)
+        /// <param name="shipmentId"></param>
+        public virtual async Task DeleteShipmentItemByShipmentIdAsync(int shipmentId)
         {
-            var logistics = await ShipmentItemRepository.FirstOrDefaultAsync(tl => tl.ShipmentId == ShipmentId);
+            var logistics = await ShipmentItemRepository.FirstOrDefaultAsync(tl => tl.ShipmentId == shipmentId);
 
             if (logistics != null)
                 await ShipmentItemRepository.DeleteAsync(logistics);

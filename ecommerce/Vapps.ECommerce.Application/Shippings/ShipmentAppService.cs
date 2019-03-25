@@ -20,7 +20,7 @@ using Vapps.ECommerce.Shippings.Tracking;
 
 namespace Vapps.ECommerce.Shippings
 {
-    [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
+    [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Self)]
     public class ShipmentAppService : VappsAppServiceBase, IShipmentAppService
     {
         private readonly IShipmentManager _shipmentManager;
@@ -55,17 +55,17 @@ namespace Vapps.ECommerce.Shippings
         /// 获取所有发货记录
         /// </summary>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Self)]
         public async Task<PagedResultDto<ShipmentListDto>> GetShipments(GetShipmentsInput input)
         {
             var query = _shipmentManager.Shipments
                 .Include(p => p.Items)
                 .WhereIf(input.Status != null, r => r.Status == input.Status)
                 .WhereIf(!input.TrackingNumber.IsNullOrWhiteSpace(), r => r.LogisticsNumber == input.TrackingNumber)
-                .WhereIf(input.DeliveryFrom != null, r => r.CreationTime >= input.DeliveryFrom)
-                .WhereIf(input.DeliveryTo != null, r => r.CreationTime <= input.DeliveryTo)
-                .WhereIf(input.ReceivedFrom != null, r => r.ReceivedOn >= input.ReceivedFrom)
-                .WhereIf(input.DeliveryTo != null, r => r.ReceivedOn <= input.DeliveryTo);
+                .WhereIf(input.DeliveriedOn.FormDateNotEmpty(), r => r.CreationTime >= input.DeliveriedOn.FormDate)
+                .WhereIf(input.DeliveriedOn.ToDateNotEmpty(), r => r.CreationTime >= input.DeliveriedOn.ToDate)
+                .WhereIf(input.ReceivedOn.FormDateNotEmpty(), r => r.CreationTime >= input.ReceivedOn.FormDate)
+                .WhereIf(input.ReceivedOn.ToDateNotEmpty(), r => r.CreationTime >= input.ReceivedOn.ToDate); 
 
             var shipmentCount = await query.CountAsync();
 
@@ -85,7 +85,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Order.Self)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Self)]
         public async Task<List<ShipmentDto>> GetOrderShipments(long orderId)
         {
             List<ShipmentDto> shipmentDtoList = new List<ShipmentDto>();
@@ -108,7 +108,19 @@ namespace Vapps.ECommerce.Shippings
                 shipmentDto.StatusString = shipment.Status.GetLocalizedEnum(_localizationManager);
                 if (shipment.LogisticsId.HasValue)
                 {
-                    shipmentDto.LogisticsId = (await _logisticsManager.FindTenantLogisticsByLogisticsIdAsync(shipment.LogisticsId.Value)).Id;
+                    var tenantLogistics = await _logisticsManager.FindTenantLogisticsByLogisticsIdAsync(shipment.LogisticsId.Value);
+                    if (tenantLogistics == null)
+                    {
+                        tenantLogistics = new TenantLogistics()
+                        {
+                            LogisticsId = shipment.LogisticsId.Value,
+                            Name = shipment.LogisticsName,
+                        };
+                        await _logisticsManager.CreateTenantLogisticsAsync(tenantLogistics);
+
+                        await CurrentUnitOfWork.SaveChangesAsync();
+                    }
+                    shipmentDto.LogisticsId = tenantLogistics.Id;
                 }
 
                 foreach (var item in shipment.Items)
@@ -127,7 +139,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Self)]
         public async Task<GetShipmentForEditOutput> GetShipmentForEdit(NullableIdDto<int> input)
         {
             GetShipmentForEditOutput ShipmentDto;
@@ -150,7 +162,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Self)]
         public async Task<EntityDto<long>> CreateOrUpdateShipment(CreateOrUpdateShipmentInput input)
         {
             Shipment shipment = null;
@@ -195,7 +207,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Order.Self)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Self)]
         public async Task QuickDelivery(QuickDeliveryInput input)
         {
             var order = await _orderManager.GetByIdAsync(input.OrderId);
@@ -266,12 +278,12 @@ namespace Vapps.ECommerce.Shippings
                 await _shipmentManager.CreateAsync(shipment);
 
                 //修改状态为已发货
-                await _orderProcessingManager.Ship(shipment, true);
+                await _orderProcessingManager.ShipAsync(shipment, true);
             }
         }
 
 
-    
+
 
         #endregion
 
@@ -315,7 +327,7 @@ namespace Vapps.ECommerce.Shippings
         /// 创建物流
         /// </summary>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Shipment.Create)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Create)]
         protected virtual async Task<Shipment> CreateShipmentAsync(CreateOrUpdateShipmentInput input)
         {
             var shipment = ObjectMapper.Map<Shipment>(input);
@@ -332,7 +344,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Shipment.Edit)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Edit)]
         protected virtual async Task<Shipment> UpdateShipmentAsync(CreateOrUpdateShipmentInput input)
         {
             var shipment = await _shipmentManager.GetByIdAsync(input.Id);

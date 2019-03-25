@@ -15,5 +15,9 @@ namespace Vapps.Notifications
         Task NewTenantRegisteredAsync(Tenant tenant);
 
         Task SendMessageAsync(UserIdentifier user, string message, NotificationSeverity severity = NotificationSeverity.Info);
+
+        Task SendMessageAsync(UserIdentifier user, string notificationName, string message, NotificationSeverity severity = NotificationSeverity.Info);
+
+        Task SomeShipmentsCouldntBeImported(UserIdentifier argsUser, string fileToken, string fileType, string fileName);
     }
 }

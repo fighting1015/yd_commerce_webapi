@@ -10,6 +10,7 @@ using Vapps.ExternalAuthentications;
 using System.Linq;
 using Abp.Extensions;
 using System;
+using Abp.Organizations;
 
 namespace Vapps.Authorization.Users
 {
@@ -34,7 +35,9 @@ namespace Vapps.Authorization.Users
             IAsyncQueryableExecuter asyncQueryableExecuter,
             IUnitOfWorkManager unitOfWorkManager,
             IRepository<UserClaim, long> userCliamRepository,
-            IRepository<UserPermissionSetting, long> userPermissionSettingRepository)
+            IRepository<UserPermissionSetting, long> userPermissionSettingRepository,
+            IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
             : base(
                 unitOfWorkManager,
                 userRepository,
@@ -43,7 +46,9 @@ namespace Vapps.Authorization.Users
                 userRoleRepository,
                 userLoginRepository,
                 userCliamRepository,
-                userPermissionSettingRepository)
+                userPermissionSettingRepository,
+                userOrganizationUnitRepository,
+                organizationUnitRoleRepository)
         {
             this._userRoleRepository = userRoleRepository;
             this._userClaimRepository = userCliamRepository;

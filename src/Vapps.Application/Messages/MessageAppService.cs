@@ -10,11 +10,11 @@ using Vapps.Messages.Dto;
 namespace Vapps.Messages
 {
     [AbpAuthorize(AdminPermissions.Configuration.HostSettings)]
-    public class MessageService : VappsAppServiceBase, IMessageService
+    public class MessageAppService : VappsAppServiceBase, IMessageAppService
     {
         private readonly IMessageTokenProvider _messageTokenProvider;
 
-        public MessageService(IMessageTokenProvider messageTokenProvider)
+        public MessageAppService(IMessageTokenProvider messageTokenProvider)
         {
             this._messageTokenProvider = messageTokenProvider;
         }

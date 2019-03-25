@@ -38,15 +38,17 @@ namespace Vapps.ECommerce.Prices
         /// <summary>
         /// Gets the product cost (one item)
         /// </summary>
-        /// <param name="attributesJson">Shopping cart item attributes in Json</param>
-        /// <returns>Product cost (one item)</returns>
+        /// <param name="product"></param>
+        /// <param name="attributesJson"></param>
+        /// <returns></returns>
         Task<decimal> GetProductCostAsync(Product product, string attributesJson);
 
         /// <summary>
         /// Get a price adjustment of a product attribute value
         /// </summary>
-        /// <param name="value">Product attribute value</param>
-        /// <returns>Price adjustment</returns>
+        /// <param name="product"></param>
+        /// <param name="attributesJson"></param>
+        /// <returns></returns>
         Task<decimal> GetProductPriceAsync(Product product, string attributesJson);
     }
 }

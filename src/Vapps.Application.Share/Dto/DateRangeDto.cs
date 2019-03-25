@@ -17,5 +17,20 @@ namespace Vapps.Dto
         /// 结束时间
         /// </summary>
         public DateTime? ToDate { get; set; }
+
+
+    }
+
+    public static class DateRangeDtoExtension
+    {
+        public static bool FormDateNotEmpty(this DateRangeDto value)
+        {
+            return value != null && value.FormDate != null;
+        }
+
+        public static bool ToDateNotEmpty(this DateRangeDto value)
+        {
+            return value != null && value.FormDate != null;
+        }
     }
 }

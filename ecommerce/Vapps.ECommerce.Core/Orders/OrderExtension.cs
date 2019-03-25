@@ -45,7 +45,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 生成订单号子
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="orderItem"></param>
         public static void GenerateOrderItemNumber(this OrderItem orderItem)
         {
             var order = orderItem.Order;

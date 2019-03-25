@@ -14,13 +14,10 @@ namespace Vapps.ECommerce.Stores
 
         public IQueryable<Store> Stores => StoreRepository.GetAll().AsNoTracking();
 
-        private readonly IAbpSession _abpSession;
 
-        public StoreManager(IRepository<Store, int> storeRepository,
-            IAbpSession abpSession)
+        public StoreManager(IRepository<Store, int> storeRepository)
         {
             this.StoreRepository = storeRepository;
-            this._abpSession = abpSession;
         }
 
         #endregion
@@ -50,28 +47,28 @@ namespace Vapps.ECommerce.Stores
         /// <summary>
         /// 添加店铺
         /// </summary>
-        /// <param name="logistics"></param>
-        public virtual async Task CreateAsync(Store logistics)
+        /// <param name="store"></param>
+        public virtual async Task CreateAsync(Store store)
         {
-            await StoreRepository.InsertAsync(logistics);
+            await StoreRepository.InsertAsync(store);
         }
 
         /// <summary>
         /// 更新店铺
         /// </summary>
-        /// <param name="logistics"></param>
-        public virtual async Task UpdateAsync(Store logistics)
+        /// <param name="store"></param>
+        public virtual async Task UpdateAsync(Store store)
         {
-            await StoreRepository.UpdateAsync(logistics);
+            await StoreRepository.UpdateAsync(store);
         }
 
         /// <summary>
         /// 删除店铺
         /// </summary>
-        /// <param name="logistics"></param>
-        public virtual async Task DeleteAsync(Store logistics)
+        /// <param name="store"></param>
+        public virtual async Task DeleteAsync(Store store)
         {
-            await StoreRepository.DeleteAsync(logistics);
+            await StoreRepository.DeleteAsync(store);
         }
 
         /// <summary>
@@ -80,10 +77,10 @@ namespace Vapps.ECommerce.Stores
         /// <param name="id"></param>
         public virtual async Task DeleteAsync(int id)
         {
-            var logistics = await StoreRepository.FirstOrDefaultAsync(id);
+            var store = await StoreRepository.FirstOrDefaultAsync(id);
 
-            if (logistics != null)
-                await StoreRepository.DeleteAsync(logistics);
+            if (store != null)
+                await StoreRepository.DeleteAsync(store);
         }
 
         #endregion

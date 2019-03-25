@@ -1,16 +1,15 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Authorization;
+using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
 using System.Linq;
 using System.Threading.Tasks;
+using Vapps.Authorization;
 using Vapps.Configuration;
 using Vapps.ECommerce.Orders;
 using Vapps.ECommerce.Shippings.Dto.Tracking;
-using Vapps.ECommerce.Shippings;
 using Vapps.ECommerce.Shippings.Tracking;
-using Abp.Authorization;
-using Vapps.Authorization;
 
 namespace Vapps.ECommerce.Shippings
 {
@@ -40,7 +39,7 @@ namespace Vapps.ECommerce.Shippings
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Shipment.Self)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Self)]
         public async Task<TrackingDto> GetShipmentTracking(GetShipmentTrackingInput input)
         {
             var resultDto = new TrackingDto()

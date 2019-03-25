@@ -24,6 +24,11 @@ namespace Vapps.Auditing.Exporting
             _abpSession = abpSession;
         }
 
+        /// <summary>
+        /// 导入到文件
+        /// </summary>
+        /// <param name="auditLogListDtos"></param>
+        /// <returns></returns>
         public FileDto ExportToFile(List<AuditLogListDto> auditLogListDtos)
         {
             return CreateExcelPackage(
@@ -78,7 +83,12 @@ namespace Vapps.Auditing.Exporting
                 });
         }
 
-        public FileDto ExportToFile(List<EntityChangeListDto> entityChangeListDtos)
+        /// <summary>
+        /// 导出实体变化
+        /// </summary>
+        /// <param name="entityChangeListDtos"></param>
+        /// <returns></returns>
+        public FileDto ExportChangeToFile(List<EntityChangeListDto> entityChangeListDtos)
         {
             return CreateExcelPackage(
                 "DetailedLogs.xlsx",

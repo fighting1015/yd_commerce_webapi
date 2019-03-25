@@ -55,6 +55,11 @@ namespace Vapps.Auditing
 
         #region audit logs
 
+        /// <summary>
+        /// 获取审计日志
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<PagedResultDto<AuditLogListDto>> GetAuditLogs(GetAuditLogsInput input)
         {
             var query = CreateAuditLogAndUsersQuery(input);
@@ -70,6 +75,11 @@ namespace Vapps.Auditing
             return new PagedResultDto<AuditLogListDto>(resultCount, auditLogListDtos);
         }
 
+        /// <summary>
+        /// 导入审计日志到Excel
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<FileDto> GetAuditLogsToExcel(GetAuditLogsInput input)
         {
             var auditLogs = await CreateAuditLogAndUsersQuery(input)
@@ -117,6 +127,11 @@ namespace Vapps.Auditing
         #endregion
 
         #region entity changes 
+
+        /// <summary>
+        /// 获取实体记录对象类型
+        /// </summary>
+        /// <returns></returns>
         public List<NameValueDto> GetEntityHistoryObjectTypes()
         {
             var entityHistoryObjectTypes = new List<NameValueDto>();
@@ -143,6 +158,11 @@ namespace Vapps.Auditing
             return entityHistoryObjectTypes;
         }
 
+        /// <summary>
+        /// 获取实体变更
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<PagedResultDto<EntityChangeListDto>> GetEntityChanges(GetEntityChangeInput input)
         {
             var query = CreateEntityChangesAndUsersQuery(input);
@@ -158,6 +178,11 @@ namespace Vapps.Auditing
             return new PagedResultDto<EntityChangeListDto>(resultCount, entityChangeListDtos);
         }
 
+        /// <summary>
+        /// 导出实体变更到Excel
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<FileDto> GetEntityChangesToExcel(GetEntityChangeInput input)
         {
             var entityChanges = await CreateEntityChangesAndUsersQuery(input)
@@ -168,9 +193,14 @@ namespace Vapps.Auditing
 
             var entityChangeListDtos = ConvertToEntityChangeListDtos(entityChanges);
 
-            return _auditLogListExcelExporter.ExportToFile(entityChangeListDtos);
+            return _auditLogListExcelExporter.ExportChangeToFile(entityChangeListDtos);
         }
 
+        /// <summary>
+        /// 获取字段变更
+        /// </summary>
+        /// <param name="entityChangeId"></param>
+        /// <returns></returns>
         public async Task<List<EntityPropertyChangeDto>> GetEntityPropertyChanges(long entityChangeId)
         {
             var entityPropertyChanges = (await _entityPropertyChangeRepository.GetAllListAsync())

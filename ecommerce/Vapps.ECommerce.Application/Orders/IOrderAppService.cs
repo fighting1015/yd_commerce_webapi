@@ -63,5 +63,12 @@ namespace Vapps.ECommerce.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         Task<FileDto> GetWaitShippingToExcel(GetWaitShippingInput input);
+
+        /// <summary>
+        /// 导出选中订单到Excel
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<FileDto> GetSelectedToExcel(GetSelectedToExcelInput input);
     }
 }

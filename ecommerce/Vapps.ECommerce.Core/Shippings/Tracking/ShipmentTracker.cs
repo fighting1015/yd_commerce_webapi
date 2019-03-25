@@ -112,10 +112,9 @@ namespace Vapps.ECommerce.Shippings.Tracking
         }
 
         /// <summary>
-        /// 
+        /// 解析物流状态
         /// </summary>
-        /// <param name="shipmentKey"></param>
-        /// <param name="trackingNumber"></param>
+        /// <param name="shipment"></param>
         /// <returns></returns>
         public async Task<TraceResult> GetOrderTraces(Shipment shipment)
         {
@@ -228,7 +227,7 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 return result.Success;
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -298,7 +297,6 @@ namespace Vapps.ECommerce.Shippings.Tracking
         /// <summary>
         /// 获回调URL
         /// </summary>
-        /// <param name="relativeUrl"></param>
         /// <returns></returns>
         private string GetCallBackUrl()
         {
@@ -309,8 +307,9 @@ namespace Vapps.ECommerce.Shippings.Tracking
         /// <summary>
         /// 解析物流状态
         /// </summary>
-        /// <param name="shipmentKey"></param>
-        /// <param name="trackingNumber"></param>
+        /// <param name="logistics"></param>
+        /// <param name="traceString"></param>
+        /// <param name="returnStatus"></param>
         /// <returns></returns>
         private ShippingStatus GetShippingStatus(Logistics logistics, string traceString, int returnStatus)
         {
@@ -373,12 +372,10 @@ namespace Vapps.ECommerce.Shippings.Tracking
             return shipmentStatus;
         }
 
-
         /// <summary>
         /// 解析物流状态
         /// </summary>
-        /// <param name="shipmentKey"></param>
-        /// <param name="trackingNumber"></param>
+        /// <param name="returnStatus"></param>
         /// <returns></returns>
         private ShippingStatus GetTracesStatus(int returnStatus)
         {

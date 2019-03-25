@@ -167,7 +167,6 @@ namespace Vapps.Authorization.Users
                         TenantId = userAccount.TenantId,
                         TenancyName = tenant == null ? "." : tenant.TenancyName,
                         Username = userAccount.UserName,
-                        LastLoginTime = userAccount.LastLoginTime
                     }).OrderBy(sorting);
         }
 

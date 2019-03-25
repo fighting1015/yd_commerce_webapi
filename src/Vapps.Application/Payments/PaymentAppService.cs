@@ -97,7 +97,11 @@ namespace Vapps.Payments
             return await UnifiedCreatePayment(input);
         }
 
-
+        /// <summary>
+        /// 取消支付
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task CancelPayment(CancelPaymentDto input)
         {
             await Task.FromResult(0);

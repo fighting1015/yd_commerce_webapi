@@ -15,7 +15,7 @@ namespace Vapps.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -122,6 +122,8 @@ namespace Vapps.Migrations
                     b.Property<string>("Parameters")
                         .HasMaxLength(1024);
 
+                    b.Property<string>("ReturnValue");
+
                     b.Property<string>("ServiceName")
                         .HasMaxLength(256);
 
@@ -219,8 +221,6 @@ namespace Vapps.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastLoginTime");
 
                     b.Property<DateTime?>("LastModificationTime");
 
@@ -902,6 +902,33 @@ namespace Vapps.Migrations
                     b.ToTable("OrganizationUnits");
                 });
 
+            modelBuilder.Entity("Abp.Organizations.OrganizationUnitRole", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<long>("OrganizationUnitId");
+
+                    b.Property<int>("RoleId");
+
+                    b.Property<int?>("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "OrganizationUnitId");
+
+                    b.HasIndex("TenantId", "RoleId");
+
+                    b.ToTable("OrganizationUnitRoles");
+                });
+
             modelBuilder.Entity("Vapps.Addresses.AccountAddress", b =>
                 {
                     b.Property<long>("Id")
@@ -958,6 +985,145 @@ namespace Vapps.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Vapps.Advert.AdvertAccounts.AdvertAccount", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AccessToken");
+
+                    b.Property<DateTime?>("AccessTokenExpiresIn");
+
+                    b.Property<decimal>("Balance");
+
+                    b.Property<int>("Channel");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<bool>("DataAutoSync");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<string>("DisplayName");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<string>("RefreshToken");
+
+                    b.Property<DateTime?>("RefreshTokenExpiresIn");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<string>("ThirdpartyId");
+
+                    b.Property<decimal>("TotalCost");
+
+                    b.Property<decimal>("TotalOrder");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "IsDeleted");
+
+                    b.ToTable("AdvertAccounts");
+                });
+
+            modelBuilder.Entity("Vapps.Advert.AdvertStatistics.AdvertDailyStatistic", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AdvertAccountId");
+
+                    b.Property<int>("ClickNum");
+
+                    b.Property<decimal>("ClickPrice")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("DisplayNum");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<string>("ProductName");
+
+                    b.Property<DateTime>("StatisticOn");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<decimal>("ThDisplayCost")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<decimal>("TotalCost");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertAccountId");
+
+                    b.HasIndex("TenantId", "AdvertAccountId", "IsDeleted");
+
+                    b.ToTable("AdvertDailyStatistics");
+                });
+
+            modelBuilder.Entity("Vapps.Advert.AdvertStatistics.AdvertDailyStatisticItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("AdvertDailyStatisticId");
+
+                    b.Property<long?>("AdvertStatisticsId");
+
+                    b.Property<int>("ClickNum");
+
+                    b.Property<decimal>("ClickPrice")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("DisplayNum");
+
+                    b.Property<int>("HourOfDay");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int>("TenantId");
+
+                    b.Property<decimal>("ThDisplayCost")
+                        .HasColumnType("decimal(18, 4)");
+
+                    b.Property<decimal>("TotalCost");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdvertDailyStatisticId");
+
+                    b.HasIndex("TenantId", "AdvertDailyStatisticId", "IsDeleted");
+
+                    b.ToTable("AdvertDailyStatisticItems");
                 });
 
             modelBuilder.Entity("Vapps.Authorization.Roles.Role", b =>
@@ -1058,8 +1224,6 @@ namespace Vapps.Migrations
                     b.Property<bool>("IsPhoneNumberConfirmed");
 
                     b.Property<bool>("IsTwoFactorEnabled");
-
-                    b.Property<DateTime?>("LastLoginTime");
 
                     b.Property<DateTime?>("LastModificationTime");
 
@@ -2646,6 +2810,22 @@ namespace Vapps.Migrations
                     b.HasOne("Vapps.Addresses.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vapps.Advert.AdvertStatistics.AdvertDailyStatistic", b =>
+                {
+                    b.HasOne("Vapps.Advert.AdvertAccounts.AdvertAccount", "AdvertAccount")
+                        .WithMany()
+                        .HasForeignKey("AdvertAccountId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vapps.Advert.AdvertStatistics.AdvertDailyStatisticItem", b =>
+                {
+                    b.HasOne("Vapps.Advert.AdvertStatistics.AdvertDailyStatistic")
+                        .WithMany("Items")
+                        .HasForeignKey("AdvertDailyStatisticId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

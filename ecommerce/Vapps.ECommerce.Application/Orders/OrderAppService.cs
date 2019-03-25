@@ -6,6 +6,7 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
+using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
@@ -25,11 +26,12 @@ using Vapps.ECommerce.Products.Dto;
 using Vapps.ECommerce.Shippings;
 using Vapps.ECommerce.Stores;
 using Vapps.Media;
+using Vapps.Notifications;
 using Vapps.States;
 
 namespace Vapps.ECommerce.Orders
 {
-    [AbpAuthorize(BusinessCenterPermissions.Order.Self)]
+    [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Self)]
     public class OrderAppService : VappsAppServiceBase, IOrderAppService
     {
 
@@ -44,6 +46,7 @@ namespace Vapps.ECommerce.Orders
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IOrderExcelExporter _orderExcelExporter;
         private readonly ICacheManager _cacheManager; // TODO: 待实现
+        private readonly IAppNotifier _appNotifier;
 
         public OrderAppService(IOrderManager orderAppService,
             IProductManager productManager,
@@ -55,7 +58,8 @@ namespace Vapps.ECommerce.Orders
             IStateManager stateManager,
             IProductAttributeFormatter productAttributeFormatter,
             IOrderExcelExporter orderExcelExporter,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager,
+            IAppNotifier appNotifier)
         {
             this._orderManager = orderAppService;
             this._storeManager = storeManager;
@@ -68,6 +72,7 @@ namespace Vapps.ECommerce.Orders
             this._productManager = productManager;
             this._productAttributeManager = productAttributeManager;
             this._orderExcelExporter = orderExcelExporter;
+            this._appNotifier = appNotifier;
         }
 
         #region Method
@@ -101,7 +106,11 @@ namespace Vapps.ECommerce.Orders
                .WhereIf(!input.PhoneNumber.IsNullOrWhiteSpace(), r => r.ShippingPhoneNumber.Contains(input.PhoneNumber))
                .WhereIf(!provinceName.IsNullOrWhiteSpace(), r => r.ShippingProvince.Contains(provinceName))
                .WhereIf(!cityName.IsNullOrWhiteSpace(), r => r.ShippingCity.Contains(cityName))
-               .WhereIf(!districtName.IsNullOrWhiteSpace(), r => r.ShippingDistrict.Contains(districtName));
+               .WhereIf(!districtName.IsNullOrWhiteSpace(), r => r.ShippingDistrict.Contains(districtName))
+               .WhereIf(input.CreatedOn.FormDateNotEmpty(), r => r.CreationTime >= input.CreatedOn.FormDate)
+               .WhereIf(input.CreatedOn.ToDateNotEmpty(), r => r.CreationTime <= input.CreatedOn.ToDate)
+               .WhereIf(input.ReceivedOn.FormDateNotEmpty(), r => (r.ReceivedOn != null && r.ReceivedOn >= input.ReceivedOn.FormDate))
+               .WhereIf(input.ReceivedOn.ToDateNotEmpty(), r => (r.ReceivedOn != null && r.ReceivedOn <= input.ReceivedOn.ToDate));
 
             var orderCount = await query.CountAsync();
 
@@ -174,7 +183,7 @@ namespace Vapps.ECommerce.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         [UnitOfWork(isTransactional: false)]
-        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Edit)]
         public async Task ChangeOrderStatus(ChangeOrderStatusInput<OrderStatus> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -198,7 +207,7 @@ namespace Vapps.ECommerce.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         [UnitOfWork(isTransactional: false)]
-        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Edit)]
         public async Task ChangeShippingStatus(ChangeOrderStatusInput<ShippingStatus> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -222,7 +231,7 @@ namespace Vapps.ECommerce.Orders
         /// <param name="input"></param>
         /// <returns></returns>
         [UnitOfWork(isTransactional: false)]
-        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Edit)]
         public async Task ChangePaymentStatus(ChangeOrderStatusInput<PaymentStatus> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -245,7 +254,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Order.Delete)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Delete)]
         public async Task DeleteOrder(BatchInput<long> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -287,6 +296,26 @@ namespace Vapps.ECommerce.Orders
             return _orderExcelExporter.ExportToFile(orders);
         }
 
+        /// <summary>
+        /// 导出选中订单到Excel
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<FileDto> GetSelectedToExcel(GetSelectedToExcelInput input)
+        {
+            var query = _orderManager
+                .Orderes
+                .Include(o => o.Items)
+                .Where(r => input.OrderIds.Contains(r.Id));
+
+            var orders = await query
+                .OrderByDescending(o => o.CreationTime)
+                .ThenByDescending(o => o.Id)
+                .ToListAsync();
+
+            return _orderExcelExporter.ExportToFile(orders);
+        }
+
         #endregion
 
         #region Utility
@@ -296,7 +325,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Order.Create)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Create)]
         private async Task<EntityDto<long>> CreateOrderAsync(CreateOrUpdateOrderInput input)
         {
             var order = ObjectMapper.Map<Order>(input);
@@ -323,7 +352,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize(BusinessCenterPermissions.Order.Edit)]
+        [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Edit)]
         private async Task<EntityDto<long>> UpdateOrderAsync(CreateOrUpdateOrderInput input)
         {
             var order = await _orderManager.GetByIdAsync(input.Id);

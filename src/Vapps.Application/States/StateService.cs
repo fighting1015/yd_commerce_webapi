@@ -31,6 +31,7 @@ namespace Vapps.States
             this._cacheManager = cacheManager;
         }
 
+
         //public async Task ImportState()
         //{
         //    var dataJsonString = GetFileJson(@"C:\Users\Victor_Lo\Downloads\china-area-data-master\v4\data.json");
@@ -450,20 +451,7 @@ namespace Vapps.States
 
             await _stateManager.UpdateDistrictAsync(district);
         }
-
-        public string GetFileJson(string filepath)
-        {
-            string json = string.Empty;
-            using (FileStream fs = new FileStream(filepath, FileMode.Open, System.IO.FileAccess.Read, FileShare.ReadWrite))
-            {
-                using (StreamReader sr = new StreamReader(fs, Encoding.Default))
-                {
-                    json = sr.ReadToEnd().ToString();
-                }
-            }
-            return json;
-        }
-
+    
         #endregion
     }
 }

@@ -24,6 +24,9 @@ namespace Vapps.ConsoleApiClient
     {
         private const string ServerUrlBase = "http://localhost:62114/";
 
+        private const string TenantIdResolveKey = "Abp.TenantId";
+
+
         static void Main(string[] args)
         {
             RunDemoAsync().Wait();
@@ -42,7 +45,7 @@ namespace Vapps.ConsoleApiClient
 
             using (var httpHandler = new HttpClientHandler())
             {
-                httpHandler.CookieContainer.Add(new Uri(ServerUrlBase), new Cookie(MultiTenancyConsts.TenantIdResolveKey, "1")); //Set TenantId
+                httpHandler.CookieContainer.Add(new Uri(ServerUrlBase), new Cookie(TenantIdResolveKey, "1")); //Set TenantId
 
                 var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "def2edf7-5d42-4edc-a84a-30136c340e13", httpHandler);
                 var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync("admin", "123qwe");

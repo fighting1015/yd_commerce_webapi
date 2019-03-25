@@ -12,6 +12,7 @@ using Vapps.Editions.Dto;
 using Abp.Collections.Extensions;
 using Vapps.Dto;
 using Vapps.ECommerce.Core;
+using Vapps.Advert;
 
 namespace Vapps.Common
 {
@@ -25,6 +26,11 @@ namespace Vapps.Common
             _editionManager = editionManager;
         }
 
+        /// <summary>
+        /// 获取版本信息（Combobox数据源）
+        /// </summary>
+        /// <param name="onlyFreeItems"></param>
+        /// <returns></returns>
         public async Task<ListResultDto<SubscribableEditionComboboxItemDto>> GetEditionsForCombobox(bool onlyFreeItems = false)
         {
             var editions = await _editionManager.Editions.ToListAsync();
@@ -105,6 +111,9 @@ namespace Vapps.Common
             if (result == null)
                 result = EnumExtensions.EnumToSelectListItem<int>(typeof(VappsECommerceCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
 
+            if (result == null)
+                result = EnumExtensions.EnumToSelectListItem<int>(typeof(VappsAdvertCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
+
             var resultDto = ObjectMapper.Map<List<SelectListItemDto<int>>>(result);
 
             return resultDto;
@@ -121,6 +130,9 @@ namespace Vapps.Common
 
             if (result == null)
                 result = EnumExtensions.EnumToSelectListItem<string>(typeof(VappsECommerceCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
+
+            if (result == null)
+                result = EnumExtensions.EnumToSelectListItem<string>(typeof(VappsAdvertCoreModule), enumName.Trim(), VappsConsts.ServerSideLocalizationSourceName);
 
             var resultDto = ObjectMapper.Map<List<SelectListItemDto<string>>>(result);
 

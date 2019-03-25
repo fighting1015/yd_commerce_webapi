@@ -128,6 +128,11 @@ namespace Vapps.Notifications
             }
         }
 
+        /// <summary>
+        /// 删除通知
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task DeleteNotification(EntityDto<Guid> input)
         {
             await _userNotificationManager.DeleteUserNotificationAsync(AbpSession.TenantId, input.Id);

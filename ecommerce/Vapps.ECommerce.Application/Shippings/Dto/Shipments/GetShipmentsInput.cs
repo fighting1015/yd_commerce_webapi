@@ -18,24 +18,14 @@ namespace Vapps.ECommerce.Shippings.Dto.Shipments
         public string TrackingNumber { get; set; }
 
         /// <summary>
-        /// 发货时间(开始时间-UTC)
+        /// 发货时间(Utc)
         /// </summary>
-        public DateTime? DeliveryFrom { get; set; }
+        public DateRangeDto DeliveriedOn { get; set; }
 
         /// <summary>
-        /// 发货时间(结束时间-UTC)
+        /// 签收时间(Utc)
         /// </summary>
-        public DateTime? DeliveryTo { get; set; }
-
-        /// <summary>
-        /// 签收时间(开始时间-UTC)
-        /// </summary>
-        public DateTime? ReceivedFrom { get; set; }
-
-        /// <summary>
-        /// 签收时间(结束时间-UTC)
-        /// </summary>
-        public DateTime? ReceivedTo { get; set; }
+        public DateRangeDto ReceivedOn { get; set; }
 
         public void Normalize()
         {

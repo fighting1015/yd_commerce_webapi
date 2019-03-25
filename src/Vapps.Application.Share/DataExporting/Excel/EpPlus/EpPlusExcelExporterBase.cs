@@ -9,7 +9,7 @@ using Vapps.Storage;
 
 namespace Vapps.DataExporting.Excel.EpPlus
 {
-    public abstract class EpPlusExcelExporterBase : VappsAppServiceBase, ITransientDependency
+    public abstract class EpPlusExcelExporterBase : VappsServiceBase, ITransientDependency
     {
         private readonly ITempFileCacheManager _tempFileCacheManager;
 
@@ -45,7 +45,6 @@ namespace Vapps.DataExporting.Excel.EpPlus
                 if (headerRow > 1)
                 {
                     sheet.Cells[1, i + 1, headerRow, i + 1].Merge = true;
-                    //sheet.Cells[$"1,{i + 1},{headerRow}},{i + 1}"].Merge = true;
                 }
             }
         }

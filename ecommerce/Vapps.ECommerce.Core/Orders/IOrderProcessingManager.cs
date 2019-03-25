@@ -14,7 +14,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="notifyCustomer">是否通知客户</param>
-        Task Ship(Shipment shipment, bool notifyCustomer);
+        Task ShipAsync(Shipment shipment, bool notifyCustomer);
 
         /// <summary>
         /// 检查订单状态

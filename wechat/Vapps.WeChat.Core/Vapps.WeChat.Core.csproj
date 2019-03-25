@@ -9,8 +9,8 @@
     <RootNamespace>Vapps.WeChat.Core</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="4.0.2" />
-    <PackageReference Include="Abp.AutoMapper" Version="4.0.2" />
+    <PackageReference Include="Abp.ZeroCore.EntityFrameworkCore" Version="4.4.0" />
+    <PackageReference Include="Abp.AutoMapper" Version="4.4.0" />
     <PackageReference Include="Castle.Windsor.MsDependencyInjection" Version="3.3.1" />
     <PackageReference Include="Microsoft.Extensions.WebEncoders" Version="2.2.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />

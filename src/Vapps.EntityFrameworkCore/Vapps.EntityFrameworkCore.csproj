@@ -9,29 +9,18 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Migrations\20190104103518_Add_Store_And_Mapping.cs" />
-    <Compile Remove="Migrations\20190110034509_Add_Categories.cs" />
-    <Compile Remove="Migrations\20190110034509_Add_Categories.Designer.cs" />
-    <Compile Remove="Migrations\20190110042023_Add_Categories.cs" />
-    <Compile Remove="Migrations\20190110042023_Add_Categories.Designer.cs" />
-    <Compile Remove="Migrations\20190123084759_Update_Product_Price.cs" />
-    <Compile Remove="Migrations\20190123084759_Update_Product_Price.Designer.cs" />
-    <Compile Remove="Migrations\20190130081939_Add_ProductAttributeMapping_Values_ForeignKey.cs" />
-    <Compile Remove="Migrations\20190130081939_Add_ProductAttributeMapping_Values_ForeignKey.Designer.cs" />
-    <Compile Remove="Migrations\20190312042649_Update_OrderItem%27.cs" />
-    <Compile Remove="Migrations\20190312042649_Update_OrderItem%27.Designer.cs" />
-  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.3" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\ecommerce\Vapps.ECommerce.Core\Vapps.ECommerce.Core.csproj" />
+    <ProjectReference Include="..\..\advert\Vapps.Advert.Core\Vapps.Advert.Core.csproj" />
     <ProjectReference Include="..\..\wechat\Vapps.WeChat.Core\Vapps.WeChat.Core.csproj" />
     <ProjectReference Include="..\Vapps.Core\Vapps.Core.csproj" />
   </ItemGroup>
@@ -40,24 +29,4 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Migrations\20190116035513_Add_Product.Designer.cs">
-      <DependentUpon>20190116035513_Add_Product.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20190116092803_PredefinedProductAttributeValue.Designer.cs">
-      <DependentUpon>20190116092803_PredefinedProductAttributeValue.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20190117014803_Update_Product_Attribute.Designer.cs">
-      <DependentUpon>20190117014803_Update_Product_Attribute.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20190123052342_Add_Product_Attribute_Values.Designer.cs">
-      <DependentUpon>20190123052342_Add_Product_Attribute_Values.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20190123090843_Update_Product_Price.Designer.cs">
-      <DependentUpon>20190123090843_Update_Product_Price.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20190125072316_Update_Attribute.Designer.cs">
-      <DependentUpon>20190125072316_Update_Attribute.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>

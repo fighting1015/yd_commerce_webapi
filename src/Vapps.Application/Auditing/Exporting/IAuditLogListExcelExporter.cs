@@ -8,6 +8,6 @@ namespace Vapps.Auditing.Exporting
     {
         FileDto ExportToFile(List<AuditLogListDto> auditLogListDtos);
 
-        FileDto ExportToFile(List<EntityChangeListDto> entityChangeListDtos);
+        FileDto ExportChangeToFile(List<EntityChangeListDto> entityChangeListDtos);
     }
 }

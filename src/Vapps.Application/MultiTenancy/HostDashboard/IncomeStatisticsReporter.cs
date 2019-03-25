@@ -52,6 +52,13 @@ namespace Vapps.MultiTenancy.HostDashboard
             }
         }
 
+        /// <summary>
+        /// 获取收入数据分析
+        /// </summary>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="dateInterval"></param>
+        /// <returns></returns>
         public async Task<List<IncomeStastistic>> GetIncomeStatisticsData(DateTime startDate, DateTime endDate,
             ChartDateInterval dateInterval)
         {

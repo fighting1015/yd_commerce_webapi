@@ -10,15 +10,15 @@ namespace Vapps.ECommerce.Orders
 {
     public class OrderProcessingManager : VappsDomainServiceBase, IOrderProcessingManager
     {
-        private readonly IShipmentManager _shippmentManager;
+        private readonly IShipmentManager _shipmentManager;
         private readonly IOrderManager _orderManager;
         private readonly IEventBus _eventBus;
 
-        public OrderProcessingManager(IShipmentManager shippmentManager,
+        public OrderProcessingManager(IShipmentManager shipmentManager,
             IOrderManager orderManager,
             IEventBus eventBus)
         {
-            this._shippmentManager = shippmentManager;
+            this._shipmentManager = shipmentManager;
             this._orderManager = orderManager;
             this._eventBus = eventBus;
         }
@@ -28,7 +28,7 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="shipment">Shipment</param>
         /// <param name="notifyCustomer">True to notify customer</param>
-        public virtual async Task Ship(Shipment shipment, bool notifyCustomer)
+        public virtual async Task ShipAsync(Shipment shipment, bool notifyCustomer)
         {
             if (shipment == null)
                 throw new AbpException("shipment");
@@ -44,7 +44,7 @@ namespace Vapps.ECommerce.Orders
             }
 
             if (shipment.Id == 0)
-                await _shippmentManager.CreateAsync(shipment);
+                await _shipmentManager.CreateAsync(shipment);
 
             //process products with "Multiple warehouse" support enabled
             foreach (var item in shipment.Items)

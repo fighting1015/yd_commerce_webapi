@@ -11,6 +11,8 @@ using Abp.Localization;
 using System.Threading.Tasks;
 using System.Linq;
 using Abp.UI;
+using Abp.Organizations;
+using Abp.Domain.Repositories;
 
 namespace Vapps.Authorization.Roles
 {
@@ -32,7 +34,9 @@ namespace Vapps.Authorization.Roles
             IRoleManagementConfig roleManagementConfig,
             ICacheManager cacheManager,
             IUnitOfWorkManager unitOfWorkManager,
-            ILocalizationManager localizationManager)
+            ILocalizationManager localizationManager,
+            IRepository<OrganizationUnit, long> organizationUnitRepository,
+            IRepository<OrganizationUnitRole, long> organizationUnitRoleRepository)
             : base(
                 store,
                 roleValidators,
@@ -42,7 +46,9 @@ namespace Vapps.Authorization.Roles
                 permissionManager,
                 cacheManager,
                 unitOfWorkManager,
-                roleManagementConfig)
+                roleManagementConfig,
+                organizationUnitRepository,
+                organizationUnitRoleRepository)
         {
             _localizationManager = localizationManager;
         }
@@ -64,7 +70,7 @@ namespace Vapps.Authorization.Roles
             }
         }
 
-        private new  string L(string name)
+        private new string L(string name)
         {
             return _localizationManager.GetString(VappsConsts.ServerSideLocalizationSourceName, name);
         }

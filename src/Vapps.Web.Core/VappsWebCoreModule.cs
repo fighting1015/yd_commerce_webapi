@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Text;
+using Vapps.Advert;
 using Vapps.Alipay.Infrastructure;
 using Vapps.Configuration;
 using Vapps.ECommerce;
@@ -36,6 +37,7 @@ namespace Vapps.Web
         typeof(VappsAlipayApplicationModule),
         typeof(VappsWeChatApplicationModule),
         typeof(VappsECommerceApplicationModule),
+        typeof(VappsAdvertApplicationModule),
         typeof(VappsEntityFrameworkCoreModule)
     )]
     public class VappsWebCoreModule : AbpModule

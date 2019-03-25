@@ -2,6 +2,8 @@
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Vapps.Addresses;
+using Vapps.Advert.AdvertAccounts;
+using Vapps.Advert.AdvertStatistics;
 using Vapps.Authorization.Accounts;
 using Vapps.Authorization.Roles;
 using Vapps.Authorization.Users;
@@ -107,6 +109,10 @@ namespace Vapps.EntityFrameworkCore
         public virtual DbSet<TenantLogistics> TenantLogisticses { get; set; }
         public virtual DbSet<OrderPayment> OrderPayments { get; set; }
 
+        public virtual DbSet<AdvertAccount> AdvertAccounts { get; set; }
+        public virtual DbSet<AdvertDailyStatistic> AdvertDailyStatistics { get; set; }
+        public virtual DbSet<AdvertDailyStatisticItem> AdvertDailyStatisticItems { get; set; }
+
         public VappsDbContext(DbContextOptions<VappsDbContext> options)
             : base(options)
         {
@@ -193,6 +199,14 @@ namespace Vapps.EntityFrameworkCore
 
             modelBuilder.Entity<LoginAttempt>();
 
+            InitECommerceEntities(modelBuilder);
+            InitAdvertEntities(modelBuilder);
+
+            modelBuilder.ConfigurePersistedGrantEntity();
+        }
+
+        private static void InitECommerceEntities(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<Store>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.IsDeleted });
@@ -343,8 +357,36 @@ namespace Vapps.EntityFrameworkCore
             {
                 b.HasIndex(e => new { e.TenantId });
             });
+        }
 
-            modelBuilder.ConfigurePersistedGrantEntity();
+        private static void InitAdvertEntities(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AdvertAccount>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+            });
+
+            modelBuilder.Entity<AdvertDailyStatistic>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.AdvertAccountId, e.IsDeleted });
+
+                b.Property(e => e.ThDisplayCost).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.ThDisplayCost).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.ClickPrice).HasColumnType("decimal(18, 4)");
+
+                b.HasMany(e => e.Items)
+                .WithOne()
+                .HasForeignKey(c => c.AdvertDailyStatisticId).OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<AdvertDailyStatisticItem>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.AdvertDailyStatisticId, e.IsDeleted });
+
+                b.Property(e => e.ThDisplayCost).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.ThDisplayCost).HasColumnType("decimal(18, 4)");
+                b.Property(e => e.ClickPrice).HasColumnType("decimal(18, 4)");
+            });
         }
     }
 }

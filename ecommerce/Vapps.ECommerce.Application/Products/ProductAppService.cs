@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Vapps.Authorization;
 using Vapps.Dto;
@@ -53,13 +54,12 @@ namespace Vapps.ECommerce.Products
         public async Task ProductSync()
         {
             string reqURL = "http://commerce.vapps.com.cn/catalog/CategoryProductJsons?categoryId=0&PageSize=1000";
-            //var requestJson = JsonConvert.SerializeObject(requestData);
-
-
-            //paramList.Add(new KeyValuePair<string, string>("RequestData", HttpUtility.UrlEncode(requestJson, Encoding.UTF8)));
-
 
             var httpClient = new HttpClient();
+            CacheControlHeaderValue cacheControl = new CacheControlHeaderValue();
+            cacheControl.NoCache = true;
+            cacheControl.NoStore = true;
+            httpClient.DefaultRequestHeaders.CacheControl = cacheControl;
 
             try
             {
@@ -77,12 +77,14 @@ namespace Vapps.ECommerce.Products
                     JObject productsDetail = (JObject)JToken.Parse(productDetailJsonResultString)["data"];
 
                     var sku = productsDetail["Sku"].ToString();
+
                     var product = await _productManager.FindBySkuAsync(sku);
                     if (product != null)
                         continue;
 
                     var productDto = new CreateOrUpdateProductInput()
                     {
+                        Id = product.Id,
                         Name = productsDetail["Name"].ToString(),
                         Price = Decimal.Parse(productsDetail["ProductPrice"]["PriceValue"].ToString()),
                         GoodCost = Decimal.Parse(productsDetail["ProductPrice"]["Cost"].ToString()),
@@ -264,18 +266,21 @@ namespace Vapps.ECommerce.Products
                     string combinURL = "http://commerce.vapps.com.cn/product/GetStockByDropAndDropJson";
                     foreach (var combin in productDto.AttributeCombinations)
                     {
-                        List<KeyValuePair<String, String>> paramList = new List<KeyValuePair<String, String>>();
-
-                        paramList.Add(new KeyValuePair<string, string>("productId", productsDetail["Id"].ToString()));
-
-                        var para = JsonConvert.SerializeObject(combin.Attributes.Select(c =>
+                        var para = combin.Attributes.Select(c =>
                         {
-                            return new { ProductAttrbuteId = c.Name, ProductAttrbuteValueId = c.Values[0].Name };
-                        }).ToList());
+                            return new { ProductAttrbuteId = Convert.ToInt32(c.Name), ProductAttrbuteValueId = Convert.ToInt32(c.Values[0].Name) };
+                        }).ToList();
 
-                        paramList.Add(new KeyValuePair<string, string>("paramDictionary", para));
+                        var data = new
+                        {
+                            productId = Convert.ToInt32(productsDetail["Id"].ToString()),
+                            paramDictionary = para
+                        };
 
-                        var combinResponse = await httpClient.PostAsync(new Uri(combinURL), new FormUrlEncodedContent(paramList));
+                        HttpContent content = new StringContent(JsonConvert.SerializeObject(data));
+                        content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+                        var combinResponse = await httpClient.PostAsync(new Uri(combinURL), content);
                         var combinJsonResultString = await combinResponse.Content.ReadAsStringAsync();
 
                         if (combinJsonResultString.IsNullOrWhiteSpace())
@@ -291,7 +296,7 @@ namespace Vapps.ECommerce.Products
                     await CreateOrUpdateProduct(productDto);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             finally
@@ -638,7 +643,7 @@ namespace Vapps.ECommerce.Products
                 var attributesJson = JsonConvert.SerializeObject(combinDto.Attributes
                     .GetAttributesJson(product, _productAttributeManager, true));
 
-                if (input.Id != 0 && combinDto.Id != 0)
+                if (input.Id != 0)
                 {
                     combin = product.AttributeCombinations.FirstOrDefault(c => c.Id == combinDto.Id
                             || c.AttributesJson == attributesJson);

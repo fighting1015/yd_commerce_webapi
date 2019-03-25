@@ -22,7 +22,6 @@ namespace Vapps.Authorization
         [Permission(Self)]
         public class UserManage
         {
-
             public const string Self = "Admin.UserManage";
 
             [Permission(Self, MultiTenancySides.Host)]
@@ -79,7 +78,7 @@ namespace Vapps.Authorization
         {
             public const string Self = "Admin.Configuration";
 
-            [Permission(Self)]
+            [Permission(Languages.Self, MultiTenancySides.Host)]
             public class Languages
             {
                 public const string Self = "Admin.Configuration.Languages";
@@ -99,8 +98,6 @@ namespace Vapps.Authorization
 
             [Permission(HostSettings, MultiTenancySides.Host)]
             public const string HostSettings = "Admin.Configuration.Host.Settings";
-
-           
         }
 
         [Permission(Self)]
@@ -119,7 +116,7 @@ namespace Vapps.Authorization
             }
         }
 
-        [Permission(Self)]
+        [Permission(Self, MultiTenancySides.Host)]
         public class System
         {
             public System() { }

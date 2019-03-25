@@ -30,7 +30,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Sku查找商品
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="sku"></param>
         /// <returns></returns>
         [UnitOfWork]
         public virtual async Task<Product> FindBySkuAsync(string sku)
@@ -80,7 +80,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新商品
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="product"></param>
         public virtual async Task UpdateAsync(Product product)
         {
             await ProductRepository.UpdateAsync(product);
@@ -89,7 +89,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新商品及关联属性
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="product"></param>
         public virtual async Task UpdateWithRelateAttributeAsync(Product product)
         {
             product.Attributes.Each(a =>
@@ -114,7 +114,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 删除商品
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="product"></param>
         public virtual async Task DeleteAsync(Product product)
         {
             await ProductRepository.DeleteAsync(product);

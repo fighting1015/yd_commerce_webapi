@@ -92,7 +92,6 @@ namespace Vapps.Authorization.Users
                     userAccount.TenantId = eventData.Entity.TenantId;
                     userAccount.UserName = eventData.Entity.UserName;
                     userAccount.EmailAddress = eventData.Entity.EmailAddress;
-                    userAccount.LastLoginTime = eventData.Entity.LastLoginTime;
                     _userAccountManager.UpdateAsync(userAccount);
                 }
             }

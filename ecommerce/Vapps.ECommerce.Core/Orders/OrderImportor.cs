@@ -81,7 +81,7 @@ namespace Vapps.ECommerce.Orders
 
             //跳过已取消订单
             if (orderImport.OrderStatus == OrderStatus.Canceled
-                && orderImport.ShipName.IsNullOrWhiteSpace())
+                && orderImport.LogisticsName.IsNullOrWhiteSpace())
             {
                 return false;
             }
@@ -128,6 +128,8 @@ namespace Vapps.ECommerce.Orders
                 order.CreationTime = orderImport.CreatedOnUtc;
 
                 await _orderManager.UpdateAsync(order);
+
+                await UnitOfWorkManager.Current.SaveChangesAsync();
 
                 return true;
             }
@@ -195,11 +197,15 @@ namespace Vapps.ECommerce.Orders
                 order.Items.Add(orderItem);
             }
 
+            await _orderManager.UpdateAsync(order);
+
+            await UnitOfWorkManager.Current.SaveChangesAsync();
+
             await AddShipment(orderImport, order);
 
             await _orderManager.UpdateAsync(order);
 
-            await UnitOfWorkManager.Current.SaveChangesAsync();
+            //await UnitOfWorkManager.Current.SaveChangesAsync();
 
             return true;
         }
@@ -220,7 +226,7 @@ namespace Vapps.ECommerce.Orders
                 var itemArray = productSku.Split(',');
                 if (!itemArray.Any())
                 {
-                    _logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
+                    //_logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
                     return orderItemList;
                 }
 
@@ -241,7 +247,7 @@ namespace Vapps.ECommerce.Orders
 
                         if (combin == null)
                         {
-                            _logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
+                            //_logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
                             return orderItemList;
                         }
                         else
@@ -259,9 +265,9 @@ namespace Vapps.ECommerce.Orders
                     orderItemList.Add(orderItem);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
+                //_logger.Error($"订单号:{orderNumber}sku不存在，导入失败");
                 return orderItemList;
             }
 
@@ -273,21 +279,30 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="orderImport"></param>
         /// <param name="order"></param>
-        private async Task<Shipment> AddShipment(OrderImport orderImport, Order order)
+        public async Task<Shipment> AddShipment(OrderImport orderImport, Order order)
         {
-            if (orderImport.ShipName.IsNullOrWhiteSpace())
+            if (orderImport.LogisticsName.IsNullOrWhiteSpace() && orderImport.LogisticsId == 0)
                 return null;
 
             if (orderImport.TrackingNumber.IsNullOrWhiteSpace())
                 return null;
 
             order.ShippingStatus = ShippingStatus.Taked;
-            var trackingNumber = orderImport.TrackingNumber.Replace("'", "");
 
-            var logistics = await _logisticsManager.FindByNameAsync(orderImport.ShipName);
-            if (logistics == null)
-                return null;
+            // 获取物流
+            var logisticsId = orderImport.LogisticsId;
+            var logisticsName = orderImport.LogisticsName;
+            if (logisticsId == 0 || logisticsName.IsNullOrWhiteSpace())
+            {
+                var logistics = await _logisticsManager.FindByNameAsync(orderImport.LogisticsName);
+                if (logistics == null)
+                    return null;
 
+                logisticsId = logistics.Id;
+                logisticsName = logistics.Name;
+            }
+
+            // 创建shipment
             Shipment shipment;
             decimal totalVolume = 0;
             decimal totalWeight = 0;
@@ -297,7 +312,7 @@ namespace Vapps.ECommerce.Orders
 
                 await _shipmentManager.ShipmentRepository.EnsureCollectionLoadedAsync(shipment, s => s.Items);
 
-                shipment.LogisticsId = logistics.Id;
+                shipment.LogisticsId = logisticsId;
                 //shipment.TrackingNumber = trackingNumber;
                 shipment.CreationTime = orderImport.CreatedOnUtc;
             }
@@ -305,18 +320,17 @@ namespace Vapps.ECommerce.Orders
             {
                 shipment = new Shipment()
                 {
-                    LogisticsName = logistics.Name,
+                    LogisticsName = orderImport.LogisticsName,
                     OrderNumber = order.OrderNumber,
                     Status = order.ShippingStatus,
-                    LogisticsId = logistics.Id,
+                    LogisticsId = logisticsId,
                     OrderId = order.Id,
                     CreationTime = orderImport.CreatedOnUtc,
                     Items = new Collection<ShipmentItem>(),
                 };
             }
 
-            shipment.LogisticsNumber = orderImport.TrackingNumber;
-
+            shipment.LogisticsNumber = orderImport.TrackingNumber.Replace("'", "");
             if (orderImport.OrderStatus == OrderStatus.Completed)
             {
                 order.OrderStatus = OrderStatus.Completed;
@@ -332,6 +346,7 @@ namespace Vapps.ECommerce.Orders
                 shipment.RejectedOn = orderImport.DeliveriedOnUtc;
             }
 
+            // 添加Item 并计算重量
             if (shipment.Id == 0)
             {
                 foreach (var item in order.Items.ToList())
@@ -381,7 +396,7 @@ namespace Vapps.ECommerce.Orders
 
                 citys = await _stateManager.Cities.Where(c => c.ProvinceId == province.Id).ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

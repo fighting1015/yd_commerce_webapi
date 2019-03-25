@@ -5,14 +5,12 @@ using Abp.PlugIns;
 using Abp.Timing;
 using Castle.Facilities.Logging;
 using Hangfire;
-using Hangfire.MySql.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -29,8 +27,6 @@ using Vapps.Web.Authentication.JwtBearer;
 using Vapps.Web.Common;
 using Vapps.Web.Hangfire;
 using Vapps.Web.IdentityServer;
-
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 
@@ -170,7 +166,6 @@ namespace Vapps.Web.Startup
             };
             app.UseHangfireServer(jobOptions);
 
-            app.UseHangfireServer();
             StratHangfireMission();
 
             app.UseMvc(routes =>
@@ -215,10 +210,14 @@ namespace Vapps.Web.Startup
 
             options.IncludeXmlComments(basePath + "\\Vapps.Core.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.Application.xml");
+            options.IncludeXmlComments(basePath + "\\Vapps.Application.Share.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.Web.Core.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.WeChat.Application.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.Alipay.Application.xml");
+            options.IncludeXmlComments(basePath + "\\Vapps.ECommerce.Core.xml");
             options.IncludeXmlComments(basePath + "\\Vapps.ECommerce.Application.xml");
+            options.IncludeXmlComments(basePath + "\\Vapps.Advert.Core.xml");
+            options.IncludeXmlComments(basePath + "\\Vapps.Advert.Application.xml");
         }
 
         private void StratHangfireMission()

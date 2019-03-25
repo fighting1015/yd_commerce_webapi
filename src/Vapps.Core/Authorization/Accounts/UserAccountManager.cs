@@ -144,7 +144,6 @@ namespace Vapps.Authorization.Accounts
             userAccount.UserName = user.UserName;
             userAccount.UserId = user.Id;
             userAccount.EmailAddress = user.EmailAddress;
-            userAccount.LastLoginTime = user.LastLoginTime;
             userAccount.ProvinceId = province?.Id ?? 0;
             userAccount.Province = province?.Name ?? string.Empty;
             userAccount.CityId = city?.Id ?? 0;

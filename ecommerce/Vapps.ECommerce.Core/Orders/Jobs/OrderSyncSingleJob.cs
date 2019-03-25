@@ -6,6 +6,7 @@ using Castle.Core.Logging;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using Vapps.ECommerce.Orders.Toutiao;
 using Vapps.ECommerce.Orders.Toutiao.Requests;
 using Vapps.ECommerce.Shippings;
@@ -43,7 +44,7 @@ namespace Vapps.ECommerce.Orders.Jobs
             {
                 using (_unitOfWorkManager.Current.SetTenantId(arg))
                 {
-                    var stores = await _storeManager.Stores.ToListAsync();
+                    var stores = await _storeManager.Stores.Where(s => s.Id == 6).ToListAsync();
 
                     foreach (var store in stores)
                     {
@@ -120,7 +121,7 @@ namespace Vapps.ECommerce.Orders.Jobs
                                             DiscountAmount = orderItemData.ShopCouponAmount / 100 + orderItemData.CouponAmount / 100,
                                             PackageNum = orderItemData.ComboNum,
                                             PackageName = orderItemData.ProductName,
-                                            ShipName = shipInfo?.Name,
+                                            LogisticsName = shipInfo?.Name,
                                             TrackingNumber = orderItemData.LogisticsCode,
                                             TrackingOrderNumber = orderItemData.LogisticsCode,
 

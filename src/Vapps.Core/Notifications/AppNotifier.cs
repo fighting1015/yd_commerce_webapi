@@ -58,11 +58,38 @@ namespace Vapps.Notifications
         public async Task SendMessageAsync(UserIdentifier user, string message, NotificationSeverity severity = NotificationSeverity.Info)
         {
             await _notificationPublisher.PublishAsync(
-                "App.SimpleMessage",
+                "订单导入成功通知",
                 new MessageNotificationData(message),
                 severity: severity,
                 userIds: new[] { user }
                 );
+        }
+
+        //This is for test purposes
+        public async Task SendMessageAsync(UserIdentifier user, string notificationName, string message, NotificationSeverity severity = NotificationSeverity.Info)
+        {
+            await _notificationPublisher.PublishAsync(
+                notificationName,
+                new MessageNotificationData(message),
+                severity: severity,
+                userIds: new[] { user }
+                );
+        }
+
+        public async Task SomeShipmentsCouldntBeImported(UserIdentifier argsUser, string fileToken, string fileType, string fileName)
+        {
+            var notificationData = new LocalizableMessageNotificationData(
+                new LocalizableString(
+                    "ClickToSeeInvalidShipments",
+                    VappsConsts.ServerSideLocalizationSourceName
+                )
+            );
+
+            notificationData["fileToken"] = fileToken;
+            notificationData["fileType"] = fileType;
+            notificationData["fileName"] = fileName;
+
+            await _notificationPublisher.PublishAsync(AppNotificationNames.DownloadInvalidImportShipments, notificationData, userIds: new[] { argsUser });
         }
     }
 }

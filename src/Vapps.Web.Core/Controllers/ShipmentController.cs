@@ -10,16 +10,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vapps.Authorization;
+using Vapps.ECommerce.Shippings.Importing;
 using Vapps.Storage;
 
 namespace Vapps.Web.Controllers
 {
-    public abstract class OrderControllerBase : VappsControllerBase
+    [Route("api/[controller]/[action]")]
+    public class ShipmentController : VappsControllerBase
     {
-        protected readonly IBinaryObjectManager BinaryObjectManager;
-        protected readonly IBackgroundJobManager BackgroundJobManager;
+        private readonly IBinaryObjectManager BinaryObjectManager;
+        private readonly IBackgroundJobManager BackgroundJobManager;
 
-        protected OrderControllerBase(
+        public ShipmentController(
             IBinaryObjectManager binaryObjectManager,
             IBackgroundJobManager backgroundJobManager)
         {
@@ -30,14 +32,20 @@ namespace Vapps.Web.Controllers
         /// <summary>
         /// 从Excel导入订单
         /// </summary>
+        /// <param name="tenantLogisticsId">自选物流Id，后期改成模板Id</param>
         /// <returns></returns>
         [HttpPost]
-        [AbpMvcAuthorize(BusinessCenterPermissions.Order.Import)]
-        public async Task<JsonResult> ImportFromExcel()
+        [AbpMvcAuthorize(BusinessCenterPermissions.SalesManage.Shipment.Import)]
+        public async Task<JsonResult> ImportFromExcel(int tenantLogisticsId)
         {
             try
             {
                 var file = Request.Form.Files.First();
+
+                if (tenantLogisticsId == 0)
+                {
+                    throw new UserFriendlyException(L("TenantLogisticsIsRequied"));
+                }
 
                 if (file == null)
                 {
@@ -60,12 +68,13 @@ namespace Vapps.Web.Controllers
 
                 await BinaryObjectManager.SaveAsync(fileObject);
 
-                //await BackgroundJobManager.EnqueueAsync<ImportUsersToExcelJob, ImportUsersFromExcelJobArgs>(new ImportUsersFromExcelJobArgs
-                //{
-                //    TenantId = tenantId,
-                //    BinaryObjectId = fileObject.Id,
-                //    User = AbpSession.ToUserIdentifier()
-                //});
+                await BackgroundJobManager.EnqueueAsync<ImportShipmentsFromExcelJob, ImportShipmentsFromExcelJobArgs>(new ImportShipmentsFromExcelJobArgs
+                {
+                    TenantId = tenantId,
+                    TenantLogisticsId = tenantLogisticsId,
+                    BinaryObjectId = fileObject.Id,
+                    User = AbpSession.ToUserIdentifier()
+                });
 
                 return Json(new AjaxResponse(new { }));
             }
