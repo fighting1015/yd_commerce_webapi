@@ -64,7 +64,7 @@ namespace Vapps.ECommerce.Catalog
         /// <summary>
         /// 更新分类
         /// </summary>
-        /// <param name="Category"></param>
+        /// <param name="category"></param>
         public virtual async Task UpdateAsync(Category category)
         {
             await CategoryRepository.UpdateAsync(category);
@@ -73,7 +73,7 @@ namespace Vapps.ECommerce.Catalog
         /// <summary>
         /// 删除分类
         /// </summary>
-        /// <param name="Category"></param>
+        /// <param name="category"></param>
         public virtual async Task DeleteAsync(Category category)
         {
             await CategoryRepository.DeleteAsync(category);

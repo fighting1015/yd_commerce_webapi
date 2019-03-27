@@ -16,7 +16,6 @@ using Vapps.Media;
 namespace Vapps.ECommerce.Customers
 {
     [AbpAuthorize(BusinessCenterPermissions.CustomerManage.Customer.Self)]
-
     public class CustomerAppService : VappsAppServiceBase, ICustomerAppService
     {
         private readonly ICustomerManager _customerManager;

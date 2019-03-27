@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Repositories;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,22 @@ namespace Vapps.Advert.AdvertStatistics
 
 
         #region Advert Daily Statistic
+
+        /// <summary>
+        /// 创建或更新每日分析
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        Task InsertOrUpdateAdvertStatisticAsync(AdvertStatisticImport dto);
+
+        /// <summary>
+        /// 根据id获取广告统计
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="accountId"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        Task<AdvertDailyStatistic> GetAdvertStatistics(long productId, long accountId, DateTime data);
 
         /// <summary>
         /// 根据id查找广告账户每日统计

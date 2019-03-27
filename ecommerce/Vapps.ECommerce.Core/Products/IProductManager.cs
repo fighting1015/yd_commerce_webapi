@@ -15,7 +15,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Sku查找商品
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="sku"></param>
         /// <returns></returns>
         Task<Product> FindBySkuAsync(string sku);
 
@@ -49,7 +49,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新商品及关联属性
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="product"></param>
         Task UpdateWithRelateAttributeAsync(Product product);
 
         /// <summary>

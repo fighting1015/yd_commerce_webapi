@@ -6,7 +6,7 @@ namespace Vapps.ECommerce.Products
 {
     /// <summary>
     /// Represents a product attribute
-    /// </summary
+    /// </summary>
     [Table("ProductAttributes")]
     public class ProductAttribute : FullAuditedEntity<long>, IMustHaveTenant
     {

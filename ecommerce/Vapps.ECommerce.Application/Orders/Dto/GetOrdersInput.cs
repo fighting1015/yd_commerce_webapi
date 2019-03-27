@@ -6,17 +6,45 @@ using Vapps.ECommerce.Shippings;
 
 namespace Vapps.ECommerce.Orders.Dto
 {
-    public class GetOrdersInput : PagedAndSortedInputDto, IShouldNormalize
+    public class GetOrdersInput : GetOrdersBaseInput
     {
-        /// <summary>
-        /// 商品Id
-        /// </summary>
-        public List<long> ProductIds { get; set; }
-
         /// <summary>
         /// 快递单号
         /// </summary>
         public virtual string LogisticsNumber { get; set; }
+
+        /// <summary>
+        /// 签收时间
+        /// </summary>
+        public DateRangeDto ReceivedOn { get; set; }
+
+        /// <summary>
+        /// 订单状态
+        /// </summary>
+        public virtual OrderStatus[] OrderStatuses { get; set; }
+
+        /// <summary>
+        /// 付款状态
+        /// </summary>
+        public virtual PaymentStatus[] PaymentStatuses { get; set; }
+
+        /// <summary>
+        /// 发货状态
+        /// </summary>
+        public virtual ShippingStatus[] ShippingStatuses { get; set; }
+    }
+
+    public class GetOrdersBaseInput : PagedAndSortedInputDto, IShouldNormalize
+    {
+        /// <summary>
+        /// 店铺Id
+        /// </summary>
+        public List<long> StoreIds { get; set; }
+
+        /// <summary>
+        /// 商品Id
+        /// </summary>
+        public List<long> ProductIds { get; set; }
 
         /// <summary>
         /// 订单号
@@ -27,11 +55,6 @@ namespace Vapps.ECommerce.Orders.Dto
         /// 下单时间
         /// </summary>
         public DateRangeDto CreatedOn { get; set; }
-
-        /// <summary>
-        /// 签收时间
-        /// </summary>
-        public DateRangeDto ReceivedOn { get; set; }
 
         /// <summary>
         /// 收件人姓名
@@ -59,21 +82,6 @@ namespace Vapps.ECommerce.Orders.Dto
         public int? DistrictId { get; set; }
 
         /// <summary>
-        /// 订单状态
-        /// </summary>
-        public virtual OrderStatus[] OrderStatuses { get; set; }
-
-        /// <summary>
-        /// 付款状态
-        /// </summary>
-        public virtual PaymentStatus[] PaymentStatuses { get; set; }
-
-        /// <summary>
-        /// 发货状态
-        /// </summary>
-        public virtual ShippingStatus[] ShippingStatuses { get; set; }
-
-        /// <summary>
         /// 订单类型
         /// </summary>
         public virtual OrderType[] OrderTypes { get; set; }
@@ -82,6 +90,16 @@ namespace Vapps.ECommerce.Orders.Dto
         /// 订单来源
         /// </summary>
         public virtual OrderSource[] OrderSources { get; set; }
+
+        /// <summary>
+        /// 管理员备注
+        /// </summary>
+        public virtual string AdminComment { get; set; }
+
+        /// <summary>
+        /// 用户备注
+        /// </summary>
+        public virtual string CustomerComment { get; set; }
 
         public void Normalize()
         {

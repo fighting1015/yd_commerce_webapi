@@ -3,6 +3,7 @@ using Abp.Extensions;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Vapps.ECommerce.Shippings;
 using Vapps.Extensions;
 using Vapps.Helpers;
 
@@ -85,9 +86,10 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 是否有可发货子订单
         /// </summary>
-        /// <param name="order">Order</param>
+        /// <param name="order"></param>
+        /// <param name="shipmentManager">Order</param>
         /// <returns></returns>
-        public static bool HasItemsToAddToShipment(this Order order)
+        public static bool HasItemsToAddToShipment(this Order order, IShipmentManager shipmentManager)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -95,7 +97,7 @@ namespace Vapps.ECommerce.Orders
 
             foreach (var orderItem in order.Items)
             {
-                var totalNumberOfItemsCanBeAddedToShipment = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                var totalNumberOfItemsCanBeAddedToShipment = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment(shipmentManager);
                 if (totalNumberOfItemsCanBeAddedToShipment <= 0)
                     continue;
 
@@ -109,13 +111,14 @@ namespace Vapps.ECommerce.Orders
         /// 或者子订单最大可发货数量        
         /// </summary>
         /// <param name="orderItem">Order item</param>
+        /// <param name="shipmentManager"></param>
         /// <returns>未发货总数</returns>
-        public static int GetTotalNumberOfItemsCanBeAddedToShipment(this OrderItem orderItem)
+        public static int GetTotalNumberOfItemsCanBeAddedToShipment(this OrderItem orderItem, IShipmentManager shipmentManager)
         {
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
 
-            var totalInShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
+            var totalInShipments = orderItem.GetTotalNumberOfItemsInAllShipment(shipmentManager);
 
             var qtyOrdered = orderItem.Quantity;
             var qtyCanBeAddedToShipmentTotal = qtyOrdered - totalInShipments;
@@ -129,8 +132,9 @@ namespace Vapps.ECommerce.Orders
         /// 获取订单发货商品数量
         /// </summary>
         /// <param name="orderItem">Order item</param>
+        /// <param name="shipmentManager"></param>
         /// <returns>Total number of items in all shipmentss</returns>
-        public static int GetTotalNumberOfItemsInAllShipment(this OrderItem orderItem)
+        public static int GetTotalNumberOfItemsInAllShipment(this OrderItem orderItem, IShipmentManager shipmentManager)
         {
             if (orderItem == null)
                 throw new ArgumentNullException("orderItem");
@@ -140,6 +144,9 @@ namespace Vapps.ECommerce.Orders
             for (int i = 0; i < shipments.Count; i++)
             {
                 var shipment = shipments[i];
+
+                shipmentManager.ShipmentRepository.EnsureCollectionLoaded(shipment, s => s.Items);
+
                 var si = shipment.Items
                     .FirstOrDefault(x => x.OrderItemId == orderItem.Id);
                 if (si != null)

@@ -6,6 +6,11 @@ namespace Vapps.Advert.AdvertAccounts.Dto
     public class AdvertAccountListDto : EntityDto<long>
     {
         /// <summary>
+        /// 店铺
+        /// </summary>
+        public string Store { get; set; }
+
+        /// <summary>
         /// 第三方Id
         /// </summary>
         public string ThirdpartyId { get; set; }

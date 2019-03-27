@@ -20,6 +20,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 获取属性关联
         /// </summary>
+        /// <param name="productId"></param>
         /// <param name="attributesJson">Attributes in json format</param>
         /// <returns>Selected product attribute mappings</returns>
         Task<IList<ProductAttributeMapping>> ParseProductAttributeMappingsAsync(long productId,
@@ -28,9 +29,11 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 获取属性值
         /// </summary>
+        /// <param name="productId"></param>
         /// <param name="attributesJson">格式化Json属性</param>
+        /// <param name="productAttributeId"></param>
         /// <param name="productAttributeMappingId">属性关联Id,0为加载所有属性值</param>
-        /// <returns>商品属性值</returns>
+        /// <returns></returns>
         Task<IList<ProductAttributeValue>> ParseProductAttributeValuesAsync(long productId,
             List<JsonProductAttribute> attributesJson,
             long productAttributeId = 0,

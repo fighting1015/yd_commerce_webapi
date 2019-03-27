@@ -5,6 +5,7 @@ using Abp.Timing;
 using System.Threading.Tasks;
 using Vapps.ECommerce.Payments;
 using Vapps.ECommerce.Shippings;
+using Vapps.ECommerce.Shippings.Events;
 
 namespace Vapps.ECommerce.Orders
 {
@@ -37,9 +38,9 @@ namespace Vapps.ECommerce.Orders
             if (order == null)
                 throw new AbpException("Order cannot be loaded");
 
-            if (shipment.Status != ShippingStatus.NotYetShipped && shipment.Status != ShippingStatus.Taked)
+            if (shipment.Status != ShippingStatus.NotYetShipped)
             {
-                await _eventBus.TriggerAsync(new ShipmentDeliveredEvent(shipment));
+                await _eventBus.TriggerAsync(new ShipmentSentEvent(shipment));
                 return;
             }
 
@@ -47,23 +48,23 @@ namespace Vapps.ECommerce.Orders
                 await _shipmentManager.CreateAsync(shipment);
 
             //process products with "Multiple warehouse" support enabled
-            foreach (var item in shipment.Items)
-            {
-                if (item.OrderItemId == 0)
-                {
-                    continue;
-                }
+            //foreach (var item in shipment.Items)
+            //{
+            //    if (item.OrderItemId == 0)
+            //    {
+            //        continue;
+            //    }
 
-                var orderItem = _orderManager.GetOrderItemByIdAsync(item.OrderItemId);
+            //    //var orderItem = _orderManager.GetOrderItemByIdAsync(item.OrderItemId);
 
-                // TODO：减少库存
-            }
+            //    // TODO：减少库存
+            //}
 
             await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Items);
             await _orderManager.OrderRepository.EnsureCollectionLoadedAsync(order, o => o.Shipments);
 
             //check whether we have more items to ship
-            if (order.HasItemsToAddToShipment() || order.HasItemsToShip())
+            if (order.HasItemsToAddToShipment(_shipmentManager) || order.HasItemsToShip())
                 order.ShippingStatus = ShippingStatus.PartiallyShipped;
             else
                 order.ShippingStatus = ShippingStatus.Taked;
@@ -76,10 +77,10 @@ namespace Vapps.ECommerce.Orders
             }
 
             //触发发货事件
-            await _eventBus.TriggerAsync(new ShipmentDeliveredEvent(shipment));
+            await _eventBus.TriggerAsync(new ShipmentSentEvent(shipment));
 
             //修改订单状态
-            await CheckOrderStatus(order);
+            //await CheckOrderStatus(order);
         }
 
         /// <summary>

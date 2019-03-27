@@ -18,7 +18,8 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据订单id查找物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="orderId"></param>
+        /// <param name="readOnly"></param>
         /// <returns></returns>
         IList<Shipment> FindByOrderId(long orderId, bool readOnly = false);
 
@@ -32,7 +33,7 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据物流单号查找物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="logisticsNumber"></param>
         /// <returns></returns>
         Task<Shipment> FindByLogisticsNumberAsync(string logisticsNumber);
 

@@ -20,7 +20,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 根据 订单号 查找订单
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="orderNumber"></param>
         /// <returns></returns>
         Task<Order> FindByOrderNumberAsync(string orderNumber);
 
@@ -69,7 +69,7 @@ namespace Vapps.ECommerce.Orders
         /// <summary>
         /// 根据订单id查找订单条目
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
         Task<List<OrderItem>> FindOrderItemByOrderIdAsync(long orderId);
 

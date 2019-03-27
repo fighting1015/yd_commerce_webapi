@@ -51,7 +51,7 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据Key查找物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         public virtual async Task<Logistics> FindByKeyAsync(string key)
         {
@@ -112,9 +112,9 @@ namespace Vapps.ECommerce.Shippings
         #region TenantLogistics
 
         /// <summary>
-        /// 根据物流id查找订单条目
+        /// 根据物流id查找自选物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="logisticsId"></param>
         /// <returns></returns>
         public virtual async Task<TenantLogistics> FindTenantLogisticsByLogisticsIdAsync(int logisticsId)
         {
@@ -122,7 +122,7 @@ namespace Vapps.ECommerce.Shippings
         }
 
         /// <summary>
-        /// 根据id查找订单条目
+        /// 根据id查找自选物流
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -132,7 +132,7 @@ namespace Vapps.ECommerce.Shippings
         }
 
         /// <summary>
-        /// 根据id获取订单条目
+        /// 根据id获取自选物流
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -142,7 +142,7 @@ namespace Vapps.ECommerce.Shippings
         }
 
         /// <summary>
-        /// 添加订单条目
+        /// 添加自选物流
         /// </summary>
         /// <param name="tenantLogistics"></param>
         public virtual async Task CreateTenantLogisticsAsync(TenantLogistics tenantLogistics)
@@ -151,7 +151,7 @@ namespace Vapps.ECommerce.Shippings
         }
 
         /// <summary>
-        /// 更新订单条目
+        /// 更新自选物流
         /// </summary>
         /// <param name="tenantLogistics"></param>
         public virtual async Task UpdateTenantLogisticsAsync(TenantLogistics tenantLogistics)
@@ -160,7 +160,7 @@ namespace Vapps.ECommerce.Shippings
         }
 
         /// <summary>
-        /// 删除订单条目
+        /// 删除自选物流
         /// </summary>
         /// <param name="tenantLogistics"></param>
         public virtual async Task DeleteTenantLogisticsAsync(TenantLogistics tenantLogistics)
@@ -169,7 +169,7 @@ namespace Vapps.ECommerce.Shippings
         }
 
         /// <summary>
-        /// 删除订单条目
+        /// 删除自选物流
         /// </summary>
         /// <param name="id"></param>
         public virtual async Task DeleteTenantLogisticsAsync(int id)
@@ -182,9 +182,9 @@ namespace Vapps.ECommerce.Shippings
 
 
         /// <summary>
-        /// 删除订单条目
+        /// 删除自选物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="logisticsId"></param>
         public virtual async Task DeleteTenantLogisticsByLogisticsIdAsync(int logisticsId)
         {
             var tenantLogistics = await TenantLogisticsRepository.FirstOrDefaultAsync(tl => tl.LogisticsId == logisticsId);

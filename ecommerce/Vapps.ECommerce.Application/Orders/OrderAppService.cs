@@ -6,7 +6,6 @@ using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
 using Abp.Runtime.Caching;
-using Abp.Runtime.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
@@ -34,7 +33,6 @@ namespace Vapps.ECommerce.Orders
     [AbpAuthorize(BusinessCenterPermissions.SalesManage.Order.Self)]
     public class OrderAppService : VappsAppServiceBase, IOrderAppService
     {
-
         private readonly IOrderManager _orderManager;
         private readonly IProductManager _productManager;
         private readonly IProductAttributeManager _productAttributeManager;
@@ -100,6 +98,7 @@ namespace Vapps.ECommerce.Orders
                .WhereIf(!input.ShippingStatuses.IsNullOrEmpty(), r => input.ShippingStatuses.Contains(r.ShippingStatus))
                .WhereIf(!input.PaymentStatuses.IsNullOrEmpty(), r => input.PaymentStatuses.Contains(r.PaymentStatus))
                .WhereIf(!input.OrderNumber.IsNullOrWhiteSpace(), r => r.OrderNumber.Contains(input.OrderNumber))
+               .WhereIf(input.StoreIds != null && input.StoreIds.Any(), r => input.StoreIds.Contains(r.StoreId))
                .WhereIf(input.ProductIds != null && input.ProductIds.Any(), r => r.Items.Any(i => input.ProductIds.Contains(i.ProductId)))
                .WhereIf(!input.LogisticsNumber.IsNullOrWhiteSpace(), r => r.Shipments.Any(s => s.LogisticsNumber.Contains(input.LogisticsNumber)))
                .WhereIf(!input.ShippingName.IsNullOrWhiteSpace(), r => r.ShippingName.Contains(input.ShippingName))
@@ -273,20 +272,32 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<FileDto> GetWaitShippingToExcel(GetWaitShippingInput input)
+        public async Task<FileDto> GetWaitShippingToExcel(GetOrdersBaseInput input)
         {
+            string provinceName = input.ProvinceId.HasValue ?
+                (await _stateManager.GetProvinceByIdAsync(input.ProvinceId.Value)).Name : null;
+            string cityName = input.CityId.HasValue ?
+                (await _stateManager.GetCityByIdAsync(input.CityId.Value)).Name : null;
+            string districtName = input.DistrictId.HasValue ?
+               (await _stateManager.FindDistrictByIdAsync(input.DistrictId.Value)).Name : null;
+
             var query = _orderManager
-                .Orderes
-                .Include(o => o.Items)
-                .Where(r => r.OrderStatus == OrderStatus.Processing)
-                .Where(r => r.ShippingStatus == ShippingStatus.NotYetShipped)
-                .WhereIf(!input.OrderNumber.IsNullOrWhiteSpace(), r => r.OrderNumber.Contains(input.OrderNumber))
-                .WhereIf(!input.ShippingName.IsNullOrWhiteSpace(), r => r.ShippingName.Contains(input.ShippingName))
-                .WhereIf(!input.PhoneNumber.IsNullOrWhiteSpace(), r => r.ShippingPhoneNumber.Contains(input.PhoneNumber))
-                .WhereIf(!input.OrderTypes.IsNullOrEmpty(), r => input.OrderTypes.Contains(r.OrderType))
-                .WhereIf(!input.OrderSources.IsNullOrEmpty(), r => input.OrderSources.Contains(r.OrderSource))
-                .WhereIf(input.StoreIds != null && input.StoreIds.Any(), r => input.StoreIds.Contains(r.StoreId))
-                .WhereIf(input.ProductIds != null && input.ProductIds.Any(), r => r.Items.Any(i => input.ProductIds.Contains(i.ProductId)));
+               .Orderes
+               .Include(o => o.Items)
+               .Where(r => r.OrderStatus == OrderStatus.Processing)
+               .Where(r => r.ShippingStatus == ShippingStatus.NotYetShipped)
+               .WhereIf(!input.OrderTypes.IsNullOrEmpty(), r => input.OrderTypes.Contains(r.OrderType))
+               .WhereIf(!input.OrderSources.IsNullOrEmpty(), r => input.OrderSources.Contains(r.OrderSource))
+               .WhereIf(!input.OrderNumber.IsNullOrWhiteSpace(), r => r.OrderNumber.Contains(input.OrderNumber))
+               .WhereIf(input.StoreIds != null && input.StoreIds.Any(), r => input.StoreIds.Contains(r.StoreId))
+               .WhereIf(input.ProductIds != null && input.ProductIds.Any(), r => r.Items.Any(i => input.ProductIds.Contains(i.ProductId)))
+               .WhereIf(!input.ShippingName.IsNullOrWhiteSpace(), r => r.ShippingName.Contains(input.ShippingName))
+               .WhereIf(!input.PhoneNumber.IsNullOrWhiteSpace(), r => r.ShippingPhoneNumber.Contains(input.PhoneNumber))
+               .WhereIf(!provinceName.IsNullOrWhiteSpace(), r => r.ShippingProvince.Contains(provinceName))
+               .WhereIf(!cityName.IsNullOrWhiteSpace(), r => r.ShippingCity.Contains(cityName))
+               .WhereIf(!districtName.IsNullOrWhiteSpace(), r => r.ShippingDistrict.Contains(districtName))
+               .WhereIf(input.CreatedOn.FormDateNotEmpty(), r => r.CreationTime >= input.CreatedOn.FormDate)
+               .WhereIf(input.CreatedOn.ToDateNotEmpty(), r => r.CreationTime <= input.CreatedOn.ToDate);
 
             var orders = await query
                 .OrderByDescending(o => o.CreationTime)

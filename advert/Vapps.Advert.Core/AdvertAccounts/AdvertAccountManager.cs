@@ -36,6 +36,27 @@ namespace Vapps.Advert.AdvertAccounts
             return await AdvertAccountRepository.FirstOrDefaultAsync(id);
         }
 
+
+        /// <summary>
+        /// 根据第三方Id查找广告账户
+        /// </summary>
+        /// <param name="thirdpartyId"></param>
+        /// <returns></returns>
+        public virtual async Task<AdvertAccount> FindByThirdpartyIdAsync(string thirdpartyId)
+        {
+            return await AdvertAccountRepository.FirstOrDefaultAsync(ad => ad.ThirdpartyId == thirdpartyId);
+        }
+
+        /// <summary>
+        /// 根据username查找广告账户
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public virtual async Task<AdvertAccount> FindByUserNameAsync(string username)
+        {
+            return await AdvertAccountRepository.FirstOrDefaultAsync(a => a.UserName == username);
+        }
+
         /// <summary>
         /// 根据id获取广告账户
         /// </summary>

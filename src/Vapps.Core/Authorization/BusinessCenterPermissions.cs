@@ -99,6 +99,32 @@ namespace Vapps.Authorization
             }
         }
 
+        [Permission(Self, MultiTenancySides.Tenant)]
+        public class AdvertManage
+        {
+            public const string Self = "BusiCenter.AdvertManage";
+
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class Account
+            {
+                public const string Self = "BusiCenter.AdvertManage.Account";
+
+                public const string Create = "BusiCenter.AdvertManage.Account.Create";
+                public const string Edit = "BusiCenter.AdvertManage.Account.Edit";
+                public const string Delete = "BusiCenter.AdvertManage.Account.Delete";
+            }
+
+            [Permission(Self, MultiTenancySides.Tenant)]
+            public class DailyStatistic
+            {
+                public const string Self = "BusiCenter.AdvertManage.DailyStatistic";
+
+                public const string Create = "BusiCenter.AdvertManage.DailyStatistic.Create";
+                public const string Edit = "BusiCenter.AdvertManage.DailyStatistic.Edit";
+                public const string Delete = "BusiCenter.AdvertManage.DailyStatistic.Delete";
+            }
+        }
+
         [Permission(Self)]
         public class StoreConfiguration
         {

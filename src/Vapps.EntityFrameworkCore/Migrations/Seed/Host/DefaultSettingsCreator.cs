@@ -6,6 +6,7 @@ using Vapps.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Vapps.Configuration;
 using Abp.Runtime.Security;
+using Vapps.Advert.AdvertAccounts;
 
 namespace Vapps.Migrations.Seed.Host
 {
@@ -38,6 +39,12 @@ namespace Vapps.Migrations.Seed.Host
             AddSettingIfNotExists(AppSettings.Shipping.ApiId, "1337086");
             AddSettingIfNotExists(AppSettings.Shipping.ApiSecret, "73f47271-8ba4-4625-9089-34d97b7cb693");
             AddSettingIfNotExists(AppSettings.Shipping.ApiUrl, "http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx");
+            
+            //Advert
+            AddSettingIfNotExists(AdvertSettings.ToutiaoAdsAppId, "1620174454145053");
+            AddSettingIfNotExists(AdvertSettings.ToutiaoAdsAppSecret, "41091c14794c7d24cd248a987f452fad1d8b4e15");
+            AddSettingIfNotExists(AdvertSettings.TenantAdsAppId, "1107493946");
+            AddSettingIfNotExists(AdvertSettings.TenantAdsAppSecret, "u1UbBRGXOTbEzdzv");
         }
 
         private void AddSettingIfNotExists(string name, string value, int? tenantId = null)

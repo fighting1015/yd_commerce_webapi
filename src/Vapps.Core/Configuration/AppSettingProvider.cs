@@ -35,7 +35,9 @@ namespace Vapps.Configuration
             var definitions = GetHostSettings().Union(GetTenantSettings())
                 .Union(GetExternalAuthenticationSettings())
                 .Union(GetSmsManagementSettings())
-                .Union(GetVerificationCodeManagementSettings()).ToList();
+                .Union(GetVerificationCodeManagementSettings())
+                .Union(GetShipSettings())
+                .ToList();
 
             var providers = _appConfiguration["Authentication:Provider"];
             if (!providers.IsNullOrEmpty())
@@ -65,7 +67,7 @@ namespace Vapps.Configuration
               new SettingDefinition(AppSettings.TenantManagement.DefaultEdition, GetFromAppSettings(AppSettings.TenantManagement.DefaultEdition, "")),
               new SettingDefinition(AppSettings.TenantManagement.SubscriptionExpireNotifyDayCount, GetFromAppSettings(AppSettings.TenantManagement.SubscriptionExpireNotifyDayCount, "7"), isVisibleToClients: true),
               new SettingDefinition(AppSettings.Recaptcha.SiteKey, GetFromSettings("Recaptcha:SiteKey"), isVisibleToClients: true),
-    
+
             };
         }
 
@@ -117,8 +119,19 @@ namespace Vapps.Configuration
             {
                 //Verification code management
                 new SettingDefinition(AppSettings.UserManagement.VerificationCodeManagement.IsEnabled, GetFromAppSettings(AppSettings.UserManagement.VerificationCodeManagement.IsEnabled, "false")),
-                new SettingDefinition(AppSettings.UserManagement.VerificationCodeManagement.AvailableSecond, GetFromAppSettings(AppSettings.UserManagement.VerificationCodeManagement.AvailableSecond, "600")),
+                new SettingDefinition(AppSettings.UserManagement.VerificationCodeManagement.AvailableSecond, GetFromAppSettings(AppSettings.UserManagement.VerificationCodeManagement.AvailableSecond, "600"), scopes: SettingScopes.Application, isVisibleToClients: false),
                 new SettingDefinition(AppSettings.UserManagement.VerificationCodeManagement.MinimumSendInterval, GetFromAppSettings(AppSettings.UserManagement.VerificationCodeManagement.MinimumSendInterval, "60"))
+            };
+        }
+
+        private IEnumerable<SettingDefinition> GetShipSettings()
+        {
+            return new[]
+            {
+                //Verification code management
+                new SettingDefinition(AppSettings.Shipping.ApiUrl, GetFromAppSettings(AppSettings.Shipping.ApiUrl,"http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx"), scopes: SettingScopes.Application, isVisibleToClients: false),
+                new SettingDefinition(AppSettings.Shipping.ApiId, GetFromAppSettings(AppSettings.Shipping.ApiId,"1337086"), scopes: SettingScopes.Application, isVisibleToClients: false),
+                new SettingDefinition(AppSettings.Shipping.ApiSecret, GetFromAppSettings(AppSettings.Shipping.ApiSecret, "73f47271-8ba4-4625-9089-34d97b7cb693"), scopes: SettingScopes.Application, isVisibleToClients: false)
             };
         }
 

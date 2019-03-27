@@ -31,7 +31,7 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据Key查找物流
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
         Task<Logistics> FindByKeyAsync(string key);
 
@@ -73,7 +73,7 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 根据物流id查找订单条目
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="logisticsId"></param>
         /// <returns></returns>
         Task<TenantLogistics> FindTenantLogisticsByLogisticsIdAsync(int logisticsId);
 
@@ -94,20 +94,20 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 添加租户快递
         /// </summary>
-        /// <param name="TenantLogistics"></param>
-        Task CreateTenantLogisticsAsync(TenantLogistics TenantLogistics);
+        /// <param name="tenantLogistics"></param>
+        Task CreateTenantLogisticsAsync(TenantLogistics tenantLogistics);
 
         /// <summary>
         /// 修改租户快递
         /// </summary>
-        /// <param name="TenantLogistics"></param>
-        Task UpdateTenantLogisticsAsync(TenantLogistics TenantLogistics);
+        /// <param name="tenantLogistics"></param>
+        Task UpdateTenantLogisticsAsync(TenantLogistics tenantLogistics);
 
         /// <summary>
         /// 删除租户快递
         /// </summary>
-        /// <param name="TenantLogistics"></param>
-        Task DeleteTenantLogisticsAsync(TenantLogistics TenantLogistics);
+        /// <param name="tenantLogistics"></param>
+        Task DeleteTenantLogisticsAsync(TenantLogistics tenantLogistics);
 
         /// <summary>
         /// 删除租户快递
@@ -118,7 +118,7 @@ namespace Vapps.ECommerce.Shippings
         /// <summary>
         /// 删除订单条目
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="logisticsId"></param>
         Task DeleteTenantLogisticsByLogisticsIdAsync(int logisticsId);
 
         #endregion

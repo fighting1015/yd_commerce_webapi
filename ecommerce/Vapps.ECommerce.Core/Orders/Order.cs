@@ -36,6 +36,11 @@ namespace Vapps.ECommerce.Orders
         /// </summary>
         public int UserId { get; set; }
 
+        /// <summary>
+        /// 广告账户Id
+        /// </summary>
+        public long? AdvertAccountId { get; set; }
+
         #region Shipping Address
 
         /// <summary>

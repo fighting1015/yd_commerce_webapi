@@ -1,10 +1,8 @@
 ﻿using Abp.Domain.Repositories;
 using Castle.Core.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Vapps.ECommerce.Products
@@ -27,7 +25,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Json 查找产品
         /// </summary>
-        /// <param name="attributesXml">Attributes in json format</param>
+        /// <param name="attributesJson">Attributes in json format</param>
         /// <returns>Selected product</returns>
         public virtual async Task<Product> ParseProductAsync(string attributesJson)
         {
@@ -67,6 +65,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 获取属性值
         /// </summary>
+        /// <param name="productId"></param>
         /// <param name="attributesJson">格式化Json属性</param>
         /// <param name="productAttributeId">属性Id,0为加载所有属性值</param>
         /// <param name="productAttributeMappingId">属性关联Id,0为加载所有属性值</param>
@@ -111,6 +110,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// Gets selected product attribute mapping identifiers
         /// </summary>
+        /// <param name="productId"></param>
         /// <param name="attributesJson">Attributes in XML format</param>
         /// <returns>Selected product attribute mapping identifiers</returns>
         protected virtual async Task<IList<long>> ParseProductAttributeMappingIds(long productId,

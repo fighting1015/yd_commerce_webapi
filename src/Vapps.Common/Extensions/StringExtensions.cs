@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web;
 using Vapps.Common.Infrastructure;
 
 namespace Vapps
@@ -231,6 +232,31 @@ namespace Vapps
                 return null;
             else
                 return value.Length;
+        }
+
+        public static string UrlEncode(this string value)
+        {
+            return HttpUtility.UrlEncode(value);
+        }
+
+        public static string UrlDecode(this string value)
+        {
+            return HttpUtility.UrlDecode(value);
+        }
+
+        public static string AttributeEncode(this string value)
+        {
+            return HttpUtility.HtmlAttributeEncode(value);
+        }
+
+        public static string HtmlEncode(this string value)
+        {
+            return HttpUtility.HtmlEncode(value);
+        }
+
+        public static string HtmlDecode(this string value)
+        {
+            return HttpUtility.HtmlDecode(value);
         }
 
         [DebuggerStepThrough]

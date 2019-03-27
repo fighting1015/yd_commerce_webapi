@@ -23,6 +23,20 @@ namespace Vapps.Advert.AdvertAccounts
         Task<AdvertAccount> FindByIdAsync(long id);
 
         /// <summary>
+        /// 根据第三方Id查找广告账户
+        /// </summary>
+        /// <param name="thirdpartyId"></param>
+        /// <returns></returns>
+        Task<AdvertAccount> FindByThirdpartyIdAsync(string thirdpartyId);
+
+        /// <summary>
+        /// 根据username查找广告账户
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task<AdvertAccount> FindByUserNameAsync(string username);
+
+        /// <summary>
         /// 根据id获取广告账户
         /// </summary>
         /// <param name="id"></param>

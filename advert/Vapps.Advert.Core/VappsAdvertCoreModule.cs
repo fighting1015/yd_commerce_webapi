@@ -1,5 +1,9 @@
 ﻿using Abp.Modules;
 using Abp.Reflection.Extensions;
+using Castle.MicroKernel.Registration;
+using Vapps.Advert.AdvertAccounts;
+using Vapps.Advert.AdvertAccounts.Sync;
+using Vapps.Advert.Configuration;
 
 namespace Vapps.Advert
 {
@@ -9,6 +13,9 @@ namespace Vapps.Advert
     {
         public override void PreInitialize()
         {
+            //Adding setting providers
+            Configuration.Settings.Providers.Add<AdvertSettingProvider>();
+
             RegisterComponent();
         }
 
@@ -25,7 +32,13 @@ namespace Vapps.Advert
 
         private void RegisterComponent()
         {
+            IocManager.IocContainer.Register(
+                 Component.For<IAdvertAccountSyncor>().ImplementedBy<TenantAdvertAccountSyncor>().LifestyleTransient().Named("TenantAdvertAccountSyncor")
+             );
 
+            IocManager.IocContainer.Register(
+                Component.For<IAdvertAccountSyncor>().ImplementedBy<ToutiaoAdvertAccountSyncor>().LifestyleTransient().Named("ToutiaoAdvertAccountSyncor")
+             );
         }
     }
 }

@@ -44,7 +44,6 @@ namespace Vapps.ECommerce.Orders.Toutiao
         /// <summary>
         /// 获取放心购api调用签名
         /// </summary>
-        /// <param name="appKey"></param>
         /// <param name="method"></param>
         /// <param name="paramJsonString"></param>
         /// <param name="timestamp"></param>
@@ -287,7 +286,7 @@ namespace Vapps.ECommerce.Orders.Toutiao
                     var deserializeResult = JsonConvert.DeserializeObject<ToutiaoDataResponse<OrderListResponse>>(returnResult);
                     return deserializeResult;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return new ToutiaoDataResponse<OrderListResponse>();
                 }
@@ -299,7 +298,7 @@ namespace Vapps.ECommerce.Orders.Toutiao
         /// </summary>
         /// <param name="shipment"></param>
         /// <returns></returns>
-        public static async Task AddLogistics(Shipment shipment)
+        public static async Task AddLogisticsAsync(Shipment shipment)
         {
             var shipInfo = ToutiaoShipInfoData.GetToutiaoShipInfoByName(shipment.LogisticsName);
             var para = new OrderLogisticsAddRequestPara()
@@ -327,7 +326,7 @@ namespace Vapps.ECommerce.Orders.Toutiao
         /// 订单确认
         /// </summary>
         /// <param name="shipment"></param>
-        public static async Task OrderStockUp(Shipment shipment)
+        public static async Task OrderStockUpAsync(Shipment shipment)
         {
             var para = new OrderLogisticsAddRequestPara()
             {

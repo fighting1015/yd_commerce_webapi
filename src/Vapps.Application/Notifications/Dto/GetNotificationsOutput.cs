@@ -7,7 +7,7 @@ namespace Vapps.Notifications.Dto
     public class GetNotificationsOutput : PagedResultDto<UserNotification>
     {
         /// <summary>
-        /// 唯独消息数量
+        /// 未读消息数量
         /// </summary>
         public int UnreadCount { get; set; }
 

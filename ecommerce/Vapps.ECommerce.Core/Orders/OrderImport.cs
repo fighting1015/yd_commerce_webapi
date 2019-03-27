@@ -10,6 +10,8 @@ namespace Vapps.ECommerce.Orders
     {
         public int StoreId { get; set; }
 
+        public long? AdvertAccountId { get; set; }
+
         public OrderSource OrderSource { get; set; }
 
         public string OrderNumber { get; set; }
@@ -43,8 +45,6 @@ namespace Vapps.ECommerce.Orders
         public string Address { get; set; }
 
         public string CustomerComment { get; set; }
-
-        public string AdvertAccountId { get; set; }
 
         public string AdminComment { get; set; }
 

@@ -330,6 +330,17 @@
     "BusiCenter.StoreConfiguration.TenantLogistics.Create": "创建",
     "BusiCenter.StoreConfiguration.TenantLogistics.Edit": "编辑",
     "BusiCenter.StoreConfiguration.TenantLogistics.Delete": "删除",
+
+    "BusiCenter.AdvertManage": "广告管理",
+    "BusiCenter.AdvertManage.Account": "账户管理",
+    "BusiCenter.AdvertManage.Account.Create": "创建",
+    "BusiCenter.AdvertManage.Account.Edit": "编辑",
+    "BusiCenter.AdvertManage.Account.Delete": "删除",
+    "BusiCenter.AdvertManage.DailyStatistic": "每日数据统计",
+    "BusiCenter.AdvertManage.DailyStatistic.Create": "创建",
+    "BusiCenter.AdvertManage.DailyStatistic.Edit": "编辑",
+    "BusiCenter.AdvertManage.DailyStatistic.Delete": "删除",
+
     "Copyright": "广州有度科技有限公司",
     "MessageTemplate": "消息模板",
     "EditMessageTemplate": "编辑消息模板",

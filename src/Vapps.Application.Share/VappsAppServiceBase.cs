@@ -60,10 +60,10 @@ namespace Vapps
         protected virtual async Task<AccountCacheItem> GetCurrentUserAccountCacheAsync()
         {
             var userAccount = await AccountCache.GetAsync(AbpSession.GetUserId());
-            if (userAccount == null)
-            {
-                throw new Exception("There is no current user!");
-            }
+            //if (userAccount == null)
+            //{
+            //    throw new Exception("There is no current user!");
+            //}
 
             return userAccount;
         }

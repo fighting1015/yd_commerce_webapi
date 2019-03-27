@@ -65,7 +65,7 @@ namespace Vapps.ECommerce.Shippings
                 .WhereIf(input.DeliveriedOn.FormDateNotEmpty(), r => r.CreationTime >= input.DeliveriedOn.FormDate)
                 .WhereIf(input.DeliveriedOn.ToDateNotEmpty(), r => r.CreationTime >= input.DeliveriedOn.ToDate)
                 .WhereIf(input.ReceivedOn.FormDateNotEmpty(), r => r.CreationTime >= input.ReceivedOn.FormDate)
-                .WhereIf(input.ReceivedOn.ToDateNotEmpty(), r => r.CreationTime >= input.ReceivedOn.ToDate); 
+                .WhereIf(input.ReceivedOn.ToDateNotEmpty(), r => r.CreationTime >= input.ReceivedOn.ToDate);
 
             var shipmentCount = await query.CountAsync();
 
@@ -223,7 +223,7 @@ namespace Vapps.ECommerce.Shippings
             foreach (var orderItem in order.Items.ToList())
             {
                 //是否还有订单项需要发货
-                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment();
+                var maxQtyToAdd = orderItem.GetTotalNumberOfItemsCanBeAddedToShipment(_shipmentManager);
                 if (maxQtyToAdd <= 0)
                     continue;
 
@@ -248,12 +248,9 @@ namespace Vapps.ECommerce.Shippings
                     {
                         OrderId = order.Id,
                         OrderNumber = order.OrderNumber,
-
                         LogisticsName = logistics.Name,
-
                         LogisticsId = logistics.LogisticsId,
                         LogisticsNumber = input.LogisticsNumber,
-
                         TotalWeight = orderItemTotalWeight,
                         TotalVolume = orderItemTotalVolume,
                         Status = ShippingStatus.NoTrace,
@@ -275,15 +272,16 @@ namespace Vapps.ECommerce.Shippings
             {
                 shipment.TotalWeight = totalWeight;
                 shipment.TotalVolume = totalVolume;
-                await _shipmentManager.CreateAsync(shipment);
+
+                if (shipment.Id == 0)
+                    await _shipmentManager.CreateAsync(shipment);
+                else
+                    await _shipmentManager.UpdateAsync(shipment);
 
                 //修改状态为已发货
                 await _orderProcessingManager.ShipAsync(shipment, true);
             }
         }
-
-
-
 
         #endregion
 

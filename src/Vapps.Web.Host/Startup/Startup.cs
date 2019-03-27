@@ -5,6 +5,7 @@ using Abp.PlugIns;
 using Abp.Timing;
 using Castle.Facilities.Logging;
 using Hangfire;
+using Hangfire.Redis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,13 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IO;
 using System.Linq;
+using Vapps.Advert.AdvertAccounts.Jobs;
+using Vapps.Advert.AdvertStatistics.Jobs;
 using Vapps.Alipay.Infrastructure;
 using Vapps.Common;
 using Vapps.Debugging;
 using Vapps.ECommerce.Orders.Jobs;
+using Vapps.ECommerce.Shippings.Tracking.Jobs;
 using Vapps.EntityFrameworkCore;
 using Vapps.Extensions;
 using Vapps.Identity;
@@ -99,11 +103,11 @@ namespace Vapps.Web.Startup
             services.AddHangfire(config =>
             {
                 //config.UseStorage(new MySqlStorage(_appConfiguration.GetConnectionString("Hangfire")));
-                config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Hangfire"));
+                //config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Hangfire"));
 
-                //var options = new RedisStorageOptions();
-                //options.Db = _appConfiguration.GetValue<int>("Hangfire:DatabaseId");
-                //config.UseRedisStorage(_appConfiguration.GetConnectionString("Hangfire"), options);
+                var options = new RedisStorageOptions();
+                options.Db = _appConfiguration.GetValue<int>("Hangfire:DatabaseId");
+                config.UseRedisStorage(_appConfiguration.GetConnectionString("Hangfire.Redis"), options);
             });
 
             //Configure Abp and Dependency Injection
@@ -161,7 +165,7 @@ namespace Vapps.Web.Startup
                                 .Split(",", StringSplitOptions.RemoveEmptyEntries)
                                 .Select(o => o.RemovePostFix("/"))
                                 .ToArray(),
-                WorkerCount = _appConfiguration.GetValue<int>("Hangfire:WorkerCount"), // 并发任务数
+                WorkerCount = Math.Max(Environment.ProcessorCount, _appConfiguration.GetValue<int>("Hangfire:WorkerCount")), // 并发任务数
                 ServerName = _appConfiguration["Hangfire:ServerName"],// 服务器名称
             };
             app.UseHangfireServer(jobOptions);
@@ -225,7 +229,14 @@ namespace Vapps.Web.Startup
             if (!bool.Parse(_appConfiguration["Hangfire:IsEnabled"]))
                 return;
 
-            HangfireBackgroundJobManagerExtension.MinutelyRecurring<OrderSyncJob, int>(5, "order");
+            var orderMinuteInterval = _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:Order");
+
+            HangfireBackgroundJobManagerExtension.MinuteInterval<OrderSyncJob, int>(0, orderMinuteInterval, "order");
+            HangfireBackgroundJobManagerExtension.MinuteInterval<AdvertOrderSyncJob, int>(0, orderMinuteInterval, "order");
+            HangfireBackgroundJobManagerExtension.MinuteInterval<AdvertDailyStatisticSyncJob, int>(0, 
+                _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:AdvertDailyStatistic"), "advertdailystatistic");
+            HangfireBackgroundJobManagerExtension.DailyRecurring<ShipmentTrackSyncJob, int>(0, 
+                _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:ShipmentTrack"), 0, "shipmenttracker");
 
             if (!DebugHelper.IsDebug)
             {

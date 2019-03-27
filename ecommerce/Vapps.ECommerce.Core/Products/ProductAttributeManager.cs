@@ -51,13 +51,14 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据名称查找属性
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<ProductAttribute> FindByNameAsync(string name)
         {
             return await ProductAttributeRepository.FirstOrDefaultAsync(x => x.Name == name);
         }
 
+        /// <summary>
         /// 根据id查找属性
         /// </summary>
         /// <param name="id"></param>
@@ -129,7 +130,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新属性
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         public virtual async Task UpdateAsync(ProductAttribute attribute)
         {
             await ProductAttributeRepository.UpdateAsync(attribute);
@@ -138,7 +139,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 删除属性
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         public virtual async Task DeleteAsync(ProductAttribute attribute)
         {
             await ProductAttributeRepository.DeleteAsync(attribute);
@@ -163,7 +164,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据预设值id查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="pValueId"></param>
         /// <returns></returns>
         public async Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long productId, long pValueId)
         {
@@ -174,7 +176,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据属性Id和预设值id查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="attributeId"></param>
+        /// <param name="pValueId"></param>
         /// <returns></returns>
         public async Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId, long pValueId)
         {
@@ -186,7 +189,9 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据商品id,属性Id和预设值id查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="attributeId"></param>
+        /// <param name="pValueId"></param>
         /// <returns></returns>
         public async Task<ProductAttributeValue> FindValueAsync(long productId, long attributeId, long pValueId)
         {
@@ -198,7 +203,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据名称查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<ProductAttributeValue> FindValueByNameAsync(string name)
         {
@@ -280,7 +285,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新属性值
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
         public virtual async Task UpdateValueAsync(ProductAttributeValue attribute)
         {
             await ProductAttributeValueRepository.UpdateAsync(attribute);
@@ -289,7 +295,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 删除属性值
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
         public virtual async Task DeleteValueAsync(ProductAttributeValue attribute)
         {
             await ProductAttributeValueRepository.DeleteAsync(attribute);
@@ -314,7 +321,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据名称查找默认属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(string name)
         {
@@ -334,7 +341,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据属性id和名称获取默认属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="attributeId"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         public virtual async Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(long attributeId, string name)
         {
@@ -345,6 +353,7 @@ namespace Vapps.ECommerce.Products
         /// 根据id获取默认属性值
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="includeDeleted"></param>
         /// <returns></returns>
         public virtual PredefinedProductAttributeValue GetPredefinedValueById(long id, bool includeDeleted = false)
         {
@@ -361,6 +370,7 @@ namespace Vapps.ECommerce.Products
         /// 根据id获取默认属性值
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="includeDeleted"></param>
         /// <returns></returns>
         public virtual async Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id, bool includeDeleted = false)
         {
@@ -411,7 +421,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新默认属性值
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
+        /// <returns></returns>
         public virtual async Task UpdatePredefinedValueAsync(PredefinedProductAttributeValue attribute)
         {
             await PredefinedProductAttributeValueRepository.UpdateAsync(attribute);
@@ -420,7 +431,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 删除默认属性值
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         public virtual async Task DeletePredefinedValueAsync(PredefinedProductAttributeValue attribute)
         {
             await PredefinedProductAttributeValueRepository.DeleteAsync(attribute);
@@ -445,7 +456,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据id查找商品属性
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="attributeId"></param>
         /// <returns></returns>
         public virtual async Task<ProductAttributeMapping> FindMappingAsync(long productId, long attributeId)
         {
@@ -475,7 +487,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据商品id获取商品属性
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="readOnly"></param>
         /// <returns></returns>
         public virtual async Task<List<ProductAttributeMapping>> GetMappingByProductIdAsync(long productId, bool readOnly = false)
         {
@@ -513,7 +526,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新商品属性
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         public virtual async Task UpdateMappingAsync(ProductAttributeMapping attribute)
         {
             await ProductAttributeMappingRepository.UpdateAsync(attribute);
@@ -522,7 +535,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 删除商品属性
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         public virtual async Task DeleteMappingAsync(ProductAttributeMapping attribute)
         {
             await ProductAttributeMappingRepository.DeleteAsync(attribute);
@@ -547,7 +560,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Json查找属性组合
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="attributesJson"></param>
         /// <returns></returns>
         public virtual async Task<ProductAttributeCombination> FindCombinationByAttributesJsonAsync(string attributesJson)
         {
@@ -560,7 +573,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Sku查找属性组合
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="sku"></param>
         /// <returns></returns>
         public virtual async Task<ProductAttributeCombination> FindCombinationBySkuAsync(string sku)
         {

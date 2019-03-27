@@ -28,7 +28,7 @@ namespace Vapps.ECommerce.Shippings.Importing
             var dateTimeString = Clock.Now.UtcTimeConverLocalTime(_dateTimeHelper).ToString("yyyyMMddHHmmss");
 
             return CreateExcelPackage(
-                $"{L("无效物流单号")}-{dateTimeString}.xlsx",
+                $"无效物流单号-{dateTimeString}.xlsx",
                 excelPackage =>
                 {
                     var sheet = excelPackage.Workbook.Worksheets.Add(L("InvalidUserImports"));

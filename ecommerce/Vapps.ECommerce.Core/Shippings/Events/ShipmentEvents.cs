@@ -1,6 +1,6 @@
 ﻿using Abp.Events.Bus;
 
-namespace Vapps.ECommerce.Shippings
+namespace Vapps.ECommerce.Shippings.Events
 {
     /// <summary>
     /// 发货事件

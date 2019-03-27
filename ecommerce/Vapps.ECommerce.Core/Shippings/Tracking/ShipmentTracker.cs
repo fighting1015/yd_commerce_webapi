@@ -1,4 +1,5 @@
 ﻿using Abp.Configuration;
+using Abp.Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -23,7 +24,6 @@ namespace Vapps.ECommerce.Shippings.Tracking
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IConfigurationRoot _appConfiguration;
 
-
         public ShipmentTracker(IOrderManager orderManager,
             IShipmentManager shipmentManager,
             ILogisticsManager logisticsManager,
@@ -37,12 +37,48 @@ namespace Vapps.ECommerce.Shippings.Tracking
             this._appConfiguration = configurationAccessor.Configuration;
         }
 
+        /// <summary>
+        /// 获取物流信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<TraceResult> GetShipmentTracesAsync(Shipment shipment, bool refresh)
+        {
+            TraceResult traces;
+            if (refresh || shipment.ShipmentDetail.IsNullOrEmpty())
+            {
+                traces = await RequestTraces(shipment);
+                shipment.ShipmentDetail = JsonConvert.SerializeObject(traces);
+                if (traces.State == (int)ShippingStatus.Received && !traces.UpdateTime.IsNullOrEmpty())
+                {
+                    shipment.ReceivedOn = Convert.ToDateTime(traces.UpdateTime).LocalTimeConverUtcTime(_dateTimeHelper);
+                }
+                else if (shipment.Order.ShippingStatus != ShippingStatus.IssueWithReject
+                    && traces.State == (int)ShippingStatus.IssueWithReject
+                    && !traces.UpdateTime.IsNullOrEmpty())
+                {
+                    shipment.ReceivedOn = Convert.ToDateTime(traces.UpdateTime).LocalTimeConverUtcTime(_dateTimeHelper);
+                }
+
+                await UpdateShipmentTracesAsync(shipment, traces);
+            }
+            else
+            {
+                traces = JsonConvert.DeserializeObject<TraceResult>(shipment.ShipmentDetail);
+                traces.Traces = traces.Traces.OrderByDescending(t => t.AcceptTime).ToList();
+
+                traces.State = (int)shipment.Status;
+            }
+
+            traces.OrderId = shipment.OrderId;
+
+            return traces;
+        }
 
         /// <summary>
         /// 更新物流信息
         /// </summary>
         /// <returns></returns>
-        public async Task UpdateShipmentTraces(List<TraceResult> traces)
+        public async Task UpdateShipmentTracesAsync(List<TraceResult> traces)
         {
             foreach (var tracesItem in traces)
             {
@@ -60,63 +96,38 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 return;
 
             var shipment = await _shipmentManager.FindByLogisticsNumberAsync(trace.LogisticCode);
-            var logistics = await _logisticsManager.FindByKeyAsync(trace.LogisticCode);
+
+            await UpdateShipmentTracesAsync(shipment, trace);
+        }
+
+        /// <summary>
+        /// 更新物流信息
+        /// </summary>
+        /// <param name="trace"></param>
+        /// <param name="shipment"></param>
+        /// <returns></returns>
+        public async Task UpdateShipmentTracesAsync(Shipment shipment, TraceResult trace)
+        {
+            var logistics = await _logisticsManager.GetByIdAsync(shipment.LogisticsId.Value);
 
             shipment.ShipmentDetail = JsonConvert.SerializeObject(trace);
             if (!trace.UpdateTime.IsNullOrEmpty())
                 shipment.ReceivedOn = Convert.ToDateTime(trace.UpdateTime).LocalTimeConverUtcTime(_dateTimeHelper);
 
-            shipment.Order.ShippingStatus = GetShippingStatus(logistics, shipment.ShipmentDetail, trace.State);
+            var shipmentStatus = GetShippingStatus(logistics, shipment.ShipmentDetail, trace.State);
+
+            shipment.Order.ShippingStatus = shipmentStatus;
+            shipment.Status = shipmentStatus;
 
             await _orderManager.UpdateAsync(shipment.Order);
         }
 
         /// <summary>
-        /// 获取物流信息
-        /// </summary>
-        /// <returns></returns>
-        public async Task<TraceResult> GetShipmentTraces(Shipment shipment, bool refresh)
-        {
-            var logistics = await _logisticsManager.FindByIdAsync(shipment.LogisticsId.Value);
-            TraceResult traces;
-            if (refresh || shipment.ShipmentDetail.IsNullOrEmpty())
-            {
-                traces = await GetOrderTraces(shipment);
-                shipment.ShipmentDetail = JsonConvert.SerializeObject(traces);
-                if (traces.State == (int)ShippingStatus.Received && !traces.UpdateTime.IsNullOrEmpty())
-                {
-                    shipment.ReceivedOn = Convert.ToDateTime(traces.UpdateTime).LocalTimeConverUtcTime(_dateTimeHelper);
-                }
-                else if (shipment.Order.ShippingStatus != ShippingStatus.IssueWithReject
-                    && traces.State == (int)ShippingStatus.IssueWithReject
-                    && !traces.UpdateTime.IsNullOrEmpty())
-                {
-                    shipment.ReceivedOn = Convert.ToDateTime(traces.UpdateTime).LocalTimeConverUtcTime(_dateTimeHelper);
-                }
-
-                shipment.Order.ShippingStatus = (ShippingStatus)traces.State;
-                await _shipmentManager.UpdateAsync(shipment);
-            }
-            else
-            {
-                traces = JsonConvert.DeserializeObject<TraceResult>(shipment.ShipmentDetail);
-                traces.Traces = traces.Traces.OrderByDescending(t => t.AcceptTime).ToList();
-
-
-                traces.State = (int)GetShippingStatus(logistics, shipment.ShipmentDetail, traces.State);
-            }
-
-            traces.OrderId = shipment.OrderId;
-
-            return traces;
-        }
-
-        /// <summary>
-        /// 解析物流状态
+        /// 请求api获取物流信息
         /// </summary>
         /// <param name="shipment"></param>
         /// <returns></returns>
-        public async Task<TraceResult> GetOrderTraces(Shipment shipment)
+        public async Task<TraceResult> RequestTraces(Shipment shipment)
         {
             var logistics = await _logisticsManager.FindByIdAsync(shipment.LogisticsId.Value);
             TraceResult result = new TraceResult();
@@ -175,16 +186,17 @@ namespace Vapps.ECommerce.Shippings.Tracking
         /// Json方式  物流信息订阅
         /// </summary>
         /// <returns></returns>
-        public async Task<bool> OrderTracesSubByJson(Order order)
+        public async Task<bool> OrderTracesSubscribeAsync(Shipment shipment)
         {
-            var shipment = order.Shipments.FirstOrDefault();
+            await _shipmentManager.ShipmentRepository.EnsurePropertyLoadedAsync(shipment, s => s.Order);
+
             var logistics = await _logisticsManager.FindByIdAsync(shipment.LogisticsId.Value);
 
             var requestData = new OrderTracesSubscription()
             {
-                OrderCode = order.OrderNumber,
+                OrderCode = shipment.OrderNumber,
                 ShipperCode = logistics.Key,
-                LogisticCode = order.Shipments.FirstOrDefault().LogisticsNumber,
+                LogisticCode = shipment.LogisticsNumber,
                 Sender = new SenderOrReceiver()
                 {
                     Name = "维普氏科技",
@@ -196,12 +208,12 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 },
                 Receiver = new SenderOrReceiver()
                 {
-                    Name = order.ShippingName,
-                    Mobile = order.ShippingPhoneNumber,
-                    ProvinceName = order.ShippingProvince ?? string.Empty,
-                    CityName = order.ShippingCity ?? string.Empty,
-                    ExpAreaName = order.ShippingDistrict ?? string.Empty,
-                    Address = order.ShippingAddress ?? string.Empty,
+                    Name = shipment.Order.ShippingName,
+                    Mobile = shipment.Order.ShippingPhoneNumber,
+                    ProvinceName = shipment.Order.ShippingProvince ?? string.Empty,
+                    CityName = shipment.Order.ShippingCity ?? string.Empty,
+                    ExpAreaName = shipment.Order.ShippingDistrict ?? string.Empty,
+                    Address = shipment.Order.ShippingAddress ?? string.Empty,
                 }
             };
 
@@ -225,7 +237,6 @@ namespace Vapps.ECommerce.Shippings.Tracking
                 var jsonResultString = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<TraceResult>(jsonResultString);
                 return result.Success;
-
             }
             catch (Exception)
             {

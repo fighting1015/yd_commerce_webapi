@@ -5,6 +5,11 @@ namespace Vapps.Advert.AdvertAccounts.Dto
     public class GetAdvertAccountForEditOutput : NullableIdDto<long>
     {
         /// <summary>
+        /// 店铺（必填）
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
         /// 第三方Id
         /// </summary>
         public string ThirdpartyId { get; set; }

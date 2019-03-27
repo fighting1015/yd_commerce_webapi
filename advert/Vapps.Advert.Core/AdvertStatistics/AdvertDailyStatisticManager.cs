@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,6 +29,50 @@ namespace Vapps.Advert.AdvertStatistics
         #endregion
 
         #region Method
+
+        /// <summary>
+        /// 创建或更新每日分析
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public async Task InsertOrUpdateAdvertStatisticAsync(AdvertStatisticImport dto)
+        {
+            //统计日期
+            var statistics = await GetAdvertStatistics(dto.ProductId, dto.AdvertAccountId, dto.StatisticOnUtc);
+            if (statistics == null)
+            {
+                statistics = new AdvertDailyStatistic()
+                {
+                    StatisticOn = dto.StatisticOnUtc,
+                    ProductId = dto.ProductId,
+                    ProductName = dto.ProductName,
+                    AdvertAccountId = dto.AdvertAccountId,
+                };
+                await CreateAsync(statistics);
+            }
+
+            statistics.ClickNum = dto.ClickNum;
+            statistics.DisplayNum = dto.DisplayNum;
+            statistics.TotalCost = dto.TotalCost;
+            statistics.ClickPrice = dto.ClickPrice;
+            statistics.ThDisplayCost = dto.ThDisplayCost;
+
+            await UpdateAsync(statistics);
+        }
+
+        /// <summary>
+        /// 根据id获取广告统计
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="accountId"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public virtual async Task<AdvertDailyStatistic> GetAdvertStatistics(long productId, long accountId, DateTime data)
+        {
+            return await AdvertDailyStatisticRepository.FirstOrDefaultAsync(ad => ad.ProductId == productId
+                && ad.AdvertAccountId == accountId
+                && ad.StatisticOn == data);
+        }
 
         /// <summary>
         /// 根据id查找广告账户每日统计

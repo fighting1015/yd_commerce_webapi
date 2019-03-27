@@ -15,6 +15,7 @@ using Vapps.ECommerce.Shippings.Importing.Dto;
 using Vapps.Notifications;
 using Vapps.Storage;
 using Hangfire;
+using System.ComponentModel;
 
 namespace Vapps.ECommerce.Shippings.Importing
 {
@@ -49,9 +50,12 @@ namespace Vapps.ECommerce.Shippings.Importing
             _orderManager = orderManager;
             _orderProcessingManager = orderProcessingManager;
             _logisticsManager = logisticsManager;
+            LocalizationSourceName = VappsConsts.ServerSideLocalizationSourceName;
             _localizationSource = localizationManager.GetSource(VappsConsts.ServerSideLocalizationSourceName);
         }
 
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("物流单号导入任务, 租户id:{0}")]
         [Queue("shipment")]
         [UnitOfWork]
         public override void Execute(ImportShipmentsFromExcelJobArgs args)

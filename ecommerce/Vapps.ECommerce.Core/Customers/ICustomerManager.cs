@@ -17,7 +17,7 @@ namespace Vapps.ECommerce.Customers
         /// <summary>
         /// 根据手机查找客户
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="phoneNumer"></param>
         /// <returns></returns>
         Task<Customer> FindByPhoneNumerAsync(string phoneNumer);
 

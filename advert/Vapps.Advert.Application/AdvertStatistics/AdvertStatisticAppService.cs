@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Linq.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,11 +8,12 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Advert.AdvertStatistics.Dto;
+using Vapps.Authorization;
 using Vapps.Dto;
 
 namespace Vapps.Advert.AdvertStatistics
 {
-
+    [AbpAuthorize(BusinessCenterPermissions.AdvertManage.DailyStatistic.Self)]
     public class AdvertStatisticAppService : VappsAppServiceBase, IAdvertStatisticAppService
     {
         private readonly IAdvertDailyStatisticManager _advertDailyStatisticManager;
@@ -97,6 +99,7 @@ namespace Vapps.Advert.AdvertStatistics
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.DailyStatistic.Delete)]
         public virtual async Task DeleteDailyStatistic(BatchInput<int> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -156,6 +159,7 @@ namespace Vapps.Advert.AdvertStatistics
         /// 创建广告账户每日分析
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.DailyStatistic.Create)]
         protected virtual async Task<AdvertDailyStatistic> CreateAdvertDailyStatisticAsync(DailyStatisticDto input)
         {
             var dailyStatistic = ObjectMapper.Map<AdvertDailyStatistic>(input);
@@ -169,6 +173,7 @@ namespace Vapps.Advert.AdvertStatistics
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.DailyStatistic.Edit)]
         protected virtual async Task<AdvertDailyStatistic> UpdateAdvertDailyStatisticAsync(DailyStatisticDto input)
         {
             var dailyStatistic = await _advertDailyStatisticManager.GetByIdAsync(input.Id);
@@ -184,6 +189,7 @@ namespace Vapps.Advert.AdvertStatistics
         /// 创建广告账户每日分析条目
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.DailyStatistic.Create)]
         protected virtual async Task<AdvertDailyStatisticItem> CreateAdvertDailyStatisticItemAsync(DailyStatisticItemDto input)
         {
             var dailyStatisticItem = ObjectMapper.Map<AdvertDailyStatisticItem>(input);
@@ -197,6 +203,7 @@ namespace Vapps.Advert.AdvertStatistics
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.DailyStatistic.Edit)]
         protected virtual async Task<AdvertDailyStatisticItem> UpdateAdvertDailyStatisticItemAsync(DailyStatisticItemDto input)
         {
             var dailyStatisticItem = await _advertDailyStatisticManager.GetItemByIdAsync(input.Id);

@@ -1,7 +1,6 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
 using Abp.Domain.Uow;
-using Abp.Threading;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

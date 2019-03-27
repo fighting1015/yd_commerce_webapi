@@ -1,7 +1,9 @@
 ﻿using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
+using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Advert.AdvertAccounts.Dto;
+using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Products;
 
@@ -33,6 +36,7 @@ namespace Vapps.Advert.AdvertAccounts
         /// 获取所有广告账户
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.Account.Self)]
         public virtual async Task<PagedResultDto<AdvertAccountListDto>> GetAccounts(GetAdvertAccountsInput input)
         {
             var query = _advertAccountManager
@@ -94,6 +98,7 @@ namespace Vapps.Advert.AdvertAccounts
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.Account.Self)]
         public virtual async Task<GetAdvertAccountForEditOutput> GetAccountForEdit(NullableIdDto<long> input)
         {
             GetAdvertAccountForEditOutput accountDto;
@@ -120,6 +125,8 @@ namespace Vapps.Advert.AdvertAccounts
         /// <returns></returns>
         public virtual async Task<EntityDto<long>> CreateOrUpdateAccount(CreateOrUpdateAdvertAccountInput input)
         {
+            CheckError(input);
+
             AdvertAccount account;
             if (input.Id.HasValue && input.Id.Value > 0)
             {
@@ -140,6 +147,7 @@ namespace Vapps.Advert.AdvertAccounts
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.Account.Delete)]
         public async Task DeleteAdvertAccount(BatchInput<long> input)
         {
             if (input.Ids == null || input.Ids.Count() <= 0)
@@ -159,12 +167,19 @@ namespace Vapps.Advert.AdvertAccounts
         /// 创建账户
         /// </summary>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.Account.Create)]
         protected virtual async Task<AdvertAccount> CreateAccountAsync(CreateOrUpdateAdvertAccountInput input)
         {
-            var store = ObjectMapper.Map<AdvertAccount>(input);
-            await _advertAccountManager.CreateAsync(store);
+            var account = ObjectMapper.Map<AdvertAccount>(input);
+            await _advertAccountManager.CreateAsync(account);
 
-            return store;
+            return account;
+        }
+
+        private static void CheckError(CreateOrUpdateAdvertAccountInput input)
+        {
+            if (input.StoreId == 0)
+                throw new UserFriendlyException("请选择店铺");
         }
 
         /// <summary>
@@ -172,12 +187,13 @@ namespace Vapps.Advert.AdvertAccounts
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.Account.Edit)]
         protected virtual async Task<AdvertAccount> UpdateAccountAsync(CreateOrUpdateAdvertAccountInput input)
         {
-            var store = ObjectMapper.Map<AdvertAccount>(input);
-            await _advertAccountManager.UpdateAsync(store);
+            var account = ObjectMapper.Map<AdvertAccount>(input);
+            await _advertAccountManager.UpdateAsync(account);
 
-            return store;
+            return account;
         }
 
         #endregion

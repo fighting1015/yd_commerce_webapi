@@ -141,12 +141,13 @@ namespace Vapps.ECommerce.Orders.Exporting
             foreach (var item in order.Items.ToList())
             {
                 var product = await _productManager.GetByIdAsync(item.ProductId);
-                var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(item.AttributesJson);
                 string productName = item.ProductName;
 
                 if (!item.AttributesJson.IsNullOrEmpty())
+                {
+                    var jsonAttributeList = JsonConvert.DeserializeObject<List<JsonProductAttribute>>(item.AttributesJson);
                     productName = productName + " " + await _productAttributeFormatter.FormatAttributesAsync(product, jsonAttributeList, " ");
-
+                }
                 if (productDetail == string.Empty)
                     productDetail = productDetail + $"{productName} * {item.Quantity}";
                 else

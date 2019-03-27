@@ -1,4 +1,5 @@
 ﻿using Abp.Auditing;
+using Abp.Notifications;
 using Abp.Runtime.Session;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,18 @@ namespace Vapps.Sessions
     {
         private readonly IPictureManager _pictureManager;
         private readonly ISubscribableEditionCache _subscribableEditionCache;
+        private readonly IUserNotificationManager _userNotificationManager;
 
         private readonly VappsTenantCache _tenantCache;
 
         public SessionAppService(IPictureManager pictureManager,
             ISubscribableEditionCache subscribableEditionCache,
+            IUserNotificationManager userNotificationManager,
             VappsTenantCache tenantCache)
         {
             this._pictureManager = pictureManager;
             this._subscribableEditionCache = subscribableEditionCache;
+            this._userNotificationManager = userNotificationManager;
             this._tenantCache = tenantCache;
         }
 
@@ -64,7 +68,13 @@ namespace Vapps.Sessions
 
             if (AbpSession.UserId.HasValue)
             {
-                output.User = ObjectMapper.Map<UserLoginInfoDto>(await GetCurrentUserAsync());
+                var userLoginInfo = await GetCurrentUserAsync();
+                var account = await GetCurrentUserAccountCacheAsync();
+
+                output.User = ObjectMapper.Map<UserLoginInfoDto>(userLoginInfo);
+                output.User.ProfilePictureUrl = (account != null ? await _pictureManager.GetPictureUrlAsync(account.ProfilePictureId) : string.Empty);
+                output.User.UnreadNotificationCount = await _userNotificationManager.GetUserNotificationCountAsync(
+                    AbpSession.ToUserIdentifier(), UserNotificationState.Unread);
             }
 
             if (output.Tenant == null)
@@ -74,6 +84,7 @@ namespace Vapps.Sessions
 
             if (output.Tenant.Edition != null)
             {
+                // 是否最高版本
                 output.Tenant.Edition.IsHighestEdition = await IsEditionHighest(output.Tenant.Edition.Id);
             }
 

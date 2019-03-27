@@ -27,7 +27,7 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据名称查找属性
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         Task<ProductAttribute> FindByNameAsync(string name);
 
@@ -89,7 +89,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据名称查找默认属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="attributeId"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         Task<PredefinedProductAttributeValue> FindPredefinedValueByNameAsync(long attributeId, string name);
 
@@ -104,6 +105,7 @@ namespace Vapps.ECommerce.Products
         /// 根据id获取默认属性值
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="includeDeleted"></param>
         /// <returns></returns>
         PredefinedProductAttributeValue GetPredefinedValueById(long id, bool includeDeleted = false);
 
@@ -111,6 +113,7 @@ namespace Vapps.ECommerce.Products
         /// 根据id获取默认属性值
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="includeDeleted"></param>
         /// <returns></returns>
         Task<PredefinedProductAttributeValue> GetPredefinedValueByIdAsync(long id, bool includeDeleted = false);
 
@@ -129,13 +132,13 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 更新默认属性值
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         Task UpdatePredefinedValueAsync(PredefinedProductAttributeValue attribute);
 
         /// <summary>
         /// 删除默认属性值
         /// </summary>
-        /// <param name="ProductAttribute"></param>
+        /// <param name="attribute"></param>
         Task DeletePredefinedValueAsync(PredefinedProductAttributeValue attribute);
 
         /// <summary>
@@ -151,7 +154,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据id查找商品属性
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="attributeId"></param>
         /// <returns></returns>
         Task<ProductAttributeMapping> FindMappingAsync(long productId, long attributeId);
 
@@ -172,7 +176,8 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据商品id获取商品属性
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="readOnly"></param>
         /// <returns></returns>
         Task<List<ProductAttributeMapping>> GetMappingByProductIdAsync(long productId, bool readOnly = false);
 
@@ -213,28 +218,32 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据预设值id查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="pValueId"></param>
         /// <returns></returns>
         Task<ProductAttributeValue> FindValueByPredefinedValueIdAsync(long productId, long pValueId);
 
         /// <summary>
         /// 根据属性Id和预设值id查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="attributeId"></param>
+        /// <param name="pValueId"></param>
         /// <returns></returns>
         Task<ProductAttributeValue> FindValueByAttributeIdAndPredefinedValueIdAsync(long attributeId, long pValueId);
 
         /// <summary>
         /// 根据商品id,属性Id和预设值id查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="productId"></param>
+        /// <param name="attributeId"></param>
+        /// <param name="pValueId"></param>
         /// <returns></returns>
         Task<ProductAttributeValue> FindValueAsync(long productId, long attributeId, long pValueId);
 
         /// <summary>
         /// 根据名称查找属性值
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
         Task<ProductAttributeValue> FindValueByNameAsync(string name);
 
@@ -269,26 +278,26 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 添加/更新属性值
         /// </summary>
-        /// <param name="Product"></param>
-        Task CreateOrUpdateValueAsync(ProductAttributeValue Product);
+        /// <param name="attributeValue"></param>
+        Task CreateOrUpdateValueAsync(ProductAttributeValue attributeValue);
 
         /// <summary>
         /// 添加属性值
         /// </summary>
-        /// <param name="Product"></param>
-        Task CreateValueAsync(ProductAttributeValue Product);
+        /// <param name="attributeValue"></param>
+        Task CreateValueAsync(ProductAttributeValue attributeValue);
 
         /// <summary>
         /// 修改属性值
         /// </summary>
-        /// <param name="Product"></param>
-        Task UpdateValueAsync(ProductAttributeValue Product);
+        /// <param name="attributeValue"></param>
+        Task UpdateValueAsync(ProductAttributeValue attributeValue);
 
         /// <summary>
         /// 删除属性值
         /// </summary>
-        /// <param name="Product"></param>
-        Task DeleteValueAsync(ProductAttributeValue Product);
+        /// <param name="attributeValue"></param>
+        Task DeleteValueAsync(ProductAttributeValue attributeValue);
 
         /// <summary>
         /// 删除属性值
@@ -303,14 +312,14 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 根据Json查找属性组合
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="attributesJson"></param>
         /// <returns></returns>
         Task<ProductAttributeCombination> FindCombinationByAttributesJsonAsync(string attributesJson);
 
         /// <summary>
         /// 根据Sku查找属性组合
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="sku"></param>
         /// <returns></returns>
         Task<ProductAttributeCombination> FindCombinationBySkuAsync(string sku);
 
@@ -331,19 +340,19 @@ namespace Vapps.ECommerce.Products
         /// <summary>
         /// 添加属性组合
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="combination"></param>
         Task CreateCombinationAsync(ProductAttributeCombination combination);
 
         /// <summary>
         /// 修改属性组合
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="combination"></param>
         Task UpdateCombinationAsync(ProductAttributeCombination combination);
 
         /// <summary>
         /// 删除属性组合
         /// </summary>
-        /// <param name="Product"></param>
+        /// <param name="combination"></param>
         Task DeleteCombinationAsync(ProductAttributeCombination combination);
 
         /// <summary>

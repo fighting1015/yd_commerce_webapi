@@ -14,6 +14,11 @@ namespace Vapps.Advert.AdvertAccounts
         public virtual int TenantId { get; set; }
 
         /// <summary>
+        /// 店铺Id
+        /// </summary>
+        public virtual int StoreId { get; set; }
+
+        /// <summary>
         /// 第三方Id
         /// </summary>
         public virtual string ThirdpartyId { get; set; }

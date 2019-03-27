@@ -8,7 +8,7 @@ namespace Vapps.ECommerce.Catalog
 {
     /// <summary>
     /// Represents a category
-    /// </summary
+    /// </summary>
     [Table("Categories")]
     public partial class Category : FullAuditedEntity<long>, IMustHaveTenant, IPassivable
     {

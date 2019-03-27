@@ -6,6 +6,7 @@ using Castle.Core.Logging;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Vapps.ECommerce.Orders.Toutiao;
 using Vapps.ECommerce.Orders.Toutiao.Requests;
@@ -36,6 +37,8 @@ namespace Vapps.ECommerce.Orders.Jobs
             this._orderImportor = orderImportor;
         }
 
+        [AutomaticRetry(Attempts = 3)]
+        [DisplayName("订单同步任务, 租户id:{0}")]
         [Queue("order")]
         [UnitOfWork]
         public override void Execute(int arg)

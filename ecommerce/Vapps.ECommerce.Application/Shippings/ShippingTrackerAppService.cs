@@ -68,7 +68,7 @@ namespace Vapps.ECommerce.Shippings
                 return resultDto;
             }
 
-            var traces = await _shipmentTracker.GetShipmentTraces(shipment, input.Refresh);
+            var traces = await _shipmentTracker.GetShipmentTracesAsync(shipment, input.Refresh);
 
             resultDto.Status = ((ShippingStatus)traces.State).GetLocalizedEnum(_localizationManager);
             resultDto.Traces = traces.Traces.Select(t =>
