@@ -84,15 +84,14 @@ namespace Vapps.ECommerce.Products
 
                     var productDto = new CreateOrUpdateProductInput()
                     {
-                        Id = product.Id,
                         Name = productsDetail["Name"].ToString(),
                         Price = Decimal.Parse(productsDetail["ProductPrice"]["PriceValue"].ToString()),
                         GoodCost = Decimal.Parse(productsDetail["ProductPrice"]["Cost"].ToString()),
 
-                        Height = Decimal.Parse(productsDetail["Height"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Height"].ToString()),
-                        Weight = Decimal.Parse(productsDetail["Weight"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Weight"].ToString()),
-                        Width = Decimal.Parse(productsDetail["Width"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Width"].ToString()),
-                        Length = Decimal.Parse(productsDetail["Length"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Length"].ToString()),
+                        //Height = Decimal.Parse(productsDetail["Height"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Height"].ToString()),
+                        //Weight = Decimal.Parse(productsDetail["Weight"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Weight"].ToString()),
+                        //Width = Decimal.Parse(productsDetail["Width"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Width"].ToString()),
+                        //Length = Decimal.Parse(productsDetail["Length"].ToString().IsNullOrWhiteSpace() ? "0" : productsDetail["Length"].ToString()),
                         Sku = sku,
                         StockQuantity = 0,
                         ShortDescription = productsDetail["ShortDescription"].ToString(),
@@ -296,7 +295,7 @@ namespace Vapps.ECommerce.Products
                     await CreateOrUpdateProduct(productDto);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
             finally

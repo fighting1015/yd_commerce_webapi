@@ -107,7 +107,7 @@ namespace Vapps.Web.Startup
 
                 var options = new RedisStorageOptions();
                 options.Db = _appConfiguration.GetValue<int>("Hangfire:DatabaseId");
-                config.UseRedisStorage(_appConfiguration.GetConnectionString("Hangfire.Redis"), options);
+                config.UseRedisStorage(_appConfiguration["Hangfire:Redis"], options);
             });
 
             //Configure Abp and Dependency Injection
@@ -231,17 +231,17 @@ namespace Vapps.Web.Startup
 
             var orderMinuteInterval = _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:Order");
 
-            HangfireBackgroundJobManagerExtension.MinuteInterval<OrderSyncJob, int>(0, orderMinuteInterval, "order");
-            HangfireBackgroundJobManagerExtension.MinuteInterval<AdvertOrderSyncJob, int>(0, orderMinuteInterval, "order");
-            HangfireBackgroundJobManagerExtension.MinuteInterval<AdvertDailyStatisticSyncJob, int>(0, 
-                _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:AdvertDailyStatistic"), "advertdailystatistic");
-            HangfireBackgroundJobManagerExtension.DailyRecurring<ShipmentTrackSyncJob, int>(0, 
-                _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:ShipmentTrack"), 0, "shipmenttracker");
+            //HangfireBackgroundJobManagerExtension.MinuteInterval<OrderSyncJob, int>(0, orderMinuteInterval, "order");
+            //HangfireBackgroundJobManagerExtension.MinuteInterval<AdvertOrderSyncJob, int>(0, orderMinuteInterval, "order");
+            //HangfireBackgroundJobManagerExtension.MinuteInterval<AdvertDailyStatisticSyncJob, int>(0,
+            //    _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:AdvertDailyStatistic"), "advertdailystatistic");
+            //HangfireBackgroundJobManagerExtension.DailyRecurring<ShipmentTrackSyncJob, int>(0,
+            //    _appConfiguration.GetValue<int>("Hangfire:MinuteInterval:ShipmentTrack"), 0, "shipmenttracker");
 
-            if (!DebugHelper.IsDebug)
-            {
-                HangfireBackgroundJobManagerExtension.MinutelyRecurring<KeepAliveJob, bool>(true);
-            }
+            //if (!DebugHelper.IsDebug)
+            //{
+            //    HangfireBackgroundJobManagerExtension.MinutelyRecurring<KeepAliveJob, bool>(true, "keepalive");
+            //}
         }
 
         /// <summary>

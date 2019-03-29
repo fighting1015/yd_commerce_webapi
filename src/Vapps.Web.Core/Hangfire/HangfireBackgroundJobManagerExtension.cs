@@ -59,7 +59,7 @@ namespace Vapps.Web.Hangfire
         }
 
         /// <summary>
-        /// 每分钟中心
+        /// 每分钟执行
         /// </summary>
         /// <typeparam name="TJob"></typeparam>
         /// <typeparam name="TArgs"></typeparam>

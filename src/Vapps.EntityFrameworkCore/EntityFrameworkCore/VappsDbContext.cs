@@ -364,6 +364,8 @@ namespace Vapps.EntityFrameworkCore
             modelBuilder.Entity<AdvertAccount>(b =>
             {
                 b.HasIndex(e => new { e.TenantId, e.IsDeleted });
+
+                b.Property(e => e.Balance).HasColumnType("decimal(18, 4)");
             });
 
             modelBuilder.Entity<AdvertDailyStatistic>(b =>

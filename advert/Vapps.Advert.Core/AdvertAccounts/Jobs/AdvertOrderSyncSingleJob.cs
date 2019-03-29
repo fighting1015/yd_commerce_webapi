@@ -33,7 +33,8 @@ namespace Vapps.Advert.AdvertAccounts.Jobs
         {
             this._unitOfWorkManager = unitOfWorkManager;
             this._advertAccountManager = advertAccountManager;
-            this._tenantAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>();
+            this._tenantAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>(typeof(IAdvertAccountSyncor));
+           
             this._logger = logger;
             this._orderImportor = orderImportor;
         }

@@ -77,8 +77,6 @@ namespace Vapps.ECommerce.Orders
         [UnitOfWork]
         public async Task<bool> ImportOrderAsync(OrderImport orderImport)
         {
-
-
             //跳过已取消订单
             if (orderImport.OrderStatus == OrderStatus.Canceled
                 && orderImport.LogisticsName.IsNullOrWhiteSpace())

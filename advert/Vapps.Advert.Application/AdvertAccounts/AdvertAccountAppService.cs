@@ -1,5 +1,6 @@
 ﻿using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Dependency;
 using Abp.Extensions;
 using Abp.Linq.Extensions;
 using Abp.Localization;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Vapps.Advert.AdvertAccounts.Dto;
+using Vapps.Advert.AdvertAccounts.Sync;
 using Vapps.Authorization;
 using Vapps.Dto;
 using Vapps.ECommerce.Products;
@@ -22,14 +24,20 @@ namespace Vapps.Advert.AdvertAccounts
         private readonly IProductManager _productManager;
         private readonly IAdvertAccountManager _advertAccountManager;
         private readonly ILocalizationManager _localizationManager;
+        private readonly IAdvertAccountSyncor _tenantAdvertAccountSyncor;
+        private readonly IAdvertAccountSyncor _toutiaoAdvertAccountSyncor;
 
         public AdvertAccountAppService(IProductManager productManager,
             IAdvertAccountManager advertAccountManager,
-            ILocalizationManager localizationManager)
+            ILocalizationManager localizationManager,
+            IIocResolver iocResolver)
         {
             this._productManager = productManager;
             this._advertAccountManager = advertAccountManager;
             this._localizationManager = localizationManager;
+
+            this._tenantAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>(typeof(IAdvertAccountSyncor));
+            this._toutiaoAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>(typeof(IAdvertAccountSyncor));
         }
 
         /// <summary>
@@ -60,6 +68,7 @@ namespace Vapps.Advert.AdvertAccounts
                 var product = _productManager.GetByIdAsync(x.ProductId).Result;
                 dto.Product = product?.Name ?? string.Empty;
                 dto.Channel = x.Channel.GetLocalizedEnum(_localizationManager);
+                dto.IsAuthed = x.IsAuth();
                 return dto;
             }).ToList();
 
@@ -105,9 +114,9 @@ namespace Vapps.Advert.AdvertAccounts
 
             if (input.Id.HasValue) //Editing existing store?
             {
-                var store = await _advertAccountManager.GetByIdAsync(input.Id.Value);
-                accountDto = ObjectMapper.Map<GetAdvertAccountForEditOutput>(store);
-
+                var account = await _advertAccountManager.GetByIdAsync(input.Id.Value);
+                accountDto = ObjectMapper.Map<GetAdvertAccountForEditOutput>(account);
+                accountDto.IsAuthed = account.IsAuth();
             }
             else
             {
@@ -158,6 +167,35 @@ namespace Vapps.Advert.AdvertAccounts
             foreach (var id in input.Ids)
             {
                 await _advertAccountManager.DeleteAsync(id);
+            }
+        }
+
+        /// <summary>
+        /// 获取 授权账户 AccessToken
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAuthorize(BusinessCenterPermissions.AdvertManage.Account.Self)]
+        public async Task GetAccessToken(GetAccessTokenInput input)
+        {
+            if (input.AccountId == 0)
+            {
+                throw new UserFriendlyException("无效账户");
+            }
+
+            var account = await _advertAccountManager.GetByIdAsync(input.AccountId);
+            if (account == null)
+            {
+                throw new UserFriendlyException("无效账户");
+            }
+
+            if (account.Channel == AdvertChannel.Tencent)
+            {
+                await _tenantAdvertAccountSyncor.GetAccessTokenAsync(input.Code);
+            }
+            else
+            {
+                await _toutiaoAdvertAccountSyncor.GetAccessTokenAsync(input.Code);
             }
         }
 

@@ -40,5 +40,12 @@ namespace Vapps.Advert.AdvertAccounts
         /// <param name="input"></param>
         /// <returns></returns>
         Task DeleteAdvertAccount(BatchInput<long> input);
+
+        /// <summary>
+        /// 获取 授权账户 AccessToken
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task GetAccessToken(GetAccessTokenInput input);
     }
 }

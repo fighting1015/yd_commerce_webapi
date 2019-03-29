@@ -12,6 +12,7 @@ using Vapps.ECommerce.Orders.Toutiao;
 using Vapps.ECommerce.Orders.Toutiao.Requests;
 using Vapps.ECommerce.Shippings;
 using Vapps.ECommerce.Stores;
+using Vapps.Filter;
 
 namespace Vapps.ECommerce.Orders.Jobs
 {
@@ -37,9 +38,10 @@ namespace Vapps.ECommerce.Orders.Jobs
             this._orderImportor = orderImportor;
         }
 
+        [Queue("tenantorder")]
+        //[UseQueueFromParameter("tenantorder")]
         [AutomaticRetry(Attempts = 3)]
         [DisplayName("订单同步任务, 租户id:{0}")]
-        [Queue("order")]
         [UnitOfWork]
         public override void Execute(int arg)
         {
@@ -47,7 +49,7 @@ namespace Vapps.ECommerce.Orders.Jobs
             {
                 using (_unitOfWorkManager.Current.SetTenantId(arg))
                 {
-                    var stores = await _storeManager.Stores.Where(s => s.Id == 6).ToListAsync();
+                    var stores = await _storeManager.Stores.ToListAsync();
 
                     foreach (var store in stores)
                     {
@@ -85,10 +87,10 @@ namespace Vapps.ECommerce.Orders.Jobs
                                 foreach (var orderData in response.Data.Items)
                                 {
                                     //跳过待确认
-                                    //if (orderData.OrderStatus == (int)ToutiaoOrderStatus.WaitForComfirm)
-                                    //{
-                                    //    continue;
-                                    //}
+                                    if (orderData.OrderStatus == (int)ToutiaoOrderStatus.WaitForComfirm)
+                                    {
+                                        continue;
+                                    }
 
                                     //跳过已取消订单
                                     if (orderData.OrderStatus == (int)ToutiaoOrderStatus.Canceled && orderData.LogisticsCode.IsNullOrEmpty())

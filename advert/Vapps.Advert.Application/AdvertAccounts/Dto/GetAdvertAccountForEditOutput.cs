@@ -35,9 +35,18 @@ namespace Vapps.Advert.AdvertAccounts.Dto
         public AdvertChannel Channel { get; set; }
 
         /// <summary>
+        /// 余额
+        /// </summary>
+        public decimal Balance { get; set; }
+
+        /// <summary>
         /// 数据自动同步
         /// </summary>
         public bool DataAutoSync { get; set; }
 
+        /// <summary>
+        /// 是否已授权
+        /// </summary>
+        public bool IsAuthed { get; set; }
     }
 }

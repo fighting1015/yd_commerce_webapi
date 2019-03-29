@@ -1,5 +1,6 @@
 ﻿using Abp.BackgroundJobs;
 using Abp.Dependency;
+using Abp.Domain.Uow;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Vapps.Advert.AdvertStatistics.Jobs
             this._tenantManager = tenantManager;
         }
 
+        [UnitOfWork]
         [Queue("advertdailystatistic")]
         public override void Execute(int arg)
         {

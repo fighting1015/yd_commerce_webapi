@@ -51,6 +51,16 @@ namespace Vapps.Advert.AdvertAccounts.Dto
         public decimal TotalOrder { get; set; }
 
         /// <summary>
+        /// 余额
+        /// </summary>
+        public decimal Balance { get; set; }
+
+        /// <summary>
+        /// 是否已授权
+        /// </summary>
+        public bool IsAuthed { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreationTime { get; set; }

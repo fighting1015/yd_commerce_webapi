@@ -31,9 +31,9 @@ namespace Vapps.Advert.AdvertStatistics.Jobs
         {
             this._unitOfWorkManager = unitOfWorkManager;
             this._advertAccountManager = advertAccountManager;
-            this._tenantAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>();
-            this._toutiaoAdvertAccountSyncor = iocResolver.Resolve<ToutiaoAdvertAccountSyncor>();
             this._logger = logger;
+            this._tenantAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>(typeof(IAdvertAccountSyncor));
+            this._toutiaoAdvertAccountSyncor = iocResolver.Resolve<TenantAdvertAccountSyncor>(typeof(IAdvertAccountSyncor));
         }
 
         [AutomaticRetry(Attempts = 3)]

@@ -2,6 +2,7 @@
 using Abp.Dependency;
 using Abp.Domain.Uow;
 using Hangfire;
+using Hangfire.States;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Vapps.MultiTenancy;
@@ -29,9 +30,17 @@ namespace Vapps.Advert.AdvertAccounts.Jobs
         public override void Execute(int arg)
         {
             var tenants = _tenantManager.Tenants.AsNoTracking().ToList();
+
+
+            var client = new BackgroundJobClient();
+            var state = new EnqueuedState("tenantorder");
+
             foreach (var tenant in tenants)
             {
-                _backgroundJobManager.Enqueue<AdvertOrderSyncSingleJob, int>(tenant.Id);
+                client.Create<AdvertOrderSyncSingleJob>(job => job.Execute(tenant.Id), state);
+                //BackgroundJob.Enqueue(job => job.Execute(tenant.Id));
+
+                //await _backgroundJobManager.EnqueueAsync<OrderSyncSingleJob, int>(tenant.Id);
             }
         }
     }
