@@ -1,33 +1,34 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
-using System;
-using Vapps.ECommerce.Orders;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Vapps.Statistic.ShipmentStatistics
+namespace Vapps.Statistic.ShipmentStatistics.Dto
 {
-    public class ShipmentStatistic : CreationAuditedEntity<long>, IMustHaveTenant, ISoftDelete
-    {
-        public int TenantId { get; set; }
 
+
+    public class ShipmentStatisticDto
+    {
         /// <summary>
         /// 渠道
         /// </summary>
-        public OrderSource Channel { get; set; }
+        public string Channel { get; set; }
 
         /// <summary>
-        /// 产品Id
+        /// 商品
         /// </summary>
-        public long ProductId { get; set; }
+        public string Product { get; set; }
 
         /// <summary>
-        /// 快递Id
+        /// 快递
         /// </summary>
-        public int LogisticsId { get; set; }
+        public string Logistics { get; set; }
 
         /// <summary>
-        /// 统计时间
+        /// 统计/下单时间
         /// </summary>
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         /// <summary>
         /// 发货数量
@@ -37,22 +38,32 @@ namespace Vapps.Statistic.ShipmentStatistics
         /// <summary>
         /// 签收数量
         /// </summary>
-        public int DeliverNum { get; set; }
+        public int ReceivedNum { get; set; }
 
         /// <summary>
         /// 签收金额
         /// </summary>
-        public decimal DeliverTotal { get; set; }
+        public decimal ReceivedTotal { get; set; }
 
         /// <summary>
-        /// 拒收数量
+        /// 签收率
         /// </summary>
-        public int RefusalNum { get; set; }
+        public decimal ReceivedRate { get; set; }
 
         /// <summary>
-        /// 拒收数量
+        /// 拒签数量
         /// </summary>
-        public decimal RefusalTotal { get; set; }
+        public int RejectNum { get; set; }
+
+        /// <summary>
+        /// 拒签金额
+        /// </summary>
+        public decimal RejectTotal { get; set; }
+
+        /// <summary>
+        /// 拒签率
+        /// </summary>
+        public decimal RejectRate { get; set; }
 
         /// <summary>
         /// 在途数量
@@ -65,7 +76,7 @@ namespace Vapps.Statistic.ShipmentStatistics
         public int DestinationCityNum { get; set; }
 
         /// <summary>
-        /// 派送中数量
+        /// 派件数量
         /// </summary>
         public int DeliveringNum { get; set; }
 
@@ -75,18 +86,19 @@ namespace Vapps.Statistic.ShipmentStatistics
         public int IssueNum { get; set; }
 
         /// <summary>
-        /// 结算数量
+        /// 回款数量
         /// </summary>
         public int ClearNum { get; set; }
 
         /// <summary>
-        /// 结算金额
+        /// 回款金额
         /// </summary>
         public decimal CleaTotal { get; set; }
 
         /// <summary>
-        /// 是否删除
+        /// 回款率
         /// </summary>
-        public bool IsDeleted { get; set; }
+        public decimal CleaRate { get; set; }
+
     }
 }
